@@ -37,87 +37,83 @@
 
 | # | 任务 | 文件 | 预估工时 | 验收标准 |
 |---|------|------|---------|---------|
-| 1.1 | 创建 `pyproject.toml` | `codex-relay/pyproject.toml` | 0.5h | `pip install -e .` 成功 |
-| 1.2 | 实现 `core/domain.py` | `codex-relay/core/domain.py` | 1h | 所有 pydantic 模型可实例化、可序列化 |
-| 1.3 | 实现 `core/errors.py` | `codex-relay/core/errors.py` | 0.5h | 所有错误类可构造，携带上下文字段 |
-| 1.4 | 实现 `core/validators.py` | `codex-relay/core/validators.py` | 1h | 校验框架可注册规则、执行校验 |
-| 1.5 | 实现 `core/actions.py` | `codex-relay/core/actions.py` | 2h | ActionExecutor 可注册 adapter、执行动作 |
-| 1.6 | 实现 Mock Adapter | `codex-relay/adapters/mock_adapter.py` | 1h | 模拟 3 个动作（成功/失败/需确认） |
-| 1.7 | 实现 `mcp/server.py` | `codex-relay/codex_plugin/mcp/server.py` | 1h | MCP Server 可启动，注册工具 |
-| 1.8 | 实现 `mcp/tools.py` | `codex-relay/codex_plugin/mcp/tools.py` | 2h | 实现 `list_adapters` + `run_action` + `confirm_action` |
-| 1.9 | 实现 `mcp/schemas.py` | `codex-relay/codex_plugin/mcp/schemas.py` | 0.5h | JSON Schema 可从 pydantic 模型自动生成 |
-| 1.10 | 创建 `plugin.json` + `.mcp.json` | `codex-relay/plugin.json` + `codex-relay/.mcp.json` | 0.5h | 符合 Agent Plugin 标准 |
-| 1.11 | 写各软件 SKILL.md | `codex-relay/skills/{kicad-pcb,stm32-flash,relay-core}/SKILL.md` | 2h | YAML frontmatter + 工作流 + 安全规则 |
-| 1.12 | 写单元测试 | `codex-relay/tests/test_core.py` | 2h | 覆盖率 > 80% |
-| 1.13 | 写集成测试 | `codex-relay/tests/test_mcp_server.py` | 2h | MCP Server 端到端测试通过 |
-| 1.14 | 写 README | 根目录 `README.md`（已有） | 0.5h | 与项目结构一致 |
+| 1.1 | 实现 `core/domain.py` | `core/domain.py` | 1.5h | 所有 pydantic 模型可实例化、可序列化 |
+| 1.2 | 实现 `core/errors.py` | `core/errors.py` | 0.5h | 所有错误类可构造，携带上下文字段 |
+| 1.3 | 实现 `core/validators.py` | `core/validators.py` | 1h | 校验框架可注册规则、执行校验 |
+| 1.4 | 实现 `core/actions.py` | `core/actions.py` | 2h | ActionExecutor 可注册 adapter、执行动作 |
+| 1.5 | 实现 `adapters/base.py` | `adapters/base.py` | 1h | BaseAdapter 抽象接口 |
+| 1.6 | 实现 Mock Adapter | `adapters/mock_adapter.py` | 1h | 模拟 3 种动作（成功/失败/需确认） |
+| 1.7 | 实现 MCP Server | `codex-relay/codex_plugin/mcp/{server,tools,schemas}.py` | 3h | 实现 6 个工具，stdio 可启动 |
+| 1.8 | 创建 `plugin.json` + `.mcp.json` | `codex-relay/plugin.json` + `codex-relay/.mcp.json` | 0.5h | 符合 Agent Plugin 标准 |
+| 1.9 | 实现 KiCad adapter | `adapters/kicad/{adapter,actions_*,validators}.py` | 4h | 打开工程 / 导出 Gerber / 导出 BOM / DRC |
+| 1.10 | 实现 Multisim adapter | `adapters/multisim/adapter.py` | 2h | XML 解析电路 / 导出网表 |
+| 1.11 | 写 Skill 文档 | `codex-relay/skills/{kicad-pcb,multisim-reader,relay-core}/SKILL.md` | 2h | YAML frontmatter + 工作流 + 安全规则 |
+| 1.12 | 写单元测试 | `tests/test_core.py` + `tests/test_mock_adapter.py` | 2h | 覆盖率 > 80% |
+| 1.13 | 写集成测试 | `tests/test_mcp_server.py` | 2h | MCP Server 端到端测试通过 |
+| 1.14 | 创建 KiCad 示例工程 | `examples/kicad_export_example/` | 1h | 最小 KiCad 工程用于测试 |
 
-### Phase 1 总预估：~16h
-### 产出物：可运行的最小 Codex 插件（Mock 模式）
+### Phase 1 总预估：~23.5h
+### 产出物：Core + MCP Server + KiCad + Multisim 可用插件
 
 ---
 
-## Phase 2：KiCad 适配器（第一个真实软件）
+## Phase 2：STM32CubeIDE + CCS（MCU 开发环境）
 
 ### 目标
-让 Codex 能真正操作 KiCad：打开工程 → 导出 Gerber → 跑 DRC → 收集产物。
+Codex 能操作 STM32CubeIDE 和 CCS：工程管理 → 编译 → 烧录 → 校验。
 
 ### 前置条件
 - Phase 1 完成
-- KiCad 8.0+ 已安装在开发机上
-- `pcbnew` Python 模块可导入
+- STM32CubeIDE 1.17+ 已安装
+- CCS 12.8+ 已安装
+- STM32 开发板 + TI LaunchPad 可用于测试
 
 ### 任务清单
 
 | # | 任务 | 文件 | 预估工时 | 验收标准 |
 |---|------|------|---------|---------|
-| 2.1 | 实现 KiCad adapter 基础框架 | `codex-relay/adapters/kicad/adapter.py` | 2h | 继承 BaseAdapter，check_availability 可检测 KiCad 是否安装 |
-| 2.2 | 实现 `open_project` | `codex-relay/adapters/kicad/actions_open.py` | 1h | 用 pcbnew.LoadBoard() 打开 .kicad_pcb 文件 |
-| 2.3 | 实现 `export_gerber` | `codex-relay/adapters/kicad/actions_export.py` | 2h | 用 pcbnew 导出 Gerber 到指定目录 |
-| 2.4 | 实现 `export_bom` | `codex-relay/adapters/kicad/actions_export.py` | 1h | 导出 BOM（CSV 或 XML） |
-| 2.5 | 实现 `run_drc` | `codex-relay/adapters/kicad/actions_check.py` | 2h | 运行 DRC，解析结果返回结构化数据 |
-| 2.6 | 实现 `collect_artifacts` | `codex-relay/adapters/kicad/actions_collect.py` | 1h | 收集所有输出文件列表 |
-| 2.7 | 写 KiCad validator | `codex-relay/adapters/kicad/validators.py` | 2h | 检查文件存在性、大小、DRC 结果 |
-| 2.8 | 写集成测试 | `codex-relay/tests/test_kicad_adapter.py` | 3h | 用真实 KiCad 工程测试全流程 |
-| 2.9 | 创建示例工程 | `codex-relay/examples/kicad_export_example/` | 1h | 一个最小 KiCad 工程用于测试 |
-| 2.10 | 更新 SKILL.md | `codex-relay/skills/kicad-pcb/SKILL.md` | 0.5h | 更新 KiCad 工作流细节 |
+| 2.1 | 实现 STM32CubeIDE adapter | `adapters/stm32cubeide/adapter.py` | 2h | Eclipse headless CLI 导入/编译/烧录 |
+| 2.2 | 实现 CCS adapter | `adapters/ccs/adapter.py` | 2h | Theia CLI + DSS 识别/烧录/调试 |
+| 2.3 | 写 Skill 文档 | `codex-relay/skills/{cubeide-build,ccs-flash}/SKILL.md` | 1.5h | 含 GOAP 模板 |
+| 2.4 | 写集成测试 | `tests/test_stm32cubeide.py` + `tests/test_ccs.py` | 3h | 真实硬件测试 |
 
-### Phase 2 总预估：~15.5h
+### Phase 2 总预估：~8.5h
 
 ---
 
-## Phase 3：STM32 适配器
+## Phase 3：Keil MDK
 
 ### 目标
-Codex 能操作 STM32：识别设备 → 烧录固件 → 校验写入 → 收集日志。
+Codex 能操作 Keil MDK：编译工程 → 烧录 → 调试。
 
-### 前置条件
-- Phase 1 完成（Phase 2 不强制）
-- STM32CubeProgrammer CLI 或 pyocd 已安装
-- 至少一块 STM32 开发板可用于测试
+| # | 任务 | 文件 | 预估工时 |
+|---|------|------|---------|
+| 3.1 | 实现 Keil adapter | `adapters/keil/adapter.py` | 2h |
+| 3.2 | 写 Skill 文档 | `codex-relay/skills/keil-build/SKILL.md` | 1h |
+| 3.3 | 写集成测试 | `tests/test_keil.py` | 2h |
 
-### 任务清单
-
-| # | 任务 | 预估工时 |
-|---|------|---------|
-| 3.1 | 调研选定烧录工具路径（pyocd vs STM32CubeProgrammer CLI） | 2h |
-| 3.2 | 实现 STM32 adapter 基础框架 | 2h |
-| 3.3 | 实现 `identify_device` | 1.5h |
-| 3.4 | 实现 `flash_firmware`（含确认机制） | 3h |
-| 3.5 | 实现 `verify_flash` | 2h |
-| 3.6 | 实现 `read_device_log` | 1h |
-| 3.7 | 写集成测试 | 3h |
-| 3.8 | 创建示例 | 1h |
-
-### Phase 3 总预估：~15.5h
+### Phase 3 总预估：~5h
 
 ---
 
-## Phase 4：TI + SolidWorks
+## Phase 4：SolidWorks
 
-（详细计划在 Phase 2/3 完成后细化）
+| # | 任务 | 文件 | 预估工时 |
+|---|------|------|---------|
+| 4.1 | 实现 SolidWorks adapter（COM） | `adapters/solidworks/adapter.py` | 3h |
+| 4.2 | 写 Skill 文档 | `codex-relay/skills/solidworks-cad/SKILL.md` | 1h |
+
+### Phase 4 总预估：~4h
 
 ---
+
+## Phase 5：AutoCAD + Hermes 迁移
+
+| # | 任务 | 文件 | 预估工时 |
+|---|------|------|---------|
+| 5.1 | 实现 AutoCAD adapter | `adapters/autocad/adapter.py` | 2h |
+| 5.2 | 写 Skill 文档 | `codex-relay/skills/autocad-dwg/SKILL.md` | 1h |
+| 5.3 | Hermes 适配层完成 | `hermes-relay/hermes_tools/` | 2h |
 
 ## 任务执行规范（给 AI 的指令）
 
@@ -142,13 +138,13 @@ Codex 能操作 STM32：识别设备 → 烧录固件 → 校验写入 → 收�
 ## 依赖关系图
 
 ```
-Phase 0 (设计)
+Phase 0 (设计 ✅)
     ↓
-Phase 1 (MVP: Core + MCP Server + Mock)
+Phase 1 (Core + MCP Server + KiCad + Multisim)
     ↓
-Phase 2 (KiCad)  ←→  Phase 3 (STM32)  可并行
-    ↓                    ↓
-Phase 4 (TI + SolidWorks)
+Phase 2 (STM32CubeIDE + CCS)  ←→  Phase 3 (Keil MDK)  可并行
     ↓
-Phase 5 (Hermes 迁移)
+Phase 4 (SolidWorks)
+    ↓
+Phase 5 (AutoCAD + Hermes 迁移)
 ```

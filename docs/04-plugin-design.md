@@ -312,10 +312,10 @@ description: Bifrost 通用中继操作 — 列出适配器、确认高风险动
 ```
 codex-relay/codex_plugin/mcp/server.py
   →  import codex_plugin.mcp.tools
-      →  import core.actions.ActionExecutor    # codex-relay/core/
+      →  import core.actions.ActionExecutor    # 根目录 core/
       →  import core.validators.ResultValidator
       →  import core.domain                    # 所有 pydantic 数据模型
-      →  import adapters.base                  # codex-relay/adapters/
+      →  import adapters.base                  # 根目录 adapters/
 
 codex-relay/codex_plugin/mcp/schemas.py
   →  import core.domain                        # 用于生成 JSON Schema

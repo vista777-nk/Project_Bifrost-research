@@ -54,33 +54,39 @@
 
 ## 4. 分阶段路线图
 
-### Phase 0 — 设计阶段（当前）
+### Phase 0 — 设计阶段（当前 ✅）
 - [x] 技术决策记录（语言选择）
-- [ ] 统一数据模型定义
-- [ ] 工具接口设计
-- [ ] 插件层设计
-- [ ] KiCad / Keil / STM32CubeIDE / CCS / AutoCAD / Multisim / SolidWorks CLI/API 调研
+- [x] 统一数据模型定义
+- [x] 工具接口设计
+- [x] 插件层设计
+- [x] KiCad / Keil / STM32CubeIDE / CCS / AutoCAD / Multisim / SolidWorks CLI/API 调研
 
-### Phase 1 — 最小可用插件（第一期开发）
+### Phase 1 — KiCad + Multisim（第一期开发）
 - [ ] 实现 Core 数据模型（pydantic）
-- [ ] 实现最小 MCP Server（仅 `list_adapters` + `run_action`）
-- [ ] 实现 1 个 mock adapter（不连真实软件，用于测试）
-- [ ] 实现 1 个 KiCad adapter（仅 `export_gerber` + `run_drc`）
-- [ ] 写 Skill 文档
+- [ ] 实现 MCP Server（list_adapters + run_action + confirm_action）
+- [ ] Mock adapter（不连真实软件）
+- [ ] KiCad adapter（打开工程 / 导出 Gerber / 导出 BOM / 运行 DRC）
+- [ ] Multisim adapter（读取电路 XML / 导出网表）
+- [ ] 写 Skill 文档（kicad-pcb + multisim-reader + relay-core）
 - [ ] 端到端测试
 
-### Phase 2 — KiCad + Keil + STM32CubeIDE 首批真实软件
-- [ ] KiCad 完整动作集（开工程/导出BOM/DRC/收集产物）
-- [ ] Keil MDK 编译 + 烧录（UV4 CLI）
-- [ ] STM32CubeIDE 工程配置 + 编译 + 烧录
+### Phase 2 — STM32CubeIDE + CCS（MCU 开发环境）
+- [ ] STM32CubeIDE adapter（导入工程 / 编译 / 烧录）
+- [ ] CCS adapter（识别 TI 设备 / 烧录 / 校验 / DSS 脚本）
+- [ ] Skills: cubeide-build + ccs-flash
 
-### Phase 3 — CCS + AutoCAD
-- [ ] CCS adapter（识别 TI 设备/烧录/校验/调试 DSS）
-- [ ] AutoCAD adapter（accoreconsole 脚本/批量导出 DWG/DXF）
+### Phase 3 — Keil MDK
+- [ ] Keil adapter（UV4 CLI 编译 / 烧录 / 调试）
+- [ ] Skill: keil-build
 
-### Phase 4 — Multisim + SolidWorks
-- [ ] Multisim adapter（XML 解析电路/导出网表）
-- [ ] SolidWorks adapter（COM 接口/导出工程图/STP）
+### Phase 4 — SolidWorks
+- [ ] SolidWorks adapter（COM 接口 / 打开文档 / 导出工程图 / STP）
+- [ ] Skill: solidworks-cad
+
+### Phase 5 — AutoCAD + Hermes 迁移
+- [ ] AutoCAD adapter（accoreconsole / 批量导出 DWG/DXF）
+- [ ] Skill: autocad-dwg
+- [ ] Hermes 适配层完成
 - [ ] TI adapter
 - [ ] SolidWorks adapter（COM 接口）
 

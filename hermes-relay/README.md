@@ -6,7 +6,7 @@
 
 ## 设计原则
 
-- **复用 Core**：不重写任何业务逻辑，直接从 `codex-relay/core/` 和 `codex-relay/adapters/` 导入
+- **复用 Core**：不重写任何业务逻辑，直接从根目录 `core/` 和 `adapters/` 导入
 - **薄包装**：仅负责将 Core 能力包装为 Hermes function calling 格式
 - **GOAP 原生**：内建 Goal Oriented Action Planning 推理模板
 
@@ -65,11 +65,11 @@ python -c "from hermes_tools import build_chatml_prompt; print(build_chatml_prom
 
 ```
 hermes-relay/hermes_tools/
-  →  import codex-relay/core/       (domain, actions, validators, errors)
-  →  import codex-relay/adapters/   (base, kicad, stm32, ti, solidworks)
+  →  import core/          (domain, actions, validators, errors)  ← 根目录
+  →  import adapters/      (base, kicad, keil, stm32cubeide, …)   ← 根目录
 ```
 
-本目录**零外部依赖**（除 Python 标准库外），Hermes 模型推理所需库由用户在自己环境中安装。
+`core/` 和 `adapters/` 位于仓库根目录，与 `hermes-relay/` 同级。
 
 ---
 

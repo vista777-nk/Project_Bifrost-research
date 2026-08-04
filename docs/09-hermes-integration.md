@@ -157,18 +157,18 @@ Codex 路径:
                          ↓
                        MCP Server (codex-relay/codex_plugin/mcp/server.py)
                          ↓
-                       Core (codex-relay/core/)
+                       Core (根目录 core/)
                          ↓
-                       Adapter (codex-relay/adapters/kicad/)
+                       Adapter (根目录 adapters/kicad/)
 
 Hermes 路径:
   User → Hermes Model → GOAP Prompt (含 tools 定义)
                          ↓
                        Hermes Tool Wrapper (hermes-relay/tools.py)
                          ↓
-                       Core (codex-relay/core/)          ← 同一套！跨目录导入
+                       Core (根目录 core/)          ← 同一套！
                          ↓
-                       Adapter (codex-relay/adapters/kicad/)  ← 同一套！
+                       Adapter (根目录 adapters/kicad/)  ← 同一套！
 ```
 
 **关键：Core 和 Adapters 完全复用。** 只变"调用协议层"。

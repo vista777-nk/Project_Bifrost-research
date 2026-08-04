@@ -163,15 +163,15 @@ python -m codex_plugin.mcp.server
 
 ## 🏭 支持的工业软件
 
-| 软件 | 版本 | 状态 | 集成路径 | 首批动作 |
-|------|------|:---:|---------|---------|
-| **KiCad** | 8.0.9 | 🚧 规划中 | pcbnew Python API | 打开工程、导出 Gerber/BOM、DRC |
-| **Keil MDK** | 5.39 | 🚧 规划中 | UV4 CLI | 编译工程、烧录、调试 |
-| **STM32CubeIDE** | 1.17.0 | 🚧 规划中 | Eclipse CLI + 脚本 | 配置/编译/烧录 STM32 工程 |
-| **CCS** (TI) | 12.8.1 | ⏳ 后续 | Theia CLI + DSS | 识别设备、烧录、调试 TI 芯片 |
-| **AutoCAD** | 2022 | ⏳ 后续 | accoreconsole + COM | 脚本执行、批量导出 DWG/DXF |
-| **Multisim** | 14.3 | ⏳ 后续 | XML 解析 + COM | 读取电路、导出网表、仿真数据 |
-| **SolidWorks** | 2024 SP5 | ⏳ 后续 | COM / Macro API | 打开文档、导出工程图/STP |
+| Phase | 软件 | 版本 | 集成路径 | 首批动作 |
+|:---:|------|------|---------|---------|
+| **P1** | **KiCad** | 8.0.9 | pcbnew Python API | 打开工程、导出 Gerber/BOM、DRC |
+| **P1** | **Multisim** | 14.3 | XML 解析 + COM | 读取电路、导出网表 |
+| **P2** | **STM32CubeIDE** | 1.17.0 | Eclipse CLI | 配置/编译/烧录 STM32 |
+| **P2** | **CCS** (TI) | 12.8.1 | Theia CLI + DSS | 识别设备、烧录、调试 TI 芯片 |
+| **P3** | **Keil MDK** | 5.39 | UV4 CLI | 编译工程、烧录、调试 |
+| **P4** | **SolidWorks** | 2024 SP5 | COM / Macro API | 打开文档、导出工程图/STP |
+| **P5** | **AutoCAD** | 2022 | accoreconsole + COM | 脚本执行、批量导出 DWG/DXF |
 
 ---
 

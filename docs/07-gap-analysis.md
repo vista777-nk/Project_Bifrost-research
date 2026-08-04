@@ -321,7 +321,7 @@ Hermes 适配不是"把插件移植过去"，而是：
 │   └── examples/
 │
 ├── hermes-relay/                     # 📁 Hermes 中继实现（未来）
-│   └── (薄包装层，复用 codex-relay/core/ 和 adapters/)
+│   └── (薄包装层，复用根目录 core/ 和 adapters/)
 │
 └── docs/                             # 📁 技术文档体系
     ├── 00-overview.md … 09-hermes-integration.md

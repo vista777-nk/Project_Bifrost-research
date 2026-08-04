@@ -195,6 +195,80 @@ main ─────────────────────────
 
 ---
 
+## 五、发布与打包策略
+
+### 5.1 项目结构原则
+
+```
+bifrost/                          ← 仓库根
+├── core/          ← 共享：数据模型 + 动作引擎 + 校验框架
+├── adapters/      ← 共享：8 个工业软件适配器
+├── codex-relay/   ← Codex 专属：plugin.json / .mcp.json / skills / MCP Server
+├── hermes-relay/  ← Hermes 专属：hermes_tools / GOAP 模板
+└── docs/          ← 共享：技术文档
+```
+
+**原则**：`core/` 和 `adapters/` 不依赖任何 AI 框架。`codex-relay/` 和 `hermes-relay/` 各自引用它们。
+
+### 5.2 发布打包
+
+各平台发布时，从仓库中提取对应文件组成独立分发包：
+
+#### Codex 发布包 (`bifrost-codex`)
+
+```
+bifrost-codex/
+├── core/              ← cp -r 仓库根/core/
+├── adapters/          ← cp -r 仓库根/adapters/
+├── codex_plugin/      ← cp -r 仓库根/codex-relay/codex_plugin/
+├── skills/            ← cp -r 仓库根/codex-relay/skills/
+├── plugin.json        ← cp    仓库根/codex-relay/plugin.json
+├── .mcp.json          ← cp    仓库根/codex-relay/.mcp.json
+└── pyproject.toml     ← 含 mcp/typer 依赖
+```
+
+安装：`codex plugin install --local ./bifrost-codex`
+
+#### Hermes 发布包 (`bifrost-hermes`)
+
+```
+bifrost-hermes/
+├── core/              ← cp -r 仓库根/core/
+├── adapters/          ← cp -r 仓库根/adapters/
+├── hermes_tools/      ← cp -r 仓库根/hermes-relay/hermes_tools/
+└── pyproject.toml     ← 仅 pydantic/structlog 依赖
+```
+
+使用：`from hermes_tools import build_system_prompt, get_hermes_tool_definitions`
+
+#### pip 安装（开发模式）
+
+```bash
+# 完整安装（Codex + Hermes + 所有适配器）
+pip install -e .
+
+# 仅 Codex
+pip install -e ".[codex]"
+
+# 仅 Hermes
+pip install -e ".[hermes]"
+
+# 含特定适配器
+pip install -e ".[codex,stm32,solidworks]"
+```
+
+### 5.3 版本号规则
+
+遵循 [Semantic Versioning](https://semver.org/) 2.0.0：
+
+| 版本类型 | 含义 | 示例 |
+|---------|------|------|
+| `0.x.y` | 开发阶段，API 不稳定 | `0.1.0` → `0.2.0` |
+| `1.0.0` | 首个稳定版，Core API 冻结 | Phase 5 完成后 |
+| `major.minor.patch` | 破坏性变更 / 新功能 / 修复 | `1.1.0` / `1.1.1` |
+
+---
+
 ## 适用范围
 
 本行为准则适用于所有 Bifrost 社区空间（GitHub Issues、PR、Discussions、相关社交平台），以及个人代表项目参与公共活动时的行为。

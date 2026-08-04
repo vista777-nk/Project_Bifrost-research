@@ -41,11 +41,11 @@ Skill → MCP Server → Core ← Adapters → 工业软件
 
 ## 2. 各层详细设计
 
-### 2.1 Core 层 (`codex-relay/core/`)
+### 2.1 Core 层 (`core/`)
 
 **职责**：提供所有不依赖具体软件、不依赖 Codex 的通用逻辑。
 
-> Core 位于 `codex-relay/core/`，但它是**框架无关**的——未来 Hermes 集成时直接从 `codex-relay/core/` 导入即可。
+> Core 位于根目录 `core/`，**框架无关**——Hermes 集成时直接从 `core/` 导入。
 
 **子模块**：
 
@@ -82,8 +82,8 @@ Skill → MCP Server → Core ← Adapters → 工业软件
 | `tools.py` | 每个工具的实现函数（调用 Core） |
 | `schemas.py` | 工具的输入输出 JSON Schema（给 MCP 协议用） |
 
-> **注意**：Core 和 Adapters 位于 `codex-relay/core/` 和 `codex-relay/adapters/`，属框架无关代码。
-> 未来 Hermes 集成时，`hermes-relay/` 将直接从 `codex-relay/core/` 和 `codex-relay/adapters/` 导入，不加修改。
+> **注意**：Core 和 Adapters 位于根目录 `core/` 和 `adapters/`，属框架无关代码。
+> 未来 Hermes 集成时，`hermes-relay/` 直接从根目录 `core/` 和 `adapters/` 导入。
 
 **工具列表（第一版）**：
 
@@ -145,7 +145,7 @@ description: KiCad PCB 工作流 — 打开工程、导出 Gerber/BOM、运行 D
 - 连续 3 次重试失败时
 ```
 
-### 2.4 Adapter 层 (`codex-relay/adapters/`)
+### 2.4 Adapter 层 (`adapters/`)
 
 **职责**：每个 adapter 实现统一的 `BaseAdapter` 接口，对接具体工业软件。
 
