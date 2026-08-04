@@ -1,0 +1,71 @@
+# Bifrost — Git Attributes
+# 规范化行尾、文件类型识别与 LFS 管理
+
+# === 行尾自动转换 ===
+# 所有文本文件统一使用 LF
+* text=auto
+
+# Python
+*.py text eol=lf
+*.pyi text eol=lf
+
+# Markdown / 文档
+*.md text eol=lf
+*.txt text eol=lf
+*.rst text eol=lf
+
+# 配置文件
+*.json text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.toml text eol=lf
+*.cfg text eol=lf
+*.ini text eol=lf
+
+# Shell 脚本
+*.sh text eol=lf
+
+# 二进制文件（不转换行尾）
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.svg binary
+*.pdf binary
+*.bin binary
+*.hex binary
+*.elf binary
+*.axf binary
+
+# Gerber 与 PCB 文件（工业软件产物，视为二进制）
+*.gbr binary
+*.drl binary
+*.kicad_pcb binary
+*.kicad_pro binary
+*.kicad_sch binary
+*.step binary
+*.stp binary
+
+# 固件文件
+*.elf binary
+*.axf binary
+
+# CAD 文件
+*.sldprt binary
+*.sldasm binary
+*.slddrw binary
+*.dxf binary
+*.dwg binary
+
+# === Git LFS（大文件管理） ===
+# 如需启用 LFS，取消以下注释：
+# *.step filter=lfs diff=lfs merge=lfs -text
+# *.stp filter=lfs diff=lfs merge=lfs -text
+# *.bin filter=lfs diff=lfs merge=lfs -text
+
+# === 语言统计 ===
+# 排除自动生成和第三方文件的语言统计
+docs/* linguist-documentation
+examples/* linguist-documentation
+assets/* linguist-documentation

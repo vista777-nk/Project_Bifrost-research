@@ -1,0 +1,40 @@
+# Bifrost — Python 依赖
+# 最低 Python 版本：3.11
+
+# === 核心依赖（Core 层零外部依赖） ===
+
+# MCP Server
+mcp>=1.6.0,<2.0.0
+
+# 数据模型与校验
+pydantic>=2.10.0,<3.0.0
+
+# CLI 工具（MCP Server 入口与调试）
+typer>=0.15.0,<1.0.0
+
+# 结构化日志
+structlog>=24.4.0,<26.0.0
+
+# === KiCad Adapter ===
+# pcbnew 由 KiCad 自带，不需要 pip 安装
+
+# === STM32 Adapter ===
+pyocd>=0.36.0,<1.0.0         # ARM Cortex 调试/烧录（首选路径）
+# stm32loader>=0.5.0         # UART bootloader（备选路径，按需取消注释）
+
+# === TI Adapter ===
+# 通过 CLI 子进程调用 UniFlash/DSLite，无需额外 Python 包
+
+# === SolidWorks Adapter ===
+pywin32>=308; sys_platform == "win32"   # Windows COM 接口
+
+# === 开发依赖（pip install -r requirements-dev.txt） ===
+# 以下内容请放入 requirements-dev.txt：
+#
+# pytest>=8.3.0,<9.0.0
+# pytest-mock>=3.14.0,<4.0.0
+# pytest-asyncio>=0.24.0,<1.0.0
+# pytest-cov>=6.0.0,<7.0.0
+# mypy>=1.13.0,<2.0.0
+# black>=24.10.0,<26.0.0
+# ruff>=0.8.0,<1.0.0

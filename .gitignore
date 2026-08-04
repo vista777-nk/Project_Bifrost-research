@@ -1,0 +1,115 @@
+# Bifrost — .gitignore
+# 适用于 Python + VS Code + 工业软件产物的 Git 忽略规则
+
+# === Python ===
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+*.egg
+dist/
+build/
+*.whl
+.tox/
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+*.prof
+
+# === 虚拟环境 ===
+venv/
+.venv/
+env/
+.env/
+ENV/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# === IDE ===
+# VS Code
+.vscode/
+*.code-workspace
+
+# PyCharm
+.idea/
+*.iml
+
+# 其他
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# === MCP / Codex ===
+# Codex 本地运行时文件
+.codex/
+.cursor/
+.claude/
+
+# === 工业软件产物 ===
+# KiCad
+*.kicad_pro-*
+*.kicad_pcb-*
+*.kicad_sch-*
+*-backups/
+*.bak
+fp-info-cache
+*.gbr
+*.drl
+*.pos
+gerber/
+output/
+export/
+
+# STM32 / 固件
+*.bin
+*.hex
+*.elf
+*.axf
+*.map
+*.out
+
+# SolidWorks
+~$*.sld*
+*.std*
+AutoRecovery/
+
+# TI
+*.out
+*.ti*
+
+# === 日志 ===
+*.log
+logs/
+
+# === 环境 / 配置 ===
+.env
+.env.local
+.env.*.local
+*.local.toml
+
+# === 临时文件 ===
+tmp/
+temp/
+*.tmp
+*.bak
+*.cache
+
+# === OS ===
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Linux
+.directory
+.Trash-*

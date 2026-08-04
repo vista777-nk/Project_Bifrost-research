@@ -1,0 +1,12 @@
+# Bifrost — Hermes Relay 依赖
+# 本目录为薄包装层，核心依赖在根目录 requirements.txt
+
+# Hermes 模型推理（用户自行选择安装方式）
+# transformers>=4.45.0         # HuggingFace Transformers（如需本地推理）
+# torch>=2.4.0                 # PyTorch
+# llama-cpp-python>=0.3.0      # llama.cpp Python 绑定（GGUF 量化模型）
+
+# Function calling 辅助（可选）
+# instructor>=1.5.0            # 结构化输出辅助库
+
+# 本目录无强制 pip 依赖，Core 依赖由根 requirements.txt 覆盖
