@@ -40,11 +40,11 @@
 │  数据模型 / 动作引擎 / 校验框架 / 错误体系                   │
 ├─────────────────────────────────────────────────────────┤
 │  Adapters (adapters/)                                    │
-│  kicad/  stm32/  ti/  solidworks/                        │
+│  kicad/ keil/ stm32cubeide/ ccs/ autocad/ multisim/ solidworks/│
 │  每个 adapter 实现统一接口，对接具体软件                      │
 ├─────────────────────────────────────────────────────────┤
 │  真实工业软件                                              │
-│  KiCad / STM32CubeProgrammer / UniFlash / SolidWorks      │
+│  KiCad 8 · Keil MDK 5 · STM32CubeIDE · CCS 12 · AutoCAD 2022 · Multisim 14 · SolidWorks 2024│
 └─────────────────────────────────────────────────────────┘
 ```
 
@@ -87,12 +87,6 @@
 - [ ] AutoCAD adapter（accoreconsole / 批量导出 DWG/DXF）
 - [ ] Skill: autocad-dwg
 - [ ] Hermes 适配层完成
-- [ ] TI adapter
-- [ ] SolidWorks adapter（COM 接口）
-
-### Phase 5 — 跨平台迁移
-- [ ] Hermes 插件适配
-- [ ] 统一适配层抽象
 
 ---
 

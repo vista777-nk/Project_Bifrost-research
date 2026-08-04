@@ -8,6 +8,33 @@
 
 ---
 
+## 🎯 理念：联合一体化 — "机器人制造机器人"
+
+> **像解放军 15 军改一样，打破烟囱、联合指挥、全域作战。**
+
+传统工业软件各自为政：KiCad 只管 PCB，Keil 只管固件，SolidWorks 只管结构。工程师在七套软件之间手动搬运数据，效率低、易出错、不可追溯。
+
+**Bifrost 的核心理念是联合一体化**——将七款工业软件统一到一层中继适配层之下，让 AI Agent 像"联合参谋部"一样，跨软件、跨领域、跨阶段地调度工程能力：
+
+```
+                    ┌─────────────────────────────┐
+                    │    🌈  Bifrost 联合参谋部      │
+                    │  统一数据模型 · 统一动作接口      │
+                    │  统一校验框架 · 统一日志追踪      │
+                    └──────┬────────────┬─────────┘
+           ┌───────────────┼────────────┼───────────────┐
+    ┌──────┴──────┐ ┌──────┴──────┐ ┌──┴────────┐ ┌────┴─────┐
+    │  PCB 设计    │ │  电路仿真    │ │  MCU 开发  │ │  CAD 结构 │
+    │  KiCad      │ │  Multisim  │ │ CubeIDE   │ │ SolidWorks│
+    │             │ │            │ │  CCS      │ │ AutoCAD  │
+    │             │ │            │ │  Keil     │ │          │
+    └─────────────┘ └─────────────┘ └───────────┘ └──────────┘
+```
+
+**机器人制造机器人**：AI 从电路设计 → 仿真验证 → 固件部署 → 结构外壳，**全栈、全链、全自动**。
+
+---
+
 ## 🎯 一句话说清楚
 
 **Bifrost** 是一层"工程中继适配层"，夹在 AI Agent（Codex、Hermes 等）与真实工业软件（KiCad、Keil MDK、STM32CubeIDE、CCS、AutoCAD、Multisim、SolidWorks）之间，负责把自然语言任务翻译成结构化动作 → 执行 → 校验 → 收集结果。
@@ -210,12 +237,38 @@ python -m codex_plugin.mcp.server
 
 ## 🙏 致谢
 
-- [Agent Skills 开放标准](https://agentskills.io/) — 本项目的 Skill 格式遵循此标准
-- [Model Context Protocol](https://modelcontextprotocol.io/) — 本项目的工具接口基于 MCP
-- [KiCad](https://www.kicad.org/) / [STMicroelectronics](https://www.st.com/) / [Texas Instruments](https://www.ti.com/) / [Dassault Systèmes](https://www.solidworks.com/)
+### 上游项目（站在巨人肩膀上）
+
+本项目受益于以下开源项目的先驱工作：
+
+| 项目 | 领域 | 借鉴价值 |
+|------|------|---------|
+| **[NUEDC-STM32-MSPM0-SKILL](https://github.com/zww666-creater/NUEDC-STM32-MSPM0-SKILL)** | Codex Skill / 嵌入式 | Keil + CCS 双工作流 Codex Skill 范例 |
+| **[ccs1280-ti-embedded-workflow](https://github.com/logicalmove/ccs1280-ti-embedded-workflow)** | Codex Skill / TI | CCS 12.8.0 Codex Skill，TI C2000 系列 |
+| **[Solidworks-MCP](https://github.com/alisamsam/Solidworks-MCP)** | MCP Server / CAD | SolidWorks MCP Server，22 工具参考实现 |
+| **[pyswx](https://github.com/deloarts/pyswx)** | Python / CAD | SolidWorks API Python 包装器 |
+| **[SWAPI](https://github.com/skarpsill/SWAPI)** | AI 知识库 / CAD | AI-ready SolidWorks API 知识库 |
+| **[codestack](https://github.com/xarial/codestack)** | API 示例 / CAD | 最全面的 SolidWorks API 代码示例库 |
+| **[MCUQuickStart](https://github.com/Majie-xixi/MCUQuickStart)** | Python / 嵌入式 | Keil 工程 Python 生成器 |
+| **[keil-restart-tool](https://github.com/Masihtabaei/keil-restart-tool)** | Python / 嵌入式 | 外部 Python 操控 Keil µVision |
+| **[matlab-agentic-toolkit](https://github.com/matlab/matlab-agentic-toolkit)** | Agent 集成 / 工程 | MathWorks 官方，工业软件 Agent 集成黄金标准 |
+| **[Citadel](https://github.com/SethGammon/Citadel)** | Codex 操作层 | 持久记忆、意图路由、安全钩子 |
+| **[ruflo](https://github.com/ruvnet/ruflo)** | Agent Swarm / Hermes | 多 Agent 框架，原生 Codex + Hermes |
+| **[Hermes-Function-Calling](https://github.com/NousResearch/Hermes-Function-Calling)** | Hermes / LLM | Hermes 官方 function calling 示例 |
+| **[action-ccstudio-ide](https://github.com/uoohyo/action-ccstudio-ide)** | CI/CD / CCS | CCS headless GitHub Action |
+
+### 标准与协议
+
+- [Agent Skills 开放标准](https://agentskills.io/) — Skill 格式遵循此标准
+- [Model Context Protocol](https://modelcontextprotocol.io/) — 工具接口基于 MCP
+- [Conventional Commits](https://www.conventionalcommits.org/) — Commit 规范
+
+### 工业软件
+
+- [KiCad](https://www.kicad.org/) · [STMicroelectronics](https://www.st.com/) · [Texas Instruments](https://www.ti.com/) · [Dassault Systèmes](https://www.solidworks.com/) · [Autodesk](https://www.autodesk.com/) · [Arm Keil](https://www.keil.com/) · [NI Multisim](https://www.ni.com/)
 
 ---
 
 <p align="center">
-  <em>🌈 Bifrost — 桥接 AI 与工业，让每一行指令都落进现实。</em>
+  <em>🌈 Bifrost — 联合一体化，机器人制造机器人。桥接 AI 与工业，让每一行指令都落进现实。</em>
 </p>

@@ -169,10 +169,13 @@ class BaseAdapter(ABC):
 
 | Adapter | 主路径 | 备选路径 | 最后手段 |
 |---------|--------|---------|---------|
-| KiCad | pcbnew Python API | KiCad CLI (`kicad-cli`) | ❌ 不做 GUI |
-| STM32 | pyocd / stm32loader | STM32CubeProgrammer CLI | ❌ 不做 GUI |
-| TI | UniFlash CLI / DSLite | OpenOCD | ❌ 不做 GUI |
-| SolidWorks | COM (pywin32) | SolidWorks Macro API | ❌ 不做 GUI |
+| KiCad | pcbnew Python API | kicad-cli | ❌ 不做 GUI |
+| Keil MDK | UV4 CLI | CMSIS-DAP 调试器 | ❌ 不做 GUI |
+| STM32CubeIDE | Eclipse headless CLI | STM32CubeProgrammer CLI | ❌ 不做 GUI |
+| CCS | DSS (JavaScript) | Theia CLI / UniFlash CLI | ❌ 不做 GUI |
+| AutoCAD | accoreconsole CLI | COM (pywin32) | ❌ 不做 GUI |
+| Multisim | XML 文件解析 | COM (pywin32) | ❌ 不做 GUI |
+| SolidWorks | COM (pywin32) | Macro API (.swp) | ❌ 不做 GUI |
 
 ---
 

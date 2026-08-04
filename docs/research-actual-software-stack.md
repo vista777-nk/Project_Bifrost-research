@@ -10,12 +10,12 @@
 
 | # | 软件 | 版本 | 领域 | 优先级 |
 |---|------|------|------|:---:|
-| 1 | KiCad | 8.0.9 (x86_64) | PCB 设计 | Phase 2 |
-| 2 | Keil MDK | 5.39 (64bit) | ARM 嵌入式开发 | Phase 2 |
+| 1 | KiCad | 8.0.9 (x86_64) | PCB 设计 | Phase 1 |
+| 2 | Keil MDK | 5.39 (64bit) | ARM 嵌入式开发 | Phase 3 |
 | 3 | STM32CubeIDE | 1.17.0 (推荐) | STM32 集成开发 | Phase 2 |
-| 4 | Code Composer Studio | 12.8.1 (推荐) | TI 芯片开发 | Phase 3 |
-| 5 | AutoCAD | 2022 | CAD 绘图 | Phase 3 |
-| 6 | Multisim | 14.3 | 电路仿真 | Phase 4 |
+| 4 | Code Composer Studio | 12.8.1 (推荐) | TI 芯片开发 | Phase 2 |
+| 5 | AutoCAD | 2022 | CAD 绘图 | Phase 5 |
+| 6 | Multisim | 14.3 | 电路仿真 | Phase 1 |
 | 7 | SolidWorks | 2024 SP5 (64bit) | 3D CAD/机械设计 | Phase 4 |
 
 ---
@@ -175,10 +175,11 @@ doc.SaveAs3("part.step", 0, 0)  # swSaveAsCurrentVersion
 
 | 批次 | 软件 | 主导路径 | 关键依赖 |
 |:---:|------|---------|---------|
-| Phase 2 | KiCad | pcbnew Python API | KiCad Python 环境 |
-| Phase 2 | Keil MDK | UV4 CLI | Keil 安装路径 |
+| Phase 1 | KiCad | pcbnew Python API | KiCad Python 环境 |
+| Phase 1 | Multisim | XML 解析 | —（零依赖） |
 | Phase 2 | STM32CubeIDE | Eclipse headless CLI | CubeIDE 安装路径 |
-| Phase 3 | CCS | DSS + Theia CLI | CCS 安装路径 |
-| Phase 3 | AutoCAD | accoreconsole + COM | pywin32 |
-| Phase 4 | Multisim | XML 解析 | —（零依赖） |
+| Phase 2 | CCS | DSS + Theia CLI | CCS 安装路径 |
+| Phase 3 | Keil MDK | UV4 CLI | Keil 安装路径 |
+| Phase 4 | SolidWorks | COM | pywin32（仅 Windows） |
+| Phase 5 | AutoCAD | accoreconsole + COM | pywin32 |
 | Phase 4 | SolidWorks | COM | pywin32（仅 Windows） |
