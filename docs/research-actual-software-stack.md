@@ -135,18 +135,35 @@ doc = acad.Documents.Open("drawing.dwg")
 
 ## 6. Multisim 14.3
 
+> **2026-08-05 联网验证更新**：此前"主路径 = .ms14 XML 解析"的假设**已被推翻**。
+> `.ms14` 是 NI 专有格式，无证据表明可直接按 XML 解析。经验证的可行路径如下。
+
 | 路径 | 类型 | 稳定性 | 推荐 |
 |------|------|--------|:---:|
-| XML 文件解析 | 脚本 | ⭐⭐⭐ | 🥇 |
-| COM (Multisim.Application) | API | ⭐⭐⭐ | 🥈 |
+| COM Automation API（pywin32） | API | ⭐⭐⭐⭐ | 🥇 |
+| 命令行 netlist 仿真 | CLI | ⭐⭐⭐ | 🥈 |
 | LVM 导出（LabVIEW） | 互操作 | ⭐⭐ | 辅助 |
+| .ms14 直接解析 | 脚本 | ⭐ | ❌ 放弃（专有格式，非 XML） |
 
-**关键能力**：
-- Multisim 工程文件 (.ms14) 本质是 XML，可直接解析电路结构
-- COM 接口可读取仿真数据、导出网表
-- 网表可导出为 SPICE 格式
+**已验证的关键能力**（COM Automation API，经 NI 官方 KB 与开源项目 [Multisim-MCP](https://github.com/Last-emo-boy/Multisim-MCP) 双重验证）：
+- 打开/保存设计文件（.ms14 及 .ms8+ 旧格式）
+- 枚举元件/探针/输入/输出、修改元件参数、替换元件
+- 运行仿真（瞬态 / AC 扫描 / DC 工作点）、采集仿真输出数据
+- 导出电路图像
+- SPICE netlist 直通：不打开 .ms14，直接对内联 netlist 做仿真，适合程序化生成电路
 
-**环境检测**：`shutil.which("multisim.exe")`
+**命令行模式**：NI 官方文档确认存在（ni.com/docs → Multisim → Command Line），可基于 netlist 做批处理仿真，但能力远少于 COM API。
+
+**重要限制**：
+- 仅 Windows；若 Multisim COM 组件为 32-bit，必须用 32-bit Python 运行
+- COM 接口无官方完整文档，最佳参考是 Multisim-MCP 的 `com_adapter.py` 实现
+- 修改元件前需停止仿真；建议所有修改走 snapshot + save_as，不覆盖原设计文件
+
+**环境检测**：`win32com.client.Dispatch("Multisim.Application")` + `shutil.which("multisim.exe")`
+
+**借鉴资源**：
+- [Last-emo-boy/Multisim-MCP](https://github.com/Last-emo-boy/Multisim-MCP) — Multisim COM Automation 的 MCP Server（61 工具，pywin32，分层架构与本项目一致，含 snapshot/audit log 安全模式）
+- [hodini007/Elecsyn](https://github.com/hodini007/Elecsyn) — AI 生成 SPICE netlist 并导入 Multisim 的自动化代理
 
 ---
 
@@ -176,10 +193,9 @@ doc.SaveAs3("part.step", 0, 0)  # swSaveAsCurrentVersion
 | 批次 | 软件 | 主导路径 | 关键依赖 |
 |:---:|------|---------|---------|
 | Phase 1 | KiCad | pcbnew Python API | KiCad Python 环境 |
-| Phase 1 | Multisim | XML 解析 | —（零依赖） |
+| Phase 1 | Multisim | COM Automation API | pywin32（仅 Windows） |
 | Phase 2 | STM32CubeIDE | Eclipse headless CLI | CubeIDE 安装路径 |
 | Phase 2 | CCS | DSS + Theia CLI | CCS 安装路径 |
 | Phase 3 | Keil MDK | UV4 CLI | Keil 安装路径 |
 | Phase 4 | SolidWorks | COM | pywin32（仅 Windows） |
 | Phase 5 | AutoCAD | accoreconsole + COM | pywin32 |
-| Phase 4 | SolidWorks | COM | pywin32（仅 Windows） |

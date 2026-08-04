@@ -289,7 +289,6 @@ pip install -e ".[codex,stm32,solidworks]"
 
 - [Contributor Covenant](https://www.contributor-covenant.org/) 2.1
 - [Conventional Commits](https://www.conventionalcommits.org/) 1.0.0
-- [Project Prometheus CONVENTIONS.md](https://github.com/)（结构参考）
 
 ---
 

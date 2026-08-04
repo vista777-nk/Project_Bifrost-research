@@ -110,9 +110,13 @@ Skill → MCP Server → Core ← Adapters → 工业软件
 ```
 codex-relay/skills/
 ├── kicad-pcb/SKILL.md          # KiCad PCB 工作流
-├── stm32-flash/SKILL.md        # STM32 烧录工作流
-├── ti-flash/SKILL.md           # TI 烧录工作流
+├── multisim-reader/SKILL.md    # Multisim 电路读取/网表导出
+├── cubeide-build/SKILL.md      # STM32CubeIDE 编译/烧录
+├── ccs-flash/SKILL.md          # TI CCS 烧录/调试
+├── keil-build/SKILL.md         # Keil MDK 编译/烧录
 ├── solidworks-cad/SKILL.md     # SolidWorks CAD 工作流
+├── autocad-dwg/SKILL.md        # AutoCAD DWG 批处理
+├── stm32-flash/SKILL.md        # STM32 烧录（向后兼容，推荐 cubeide-build）
 └── relay-core/SKILL.md         # 通用中继工具（列出适配器、确认动作等）
 ```
 
@@ -174,7 +178,7 @@ class BaseAdapter(ABC):
 | STM32CubeIDE | Eclipse headless CLI | STM32CubeProgrammer CLI | ❌ 不做 GUI |
 | CCS | DSS (JavaScript) | Theia CLI / UniFlash CLI | ❌ 不做 GUI |
 | AutoCAD | accoreconsole CLI | COM (pywin32) | ❌ 不做 GUI |
-| Multisim | XML 文件解析 | COM (pywin32) | ❌ 不做 GUI |
+| Multisim | COM Automation API (pywin32) | netlist CLI 仿真 | ❌ 不做 GUI |
 | SolidWorks | COM (pywin32) | Macro API (.swp) | ❌ 不做 GUI |
 
 ---

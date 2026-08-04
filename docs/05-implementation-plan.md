@@ -6,9 +6,9 @@
 
 ---
 
-## Phase 0：设计完成（当前）
+## Phase 0：设计完成
 
-### 状态：🔄 进行中
+### 状态：✅ 已完成
 
 ### 任务清单
 
@@ -21,9 +21,9 @@
 | 0.5 | 工具接口设计 | `docs/03-tools-design.md` | ✅ |
 | 0.6 | 插件层设计 | `docs/04-plugin-design.md` | ✅ |
 | 0.7 | 实现计划 | `docs/05-implementation-plan.md` | ✅（本文件） |
-| 0.8 | 测试策略 | `docs/06-testing-strategy.md` | ⏳ |
-| 0.9 | KiCad CLI 调研 | `docs/research-kicad-cli.md` | ⏳ |
-| 0.10 | STM32 CLI 调研 | `docs/research-stm32-cli.md` | ⏳ |
+| 0.8 | 测试策略 | `docs/06-testing-strategy.md` | ✅ |
+| 0.9 | KiCad CLI 调研 | `docs/research-kicad-cli.md` | ✅ |
+| 0.10 | STM32 CLI 调研 | `docs/research-stm32-cli.md` | ✅ |
 
 ---
 
@@ -46,7 +46,7 @@
 | 1.7 | 实现 MCP Server | `codex-relay/codex_plugin/mcp/{server,tools,schemas}.py` | 3h | 实现 6 个工具，stdio 可启动 |
 | 1.8 | 创建 `plugin.json` + `.mcp.json` | `codex-relay/plugin.json` + `codex-relay/.mcp.json` | 0.5h | 符合 Agent Plugin 标准 |
 | 1.9 | 实现 KiCad adapter | `adapters/kicad/{adapter,actions_*,validators}.py` | 4h | 打开工程 / 导出 Gerber / 导出 BOM / DRC |
-| 1.10 | 实现 Multisim adapter | `adapters/multisim/adapter.py` | 2h | XML 解析电路 / 导出网表 |
+| 1.10 | 实现 Multisim adapter | `adapters/multisim/adapter.py` | 3h | COM Automation：读取电路 / 导出网表 / 运行仿真 |
 | 1.11 | 写 Skill 文档 | `codex-relay/skills/{kicad-pcb,multisim-reader,relay-core}/SKILL.md` | 2h | YAML frontmatter + 工作流 + 安全规则 |
 | 1.12 | 写单元测试 | `tests/test_core.py` + `tests/test_mock_adapter.py` | 2h | 覆盖率 > 80% |
 | 1.13 | 写集成测试 | `tests/test_mcp_server.py` | 2h | MCP Server 端到端测试通过 |
@@ -78,6 +78,8 @@ Codex 能操作 STM32CubeIDE 和 CCS：工程管理 → 编译 → 烧录 → �
 | 2.4 | 写集成测试 | `tests/test_stm32cubeide.py` + `tests/test_ccs.py` | 3h | 真实硬件测试 |
 
 ### Phase 2 总预估：~8.5h
+
+> **注**：`adapters/stm32/` 仅为向后兼容占位目录，不投入开发。自 Phase 2 起，STM32 烧录能力统一由 `adapters/stm32cubeide/`（STM32CubeProgrammer CLI / pyocd 路径）提供。
 
 ---
 

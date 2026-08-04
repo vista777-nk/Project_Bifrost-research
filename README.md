@@ -48,7 +48,7 @@
         ↓
   🌈  Bifrost  Core（统一数据模型 + 动作引擎 + 校验框架）
         ↓
-  🌈  Bifrost  Adapters（KiCad pcbnew / Keil UV4 / STM32CubeIDE / CCS / AutoCAD accoreconsole / Multisim XML / SolidWorks COM）
+  🌈  Bifrost  Adapters（KiCad pcbnew / Keil UV4 / STM32CubeIDE / CCS / AutoCAD accoreconsole / Multisim COM / SolidWorks COM）
         ↓
     真实工业软件
 ```
@@ -77,7 +77,7 @@ bifrost/                              ← 项目根（社区文档 + 许可证�
 │   ├── stm32cubeide/                 #     STM32CubeIDE 1.17（Eclipse CLI）
 │   ├── ccs/                          #     CCS 12.8（Theia CLI + DSS）
 │   ├── autocad/                      #     AutoCAD 2022（accoreconsole + COM）
-│   ├── multisim/                     #     Multisim 14.3（XML 解析 + COM）
+│   ├── multisim/                     #     Multisim 14.3（COM Automation API）
 │   └── solidworks/                   #     SolidWorks 2024 SP5（COM / Macro）
 │
 ├── tests/                            # 📁 统一测试
@@ -191,7 +191,7 @@ python -m codex_plugin.mcp.server
 | Phase | 软件 | 版本 | 集成路径 | 首批动作 |
 |:---:|------|------|---------|---------|
 | **P1** | **KiCad** | 8.0.9 | pcbnew Python API | 打开工程、导出 Gerber/BOM、DRC |
-| **P1** | **Multisim** | 14.3 | XML 解析 + COM | 读取电路、导出网表 |
+| **P1** | **Multisim** | 14.3 | COM Automation API | 读取电路、导出网表、仿真 |
 | **P2** | **STM32CubeIDE** | 1.17.0 | Eclipse CLI | 配置/编译/烧录 STM32 |
 | **P2** | **CCS** (TI) | 12.8.1 | Theia CLI + DSS | 识别设备、烧录、调试 TI 芯片 |
 | **P3** | **Keil MDK** | 5.39 | UV4 CLI | 编译工程、烧录、调试 |
@@ -222,7 +222,6 @@ python -m codex_plugin.mcp.server
 我们欢迎所有形式的贡献！请先阅读：
 
 - [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) — 社区行为准则
-- [`CONVENTIONS.md`](CONVENTIONS.md) — 项目规范与约定
 - [`docs/05-implementation-plan.md`](docs/05-implementation-plan.md) — 了解当前阶段
 
 ---
@@ -254,6 +253,7 @@ python -m codex_plugin.mcp.server
 | **[ruflo](https://github.com/ruvnet/ruflo)** | Agent Swarm / Hermes | 多 Agent 框架，原生 Codex + Hermes |
 | **[Hermes-Function-Calling](https://github.com/NousResearch/Hermes-Function-Calling)** | Hermes / LLM | Hermes 官方 function calling 示例 |
 | **[action-ccstudio-ide](https://github.com/uoohyo/action-ccstudio-ide)** | CI/CD / CCS | CCS headless GitHub Action |
+| **[Multisim-MCP](https://github.com/Last-emo-boy/Multisim-MCP)** | MCP Server / 电路仿真 | Multisim COM Automation 参考实现，61 工具 + snapshot/audit log 安全模式 |
 
 ### 标准与协议
 

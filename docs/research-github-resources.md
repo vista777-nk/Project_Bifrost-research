@@ -36,6 +36,13 @@
 | **[Majie-xixi/MCUQuickStart](https://github.com/Majie-xixi/MCUQuickStart)** | — | Python | STM32/Keil 项目生成器。Python 实现的 Keil 工程操作逻辑，可直接参考其 UV4 调用方式 |
 | **[Masihtabaei/keil-restart-tool](https://github.com/Masihtabaei/keil-restart-tool)** | — | Python | Python 工具控制 Keil µVision — 证明 Keil 可通过外部脚本操控 |
 
+### Multisim（2026-08-05 新增）
+
+| 项目 | Stars | 语言 | 为什么重要 |
+|------|:---:|------|-----------|
+| **[Last-emo-boy/Multisim-MCP](https://github.com/Last-emo-boy/Multisim-MCP)** | 12 | Python | **MCP Server for Multisim** — 61 个工具，pywin32 调用 COM Automation API。架构（MCP 层 → 会话/快照/审计 → COM 适配层）与 Bifrost 完全一致，且证明纯 Python 部分可跨平台测试 |
+| **[hodini007/Elecsyn](https://github.com/hodini007/Elecsyn)** | — | Python | AI 生成 SPICE netlist 并导入 Multisim 的自动化代理 — 验证 netlist 直通路径 |
+
 ### Codex 插件生态
 
 | 项目 | Stars | 语言 | 为什么重要 |
@@ -63,7 +70,7 @@
 | CCS | **4 个直接对口项目** | ⭐⭐⭐ | 有 Codex skill + Docker + CI Action |
 | Keil MDK | 2 个 Python 工具 | ⭐⭐ | UV4 CLI 调用有先例 |
 | AutoCAD | 较少 | ⭐⭐ | accoreconsole 路径需自行探索 |
-| Multisim | 极少 | ⭐ | XML 解析路径需自行开发 |
+| Multisim | **2 个直接对口项目** | ⭐⭐⭐ | 已有 COM Automation MCP Server 参考实现 |
 | SolidWorks | **5 个高价值项目** | ⭐⭐⭐⭐ | 有 MCP Server + Python 包装器 + API 知识库 |
 
 ---
@@ -88,11 +95,18 @@
 
 这两个项目证明了 Keil 可以通过外部 Python 脚本操控。提取 UV4.exe 的命令行模式。
 
-### 4. Codex 插件架构 → 对标 `matlab-agentic-toolkit`
+### 4. Multisim adapter → 基于 `Multisim-MCP`
+
+该项目已验证 Multisim COM Automation API 的完整能力（打开设计、枚举/修改元件、运行仿真、采集输出）。我们可以：
+- 参考其 `com_adapter.py` 的 COM 封装方式（进程管理、32-bit Python 约束）
+- 借鉴其 snapshot + audit log 安全模式（对应我们的"破坏性必确认"原则）
+- 复用其"纯 Python 工具与 COM 层分离"的测试策略
+
+### 5. Codex 插件架构 → 对标 `matlab-agentic-toolkit`
 
 MathWorks 官方出品的 Agent 工具包，是工业软件 + Agent 集成的黄金标准。其 MCP Server + Skill 的组织方式值得逐行学习。
 
-### 5. STM32CubeIDE → 参考 Eclipse headless build 通用模式
+### 6. STM32CubeIDE → 参考 Eclipse headless build 通用模式
 
 STM32CubeIDE 基于 Eclipse，headless build 语法通用。373 个 repo 中有大量 `.project`/`.cproject` 配置可参考。
 
@@ -102,7 +116,6 @@ STM32CubeIDE 基于 Eclipse，headless build 语法通用。373 个 repo 中有�
 
 | 软件 | 缺口 | 我们的机会 |
 |------|------|-----------|
-| **Multisim** | 无现有自动化项目 | 首创 Multisim XML→结构化数据 的 adapter |
 | **AutoCAD** | accoreconsole 自动化极少 | 首创 AutoCAD CLI 自动化 Codex skill |
 | **KiCad + Codex 集成** | 无现成 MCP Server | 我们可能是第一个做 KiCad MCP Server 的 |
 
@@ -110,7 +123,7 @@ STM32CubeIDE 基于 Eclipse，headless build 语法通用。373 个 repo 中有�
 
 ## 📎 行动计划
 
-1. **立即 fork 并研究**：`NUEDC-STM32-MSPM0-SKILL`、`Solidworks-MCP`、`matlab-agentic-toolkit`
+1. **立即 fork 并研究**：`NUEDC-STM32-MSPM0-SKILL`、`Solidworks-MCP`、`Multisim-MCP`、`matlab-agentic-toolkit`
 2. **提取可复用模块**：CCS DSS 脚本、SolidWorks COM 模式、Keil UV4 CLI 调用
 3. **对标架构**：`matlab-agentic-toolkit` 的 MCP Server + Skill 组织方式
 4. **在文档中引用**：在相关 adapter 的 README 和 SKILL.md 中致谢上游项目

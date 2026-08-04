@@ -164,7 +164,7 @@ Codex 路径:
 Hermes 路径:
   User → Hermes Model → GOAP Prompt (含 tools 定义)
                          ↓
-                       Hermes Tool Wrapper (hermes-relay/tools.py)
+                       Hermes Tool Wrapper (hermes-relay/hermes_tools/tools.py)
                          ↓
                        Core (根目录 core/)          ← 同一套！
                          ↓
@@ -173,7 +173,7 @@ Hermes 路径:
 
 **关键：Core 和 Adapters 完全复用。** 只变"调用协议层"。
 
-`hermes-relay/` 通过 `import sys; sys.path.insert(0, '../codex-relay')` 或 pip editable install 导入 `codex-relay` 的 Core 和 Adapters。
+`hermes-relay/` 通过将项目根目录加入 `sys.path`（已在 `hermes_tools/tools.py` 中实现）导入根目录的 `core/` 和 `adapters/`。
 
 ---
 
@@ -181,8 +181,10 @@ Hermes 路径:
 
 ### Phase H1：Hermes Tool Wrapper
 
+> 状态：✅ 骨架已实现于 `hermes-relay/hermes_tools/`，工具执行调度待 Core 完成后对接。
+
 ```python
-# hermes_integration/
+# hermes-relay/hermes_tools/
 # ├── __init__.py
 # ├── tools.py          # 工具定义 + 执行调度
 # ├── prompts.py        # 系统提示生成
