@@ -39,41 +39,49 @@ bifrost/                              ← 项目根（社区文档 + 许可证�
 ├── SECURITY.md                       #   安全策略
 ├── requirements.txt                  #   Python 依赖
 │
-├── codex-relay/                      # 📁 Codex 中继实现
+├── core/                             # 📁 核心引擎（框架无关，Codex + Hermes 共享）
+│   ├── domain.py                     #     数据模型
+│   ├── actions.py                    #     动作引擎
+│   ├── validators.py                 #     校验框架
+│   └── errors.py                     #     错误体系
+│
+├── adapters/                         # 📁 工业软件适配器（8 个，框架无关）
+│   ├── base.py                       #     BaseAdapter 抽象接口
+│   ├── kicad/                        #     KiCad 8.0.9（pcbnew Python API）
+│   ├── keil/                         #     Keil MDK 5.39（UV4 CLI）
+│   ├── stm32cubeide/                 #     STM32CubeIDE 1.17（Eclipse CLI）
+│   ├── ccs/                          #     CCS 12.8（Theia CLI + DSS）
+│   ├── autocad/                      #     AutoCAD 2022（accoreconsole + COM）
+│   ├── multisim/                     #     Multisim 14.3（XML 解析 + COM）
+│   └── solidworks/                   #     SolidWorks 2024 SP5（COM / Macro）
+│
+├── tests/                            # 📁 统一测试
+├── examples/                         # 📁 使用示例
+│
+├── codex-relay/                      # 📁 Codex 插件（仅 Codex 专属文件）
 │   ├── plugin.json                   #   Agent Plugin 清单
 │   ├── .mcp.json                     #   MCP Server 配置
-│   ├── skills/                       #   Skill 集合（每软件一个 skill）
-│   │   ├── kicad-pcb/SKILL.md
-│   │   ├── keil-build/SKILL.md
-│   │   ├── cubeide-build/SKILL.md
-│   │   ├── ccs-flash/SKILL.md
-│   │   ├── autocad-dwg/SKILL.md
-│   │   ├── multisim-reader/SKILL.md
-│   │   ├── solidworks-cad/SKILL.md
-│   │   └── relay-core/SKILL.md
-│   ├── mcp/                          #   MCP Server（Python）
-│   │   ├── server.py
-│   │   ├── tools.py
-│   │   └── schemas.py
-│   ├── core/                         #   核心引擎（零外部框架依赖）
-│   │   ├── domain.py                 #     数据模型
-│   │   ├── actions.py                #     动作引擎
-│   │   ├── validators.py             #     校验框架
-│   │   └── errors.py                 #     错误体系
-│   ├── adapters/                     #   工业软件适配器（8 个）
-│   │   ├── base.py                   #     BaseAdapter 抽象接口
-│   │   ├── kicad/                    #     KiCad 8.0.9（pcbnew Python API）
-│   │   ├── keil/                     #     Keil MDK 5.39（UV4 CLI）
-│   │   ├── stm32cubeide/             #     STM32CubeIDE 1.17（Eclipse CLI + 脚本）
-│   │   ├── ccs/                      #     CCS 12.8（Theia CLI + DSS）
-│   │   ├── autocad/                  #     AutoCAD 2022（accoreconsole + COM）
-│   │   ├── multisim/                 #     Multisim 14.3（XML 解析 + COM）
-│   │   └── solidworks/               #     SolidWorks 2024 SP5（COM / Macro）
-│   ├── examples/                     #   使用示例
-│   └── tests/                        #   测试
+│   ├── codex_plugin/                 #   Python 包（MCP Server）
+│   │   └── mcp/
+│   │       ├── server.py
+│   │       ├── tools.py
+│   │       └── schemas.py
+│   └── skills/                       #   Skill 集合（9 个 skill）
+│       ├── kicad-pcb/SKILL.md
+│       ├── keil-build/SKILL.md
+│       ├── cubeide-build/SKILL.md
+│       ├── ccs-flash/SKILL.md
+│       ├── autocad-dwg/SKILL.md
+│       ├── multisim-reader/SKILL.md
+│       ├── solidworks-cad/SKILL.md
+│       ├── stm32-flash/SKILL.md      #   向后兼容
+│       └── relay-core/SKILL.md
 │
-├── hermes-relay/                     # 📁 Hermes 中继实现（未来）
-│   └── (复用 codex-relay/core/ 和 adapters/，仅加薄包装层)
+├── hermes-relay/                     # 📁 Hermes 适配（仅 Hermes 专属文件）
+│   └── hermes_tools/
+│       ├── tools.py                  #   Hermes/OpenAI 工具定义
+│       ├── prompts.py                #   ChatML 系统提示生成
+│       └── goap_templates.py         #   GOAP 推理模板
 │
 └── docs/                             # 📁 技术文档体系（AI 可读版）
     ├── 00-overview.md … 09-hermes-integration.md

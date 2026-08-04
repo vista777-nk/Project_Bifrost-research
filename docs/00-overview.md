@@ -107,60 +107,33 @@
 ## 6. 项目文件结构速查
 
 ```
-bifrost/                              ← 项目根
-├── README.md                         #   项目主文档
-├── CODE_OF_CONDUCT.md                #   社区行为准则
-├── SECURITY.md                       #   安全策略
-├── requirements.txt                  #   Python 依赖
-├── .gitignore / .gitattributes       #   Git 配置
+bifrost/                              ← 项目根（共享 + 社区文档）
+├── README.md / SECURITY.md / ...      #   社区标准文档
+├── pyproject.toml                     #   共享包配置
+├── requirements.txt                   #   Python 依赖
 │
-├── codex-relay/                      # 📁 Codex 中继实现（当前开发主目录）
-│   ├── plugin.json                   #   Agent Plugin 清单
-│   ├── .mcp.json                     #   MCP Server 配置
-│   ├── skills/                       #   Skill 集合（每软件一个 skill 文件夹）
-│   │   ├── kicad-pcb/SKILL.md
-│   │   ├── stm32-flash/SKILL.md
-│   │   ├── ti-flash/SKILL.md
-│   │   └── solidworks-cad/SKILL.md
-│   ├── mcp/                          #   MCP Server
-│   │   ├── server.py                 #     入口
-│   │   ├── tools.py                  #     工具实现（调用 Core）
-│   │   └── schemas.py                #     JSON Schema 生成
-│   ├── core/                         #   核心引擎（零外部框架依赖）
-│   │   ├── domain.py                 #     Task / Action / ActionResult
-│   │   ├── actions.py                #     动作执行引擎
-│   │   ├── validators.py             #     校验框架
-│   │   └── errors.py                 #     错误体系
-│   ├── adapters/                     #   工业软件适配器
-│   │   ├── base.py                   #     BaseAdapter 抽象接口
-│   │   ├── kicad/                    #     KiCad（pcbnew Python API）
-│   │   ├── stm32/                    #     STM32（pyocd / CubeProgrammer）
-│   │   ├── ti/                       #     TI（UniFlash / DSLite）
-│   │   └── solidworks/               #     SolidWorks（COM 接口）
-│   ├── examples/                     #   使用示例
-│   └── tests/                        #   测试
-│       ├── test_core.py
-│       ├── test_tools.py
-│       ├── test_mcp_server.py
-│       └── test_integration.py
+├── core/                              # 📁 核心引擎（框架无关，Codex + Hermes 共享）
+│   ├── domain.py / actions.py / validators.py / errors.py
 │
-├── hermes-relay/                     # 📁 Hermes 中继实现（未来）
-│   └── (复用 codex-relay/core/ 和 adapters/，仅加 Hermes 薄包装层)
+├── adapters/                          # 📁 工业软件适配器（8 个，框架无关）
+│   ├── base.py                        #     BaseAdapter
+│   ├── kicad/ keil/ stm32cubeide/ ccs/
+│   ├── autocad/ multisim/ solidworks/ stm32/
 │
-└── docs/                             # 📁 本文档体系
-    ├── 00-overview.md                #   本文件
-    ├── 01-architecture.md            #   架构详解
-    ├── 02-data-models.md             #   统一数据模型
-    ├── 03-tools-design.md            #   工具接口设计
-    ├── 04-plugin-design.md           #   插件层设计
-    ├── 05-implementation-plan.md     #   分阶段实现计划
-    ├── 06-testing-strategy.md        #   测试策略
-    ├── 07-gap-analysis.md            #   调研与差距分析
-    ├── 08-agent-skills-standard.md   #   Agent Skills 开放标准
-    ├── 09-hermes-integration.md      #   Hermes 集成方案
-    ├── decisions/                    #   技术决策记录
-    └── research-*.md                 #   调研报告
-```
+├── tests/                             # 📁 统一测试
+├── examples/                          # 📁 示例
+│
+├── codex-relay/                       # 📁 Codex 专属
+│   ├── plugin.json / .mcp.json        #   Codex 插件配置
+│   ├── codex_plugin/mcp/              #   MCP Server（Python 包）
+│   └── skills/ (9 个 skill 文件夹)     #   Agent Skills
+│
+├── hermes-relay/                      # 📁 Hermes 专属
+│   └── hermes_tools/                  #   Function calling + GOAP
+│
+└── docs/                              # 📁 技术文档体系
+    ├── 00-overview.md … 09-hermes-integration.md
+    ├── decisions/ + research-*.md
 
 ---
 

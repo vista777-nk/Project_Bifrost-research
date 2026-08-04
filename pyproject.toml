@@ -1,0 +1,77 @@
+[project]
+name = "bifrost"
+version = "0.1.0"
+description = "Bifrost — 工业软件中继适配层。桥接 AI 与工业软件。"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [
+    { name = "Bifrost Maintainers" }
+]
+keywords = [
+    "kicad", "keil", "stm32", "ccs", "autocad", "multisim", "solidworks",
+    "industrial", "eda", "embedded", "cad", "automation",
+    "codex", "hermes", "mcp", "agent-skills"
+]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering",
+]
+
+# 共享依赖（core + adapters）
+dependencies = [
+    "pydantic>=2.10.0,<3.0.0",
+    "structlog>=24.4.0,<26.0.0",
+]
+
+[project.optional-dependencies]
+# Codex 插件（MCP Server）
+codex = ["mcp>=1.6.0,<2.0.0", "typer>=0.15.0,<1.0.0"]
+# Hermes 适配
+hermes = []
+# 各软件适配器依赖
+stm32 = ["pyocd>=0.36.0,<1.0.0"]
+solidworks = ["pywin32>=308; sys_platform == 'win32'"]
+autocad = ["pywin32>=308; sys_platform == 'win32'"]
+# 开发依赖
+dev = [
+    "pytest>=8.3.0,<9.0.0",
+    "pytest-mock>=3.14.0,<4.0.0",
+    "pytest-asyncio>=0.24.0,<1.0.0",
+    "pytest-cov>=6.0.0,<7.0.0",
+    "mypy>=1.13.0,<2.0.0",
+    "black>=24.10.0,<26.0.0",
+    "ruff>=0.8.0,<1.0.0",
+]
+
+[build-system]
+requires = ["setuptools>=75.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP", "B", "SIM"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+addopts = "-v --tb=short"
+markers = [
+    "hardware: 需要真实硬件",
+    "kicad: 需要 KiCad 安装",
+    "slow: 耗时较长的测试",
+    "integration: 集成测试",
+]

@@ -1,27 +1,22 @@
 """
 Hermes 工具包装层
 ================
-将 codex-relay Core 的工具包装为 Hermes/OpenAI 兼容的 function calling 格式。
+将 Core 的工具包装为 Hermes/OpenAI 兼容的 function calling 格式。
 
-Hermes 使用 OpenAI 兼容的 tool schema，通过系统提示中的 <tools> XML 标签
-注入工具定义，模型输出 <tool_call> XML 标签调用工具。
-
-参考：NousResearch/Hermes-Function-Calling 的 @tool 装饰器模式
+Core 和 Adapters 位于项目根目录，与 hermes-relay/ 同级。
 """
 
 from __future__ import annotations
 
-import importlib
 import json
 import sys
 from pathlib import Path
 from typing import Any, Callable
 
-# ── 跨目录导入 codex-relay 的 Core ──────────────────────────
-# hermes-relay/ 和 codex-relay/ 是兄弟目录
-_CODEX_RELAY_PATH = Path(__file__).resolve().parent.parent / "codex-relay"
-if str(_CODEX_RELAY_PATH) not in sys.path:
-    sys.path.insert(0, str(_CODEX_RELAY_PATH))
+# ── 导入项目根目录的 Core（core/ 和 adapters/ 在根） ──────────
+_ROOT = Path(__file__).resolve().parent.parent.parent  # hermes-relay/ → 根
+if str(_ROOT) not in sys.path:
+    sys.path.insert(0, str(_ROOT))
 
 # 延迟导入——Core 模块尚未实现时不会崩溃，只在使用时报错
 _core_available = False
@@ -289,8 +284,7 @@ def execute_hermes_tool_call(tool_name: str, arguments: dict[str, Any]) -> dict[
     """
     if not _core_available:
         raise ImportError(
-            "codex-relay Core 尚未实现。"
-            "请先完成 Phase 1 开发（参见 docs/05-implementation-plan.md）。"
+            "Core 尚未实现。请先完成 Phase 1 开发（参见 docs/05-implementation-plan.md）。"
         )
 
     # 工具名 → 处理函数映射
