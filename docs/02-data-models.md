@@ -64,7 +64,7 @@ class Task(BaseModel):
 
     task_id: str = Field(description="唯一任务 ID，格式: task-{uuid}")
     title: str = Field(description="任务简短标题，如'导出 KiCad Gerber 并检查'")
-    target_app: str = Field(description="目标软件: kicad | stm32 | ti | solidworks")
+    target_app: str = Field(description="目标软件: kicad | keil | stm32cubeide | ccs | autocad | multisim | solidworks")
     goal: str = Field(description="自然语言描述的任务目标")
     priority: int = Field(default=5, ge=1, le=10, description="1=最高, 10=最低")
     mode: ExecutionMode = Field(default=ExecutionMode.NORMAL)

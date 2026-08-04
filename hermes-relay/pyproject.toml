@@ -1,0 +1,54 @@
+[project]
+name = "bifrost-hermes"
+version = "0.1.0"
+description = "Bifrost — Hermes Relay：工业软件中继适配层 Hermes 集成（薄包装层）"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [
+    { name = "Bifrost Maintainers" }
+]
+keywords = [
+    "kicad", "stm32", "pcb", "firmware", "industrial",
+    "eda", "embedded", "solidworks", "cad", "automation",
+    "hermes", "function-calling", "goap", "agent-skills"
+]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Manufacturing",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Electronic Design Automation (EDA)",
+    "Topic :: Software Development :: Libraries :: Application Frameworks",
+]
+
+# 核心依赖仅根包 bifrost（core/ + adapters/）。
+# Hermes 模型推理依赖由用户按需安装，见下方 optional-dependencies。
+dependencies = [
+    "bifrost>=0.1.0",
+]
+
+[project.optional-dependencies]
+# HuggingFace Transformers 本地推理
+inference = [
+    "transformers>=4.45.0",
+    "torch>=2.4.0",
+]
+# llama.cpp GGUF 量化模型推理
+gguf = ["llama-cpp-python>=0.3.0"]
+# 结构化输出辅助
+structured = ["instructor>=1.5.0"]
+dev = [
+    "pytest>=8.3.0,<9.0.0",
+]
+
+[build-system]
+requires = ["setuptools>=75.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["hermes_tools*"]

@@ -27,7 +27,7 @@
 ### 输入
 ```json
 {
-  "filter": "string (optional) - 按名称过滤: 'kicad' | 'stm32' | 'ti' | 'solidworks' | 空=全部"
+  "filter": "string (optional) - 按名称过滤: 'kicad' | 'keil' | 'stm32cubeide' | 'ccs' | 'autocad' | 'multisim' | 'solidworks' | 空=全部"
 }
 ```
 
@@ -66,7 +66,7 @@
 ### 输入
 ```json
 {
-  "app": "string (必填) - 目标软件: kicad | stm32 | ti | solidworks",
+  "app": "string (必填) - 目标软件: kicad | keil | stm32cubeide | ccs | autocad | multisim | solidworks",
   "action_name": "string (必填) - 动作名称",
   "parameters": {
     "key": "value (任意 JSON，由 adapter 解释)"

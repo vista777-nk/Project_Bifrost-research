@@ -41,11 +41,11 @@ Skill → MCP Server → Core ← Adapters → 工业软件
 
 ## 2. 各层详细设计
 
-### 2.1 Core 层 (`codex-relay/core/`)
+### 2.1 Core 层 (`core/`)
 
 **职责**：提供所有不依赖具体软件、不依赖 Codex 的通用逻辑。
 
-> Core 位于 `codex-relay/core/`，但它是**框架无关**的——未来 Hermes 集成时直接从 `codex-relay/core/` 导入即可。
+> Core 位于根目录 `core/`，**框架无关**——Hermes 集成时直接从 `core/` 导入。
 
 **子模块**：
 
@@ -82,8 +82,8 @@ Skill → MCP Server → Core ← Adapters → 工业软件
 | `tools.py` | 每个工具的实现函数（调用 Core） |
 | `schemas.py` | 工具的输入输出 JSON Schema（给 MCP 协议用） |
 
-> **注意**：Core 和 Adapters 位于 `codex-relay/core/` 和 `codex-relay/adapters/`，属框架无关代码。
-> 未来 Hermes 集成时，`hermes-relay/` 将直接从 `codex-relay/core/` 和 `codex-relay/adapters/` 导入，不加修改。
+> **注意**：Core 和 Adapters 位于根目录 `core/` 和 `adapters/`，属框架无关代码。
+> 未来 Hermes 集成时，`hermes-relay/` 直接从根目录 `core/` 和 `adapters/` 导入。
 
 **工具列表（第一版）**：
 
@@ -110,9 +110,13 @@ Skill → MCP Server → Core ← Adapters → 工业软件
 ```
 codex-relay/skills/
 ├── kicad-pcb/SKILL.md          # KiCad PCB 工作流
-├── stm32-flash/SKILL.md        # STM32 烧录工作流
-├── ti-flash/SKILL.md           # TI 烧录工作流
+├── multisim-reader/SKILL.md    # Multisim 电路读取/网表导出
+├── cubeide-build/SKILL.md      # STM32CubeIDE 编译/烧录
+├── ccs-flash/SKILL.md          # TI CCS 烧录/调试
+├── keil-build/SKILL.md         # Keil MDK 编译/烧录
 ├── solidworks-cad/SKILL.md     # SolidWorks CAD 工作流
+├── autocad-dwg/SKILL.md        # AutoCAD DWG 批处理
+├── stm32-flash/SKILL.md        # STM32 烧录（向后兼容，推荐 cubeide-build）
 └── relay-core/SKILL.md         # 通用中继工具（列出适配器、确认动作等）
 ```
 
@@ -145,7 +149,7 @@ description: KiCad PCB 工作流 — 打开工程、导出 Gerber/BOM、运行 D
 - 连续 3 次重试失败时
 ```
 
-### 2.4 Adapter 层 (`codex-relay/adapters/`)
+### 2.4 Adapter 层 (`adapters/`)
 
 **职责**：每个 adapter 实现统一的 `BaseAdapter` 接口，对接具体工业软件。
 
@@ -169,10 +173,13 @@ class BaseAdapter(ABC):
 
 | Adapter | 主路径 | 备选路径 | 最后手段 |
 |---------|--------|---------|---------|
-| KiCad | pcbnew Python API | KiCad CLI (`kicad-cli`) | ❌ 不做 GUI |
-| STM32 | pyocd / stm32loader | STM32CubeProgrammer CLI | ❌ 不做 GUI |
-| TI | UniFlash CLI / DSLite | OpenOCD | ❌ 不做 GUI |
-| SolidWorks | COM (pywin32) | SolidWorks Macro API | ❌ 不做 GUI |
+| KiCad | pcbnew Python API | kicad-cli | ❌ 不做 GUI |
+| Keil MDK | UV4 CLI | CMSIS-DAP 调试器 | ❌ 不做 GUI |
+| STM32CubeIDE | Eclipse headless CLI | STM32CubeProgrammer CLI | ❌ 不做 GUI |
+| CCS | DSS (JavaScript) | Theia CLI / UniFlash CLI | ❌ 不做 GUI |
+| AutoCAD | accoreconsole CLI | COM (pywin32) | ❌ 不做 GUI |
+| Multisim | COM Automation API (pywin32) | netlist CLI 仿真 | ❌ 不做 GUI |
+| SolidWorks | COM (pywin32) | Macro API (.swp) | ❌ 不做 GUI |
 
 ---
 

@@ -285,43 +285,30 @@ Hermes 适配不是"把插件移植过去"，而是：
 
 ## 7. 修正后的推荐项目结构
 
-```bifrost/                              ← 项目根（社区文档 + 双轨中继层）
-├── README.md                         #   项目主文档
-├── CODE_OF_CONDUCT.md                #   社区行为准则
-├── SECURITY.md                       #   安全策略
-├── requirements.txt                  #   Python 依赖
-├── .gitignore / .gitattributes       #   Git 配置
+```
+bifrost/                              ← 项目根（社区文档 + 共享核心）
+├── README.md / CODE_OF_CONDUCT.md / SECURITY.md
+├── pyproject.toml / requirements.txt
 │
-├── codex-relay/                      # 📁 Codex 中继实现
+├── core/                             # 📁 核心引擎（框架无关，Codex + Hermes 共享）
+│   ├── domain.py / actions.py / validators.py / errors.py
+│
+├── adapters/                         # 📁 工业软件适配器（8 个）
+│   ├── base.py
+│   ├── kicad/ multisim/ stm32cubeide/ ccs/
+│   └── keil/ autocad/ solidworks/ stm32/
+│
+├── tests/                            # 📁 统一测试
+├── examples/                         # 📁 使用示例
+│
+├── codex-relay/                      # 📁 Codex 专属
 │   ├── plugin.json                   #   Agent Plugin 清单
 │   ├── .mcp.json                     #   MCP Server 配置
-│   ├── skills/                       #   Skill 集合（每软件一个 skill 文件夹）
-│   │   ├── kicad-pcb/SKILL.md
-│   │   ├── stm32-flash/SKILL.md
-│   │   ├── ti-flash/SKILL.md
-│   │   ├── solidworks-cad/SKILL.md
-│   │   └── relay-core/SKILL.md
-│   ├── codex_plugin/                 #   Python 包（MCP Server 实现）
-│   │   ├── __init__.py
-│   │   ├── mcp/server.py
-│   │   ├── mcp/tools.py
-│   │   └── mcp/schemas.py
-│   ├── core/                         #   核心引擎（框架无关）
-│   │   ├── domain.py
-│   │   ├── actions.py
-│   │   ├── validators.py
-│   │   └── errors.py
-│   ├── adapters/                     #   工业软件适配器
-│   │   ├── base.py
-│   │   ├── kicad/
-│   │   ├── stm32/
-│   │   ├── ti/
-│   │   └── solidworks/
-│   ├── tests/
-│   └── examples/
+│   ├── skills/                       #   9 个 skill 文件夹（每软件一个）
+│   └── codex_plugin/mcp/             #   MCP Server 实现（server/tools/schemas）
 │
-├── hermes-relay/                     # 📁 Hermes 中继实现（未来）
-│   └── (薄包装层，复用 codex-relay/core/ 和 adapters/)
+├── hermes-relay/                     # 📁 Hermes 专属（薄包装层）
+│   └── hermes_tools/                 #   tools.py / prompts.py / goap_templates.py
 │
 └── docs/                             # 📁 技术文档体系
     ├── 00-overview.md … 09-hermes-integration.md
@@ -331,147 +318,37 @@ Hermes 适配不是"把插件移植过去"，而是：
 
 ---
 
-## 8. 修正后的 plugin.json（Agent Plugin 格式）
+## 8. 修正后的格式落地位置
 
-```json
-{
-  "$schema": "https://agentskills.io/spec/agent-plugin/v1.json",
-  "name": "codex-relay",
-  "version": "0.1.0",
-  "description": "工业软件中继适配层 — 让 AI Agent 安全稳定地操作 KiCad、STM32、TI 和 SolidWorks",
-  "author": {
-    "name": "Your Name"
-  },
-  "homepage": "https://github.com/xxx/codex-relay",
-  "repository": "https://github.com/xxx/codex-relay",
-  "license": "MIT",
-  "keywords": [
-    "kicad",
-    "stm32",
-    "pcb",
-    "firmware",
-    "industrial",
-    "eda",
-    "embedded",
-    "solidworks",
-    "cad",
-    "automation"
-  ],
-  "extensions": {
-    "com.openai": {
-      "skills": "./skills/",
-      "mcpServers": "./.mcp.json",
-      "interface": {
-        "displayName": "Codex Relay",
-        "shortDescription": "工业软件中继适配层",
-        "longDescription": "让 Codex 安全稳定地调用 KiCad（PCB设计/DRC/Gerber导出）、STM32（固件烧录/校验）、TI（芯片烧录）和 SolidWorks（CAD操作）等工业软件。所有操作结构化、可校验、可追溯。",
-        "developerName": "Your Name",
-        "category": "Developer Tools",
-        "capabilities": ["Interactive", "Read", "Write"],
-        "defaultPrompt": "导出 KiCad 工程的 Gerber 文件并运行 DRC 检查",
-        "brandColor": "#2563EB",
-        "composerIcon": "./assets/icon.png",
-        "logo": "./assets/logo.png"
-      }
-    }
-  }
-}
-```
+修正后的 plugin.json（Agent Plugin 格式）、SKILL.md 格式（YAML frontmatter + Markdown body + GOAP 模板）和 `.mcp.json` 配置，已并入 `docs/04-plugin-design.md` 作为**唯一权威定义**，本文不再重复，以避免两处定义漂移。
 
----
-
-## 9. 修正后的 SKILL.md 格式
-
-```markdown
----
-name: kicad-workflows
-description: KiCad PCB 工作流 — 打开工程、导出 Gerber/BOM、运行 DRC、收集产物。当用户需要操作 KiCad 或处理 PCB 设计文件时使用。
----
-
-# KiCad 工作流
-
-## 适用场景
-- 用户提到 KiCad、PCB、Gerber、DRC、BOM、电路板
-- 用户需要导出 PCB 生产文件
-- 用户需要检查 PCB 设计规则
-
-## 前置条件
-- KiCad 8.0+ 已安装
-- 工程文件 (.kicad_pro / .kicad_pcb) 存在
-
-## 标准工作流
-
-### W1: 导出 Gerber + DRC 检查
-1. `list_adapters(filter="kicad")` — 确认 KiCad 可用
-2. `run_action(app="kicad", action_name="open_project", parameters={"project_path": "<用户提供>"})`
-3. `run_action(app="kicad", action_name="export_gerber", parameters={"output_dir": "<自动生成>"})`
-4. `run_action(app="kicad", action_name="run_drc", parameters={})`
-5. `validate_result(action_id="<步骤3的action_id>")`
-6. 向用户报告结果
-
-### W2: 导出 BOM
-...
-
-## 安全规则
-- ⚠️ DRC 发现错误时必须告知用户，不要自动忽略
-- ⚠️ 覆盖已有文件前需确认
-- ✅ 导出只读操作可以自动执行
-
-## GOAP 推理模板（Hermes 兼容）
-<scratch_pad>
-Goal: {用户目标}
-Actions:
-  - adapter_status = functions.list_adapters(filter="{目标软件}")
-  - result = functions.run_action(app="{目标软件}", action_name="{动作}", ...)
-  - validation = functions.validate_result(action_id=result.action_id)
-Observation: {执行结果}
-Reflection: {分析}
-</scratch_pad>
-```
-
----
-
-## 10. 修正后的 `.mcp.json`
-
-```json
-{
-  "mcpServers": {
-    "codex-relay": {
-      "command": "python",
-      "args": ["-m", "codex_relay.mcp.server"],
-      "env": {
-        "CODEX_RELAY_HOME": "${pluginRoot}"
-      }
-    }
-  }
-}
-```
+目录结构已按"根目录共享 `core/` + `adapters/`"方案实际落地（见根 `README.md` 架构图与本文第 7 节）。
 
 ---
 
 ## 11. 分步修正行动计划
 
-### 立即执行（重构现有文档）
+### 文档重构（A 类）——已全部完成 ✅
 
-| 序号 | 任务 | 影响文件 |
-|------|------|---------|
-| A1 | 更新 `docs/04-plugin-design.md` — 修正插件清单格式为 Agent Plugin 标准 | docs/04-plugin-design.md |
-| A2 | 更新 `docs/04-plugin-design.md` — 修正 SKILL.md 为 YAML frontmatter + Markdown | docs/04-plugin-design.md |
-| A3 | 更新 `docs/00-overview.md` — 更新目录结构为修正版 | docs/00-overview.md |
-| A4 | 新增 `docs/07-gap-analysis.md` — 本调研报告 | docs/07-gap-analysis.md |
-| A5 | 新增 `docs/08-agent-skills-standard.md` — Agent Skills 开放标准参考 | docs/08-agent-skills-standard.md |
-| A6 | 新增 `docs/09-hermes-integration.md` — Hermes GOAP 集成方案 | docs/09-hermes-integration.md |
+| 序号 | 任务 | 状态 |
+|------|------|:---:|
+| A1 | 更新 `docs/04-plugin-design.md` — 插件清单格式为 Agent Plugin 标准 | ✅ |
+| A2 | 更新 `docs/04-plugin-design.md` — SKILL.md 为 YAML frontmatter + Markdown | ✅ |
+| A3 | 更新 `docs/00-overview.md` — 目录结构为修正版 | ✅ |
+| A4 | 新增 `docs/07-gap-analysis.md` — 本调研报告 | ✅ |
+| A5 | 新增 `docs/08-agent-skills-standard.md` — Agent Skills 开放标准参考 | ✅ |
+| A6 | 新增 `docs/09-hermes-integration.md` — Hermes GOAP 集成方案 | ✅ |
 
-### 后续编码阶段应用
+### 编码阶段应用（B 类）
 
-| 序号 | 任务 |
-|------|------|
-| B1 | 创建根目录 `plugin.json`（Agent Plugin 格式） |
-| B2 | 创建 `.mcp.json` |
-| B3 | 重构目录：`codex_plugin/mcp/` → `mcp/`，`codex_plugin/skills/` → `skills/` |
-| B4 | 每个软件拆为独立 skill 文件夹 |
-| B5 | SKILL.md 全部加 YAML frontmatter |
-| B6 | 实现 skill 元数据提取器（供 MCP Server `list_skills` 工具使用） |
+| 序号 | 任务 | 状态 |
+|------|------|:---:|
+| B1 | 创建 `codex-relay/plugin.json`（Agent Plugin 格式） | ⏳ Phase 1（任务 1.8） |
+| B2 | 创建 `codex-relay/.mcp.json` | ⏳ Phase 1（任务 1.8） |
+| B3 | 目录落地：`core/`、`adapters/` 置于项目根目录共享 | ✅ 已完成 |
+| B4 | 每个软件拆为独立 skill 文件夹（9 个） | ✅ 目录已建，SKILL.md 内容待写 |
+| B5 | SKILL.md 全部加 YAML frontmatter | ⏳ Phase 1（任务 1.11） |
+| B6 | 实现 skill 元数据提取器（供渐进式发现使用） | ⏳ Phase 1 后续 |
 
 ---
 

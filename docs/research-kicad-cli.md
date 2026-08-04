@@ -53,20 +53,9 @@ plot_options.SetPlotFrameRef(False)
 
 ### 2.3 运行 DRC
 
-```python
-import pcbnew
-
-board = pcbnew.LoadBoard("project.kicad_pcb")
-
-# 运行设计规则检查
-drc = pcbnew.DRC()
-drc.RunDRC(board)
-
-# 获取结果
- violations = drc.GetViolations()
- for v in violations:
-     print(v.GetText())
-```
+> ⚠️ **2026-08-05 验证修正**：KiCad 8 的 pcbnew **没有公开稳定的 DRC Python 接口**
+>（此前示例中的 `pcbnew.DRC()` 并不存在）。DRC 请走 kicad-cli（见 §3.1），
+> 其 `--format json` 输出即为结构化违规列表，效果等价且更稳定。
 
 ### 2.4 导出 BOM
 
@@ -91,18 +80,21 @@ for footprint in board.GetFootprints():
 
 ### 3.1 可用命令
 
+> ✅ 以下语法已对照 KiCad 8.0 官方 CLI 文档逐条验证（2026-08-05）。
+
 ```bash
-# 导出 Gerber
-kicad-cli pcb export gerber --output-dir output/gerber/ project.kicad_pcb
+# 导出 Gerber（每层一个文件，用于打样；注意是 gerbers 复数；
+# 单数 gerber 是把多层合并到单个文件，用途不同，勿混淆）
+kicad-cli pcb export gerbers -o output/gerber/ project.kicad_pcb
 
-# 导出 BOM
-kicad-cli sche export bom --output output/bom.csv project.kicad_sch
+# 导出 BOM（注意是 sch 不是 sche）
+kicad-cli sch export bom -o output/bom.csv project.kicad_sch
 
-# 运行 DRC
-kicad-cli pcb drc --output drc_report.txt project.kicad_pcb
+# 运行 DRC（JSON 结构化输出；--exit-code-violations 使有违规时退出码为 5，CI 友好）
+kicad-cli pcb drc --format json --severity-all --exit-code-violations -o drc_report.json project.kicad_pcb
 
 # 导出 3D 模型
-kicad-cli pcb export step --output project.step project.kicad_pcb
+kicad-cli pcb export step -o project.step project.kicad_pcb
 ```
 
 ### 3.2 优势
@@ -129,7 +121,7 @@ kicad-cli pcb export step --output project.step project.kicad_pcb
 | `open_project` | pcbnew API | 需要把 board 对象保留在内存 |
 | `export_gerber` | 二者皆可 | CLI 更简单，API 更灵活 |
 | `export_bom` | CLI (`kicad-cli sche export bom`) | 最直接 |
-| `run_drc` | API | 可以结构化解析违规列表 |
+| `run_drc` | CLI（`kicad-cli pcb drc --format json`） | KiCad 8 pcbnew 无公开 DRC 接口；JSON 输出即可结构化解析 |
 | `collect_artifacts` | 文件系统遍历 | 不依赖 KiCad |
 | `get_project_info` | API + 文件解析 | API 拿 board 数据，文件解析拿工程配置 |
 

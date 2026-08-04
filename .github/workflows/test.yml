@@ -1,0 +1,23 @@
+name: Tests
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      # 根包 bifrost（core/ + adapters/）+ 开发依赖
+      - run: pip install -e ".[dev]"
+      # COM 类 adapter（SolidWorks/AutoCAD/Multisim）的测试仅应在 windows runner 上运行，
+      # 需用 pytest 标记（如 @pytest.mark.hardware 或自定义 marker）隔离；
+      # ubuntu runner 永远不执行依赖 pywin32 的测试。
+      - run: pytest tests/ -v -m "not hardware"

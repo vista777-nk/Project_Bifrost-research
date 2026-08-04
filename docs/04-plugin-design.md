@@ -12,29 +12,34 @@
 Codex 插件位于 `codex-relay/` 目录下，包含三层：
 
 ```
-codex-relay/                         ← Codex 插件根目录
-├── plugin.json                      # Agent Plugin 清单（根目录）
+codex-relay/                         ← Codex 插件根目录（仅 Codex 专属文件）
+├── plugin.json                      # Agent Plugin 清单
 ├── .mcp.json                        # MCP Server 配置（独立文件）
-├── skills/                          # Skill 集合（每工业软件一个 skill 文件夹）
+├── skills/                          # Skill 集合（9 个 skill 文件夹）
 │   ├── kicad-pcb/SKILL.md           #   YAML frontmatter + Markdown
-│   ├── stm32-flash/SKILL.md
-│   ├── ti-flash/SKILL.md
+│   ├── multisim-reader/SKILL.md
+│   ├── cubeide-build/SKILL.md
+│   ├── ccs-flash/SKILL.md
+│   ├── keil-build/SKILL.md
 │   ├── solidworks-cad/SKILL.md
+│   ├── autocad-dwg/SKILL.md
+│   ├── stm32-flash/SKILL.md         #   向后兼容
 │   └── relay-core/SKILL.md          #   通用中继工具
-├── codex_plugin/                    # Python 包（MCP Server 实现）
-│   ├── __init__.py
-│   ├── mcp/
-│   │   ├── server.py                #   MCP Server 入口
-│   │   ├── tools.py                 #   工具实现
-│   │   └── schemas.py               #   JSON Schema 生成
-│   └── skills/                      #   （旧 skill 路径，待迁移至 ../skills/）
-├── core/                            # 核心引擎（框架无关，hermes-relay 可复用）
-├── adapters/                        # 软件适配器
-├── tests/
-└── examples/
+└── codex_plugin/                    # Python 包（MCP Server 实现）
+    ├── __init__.py
+    └── mcp/
+        ├── server.py                #   MCP Server 入口
+        ├── tools.py                 #   工具实现
+        └── schemas.py               #   JSON Schema 生成
+
+项目根目录（框架无关，Codex + Hermes 共享）：
+├── core/                            # 核心引擎（domain/actions/validators/errors）
+├── adapters/                        # 软件适配器（8 个）
+├── tests/                           # 统一测试
+└── examples/                        # 使用示例
 ```
 
-> **关键设计**：`core/` 和 `adapters/` 位于 `codex-relay/` 下但**不依赖 Codex**。未来 `hermes-relay/` 直接从它们导入。
+> **关键设计**：`core/` 和 `adapters/` 位于**项目根目录**，不依赖 Codex。`codex_plugin` 与 `hermes-relay/` 均直接从根目录导入它们。
 
 ---
 
@@ -51,8 +56,8 @@ codex-relay/                         ← Codex 插件根目录
   "author": {
     "name": "项目作者"
   },
-  "homepage": "https://github.com/xxx/bifrost",
-  "repository": "https://github.com/xxx/bifrost",
+  "homepage": "https://github.com/vista777-nk/Project_Bifrost-research",
+  "repository": "https://github.com/vista777-nk/Project_Bifrost-research",
   "license": "MIT",
   "keywords": [
     "kicad", "stm32", "pcb", "firmware",
@@ -221,11 +226,19 @@ def register_all_tools(server: Server):
 codex-relay/skills/
 ├── kicad-pcb/                     # KiCad PCB 工作流
 │   └── SKILL.md
-├── stm32-flash/                   # STM32 烧录工作流
+├── multisim-reader/               # Multisim 电路读取/网表导出
 │   └── SKILL.md
-├── ti-flash/                      # TI 烧录工作流
+├── cubeide-build/                 # STM32CubeIDE 编译/烧录
+│   └── SKILL.md
+├── ccs-flash/                     # TI CCS 烧录/调试
+│   └── SKILL.md
+├── keil-build/                    # Keil MDK 编译/烧录
 │   └── SKILL.md
 ├── solidworks-cad/                # SolidWorks CAD 工作流
+│   └── SKILL.md
+├── autocad-dwg/                   # AutoCAD DWG 批处理
+│   └── SKILL.md
+├── stm32-flash/                   # STM32 烧录（向后兼容）
 │   └── SKILL.md
 └── relay-core/                    # 通用中继工具
     └── SKILL.md
@@ -312,10 +325,10 @@ description: Bifrost 通用中继操作 — 列出适配器、确认高风险动
 ```
 codex-relay/codex_plugin/mcp/server.py
   →  import codex_plugin.mcp.tools
-      →  import core.actions.ActionExecutor    # codex-relay/core/
+      →  import core.actions.ActionExecutor    # 根目录 core/
       →  import core.validators.ResultValidator
       →  import core.domain                    # 所有 pydantic 数据模型
-      →  import adapters.base                  # codex-relay/adapters/
+      →  import adapters.base                  # 根目录 adapters/
 
 codex-relay/codex_plugin/mcp/schemas.py
   →  import core.domain                        # 用于生成 JSON Schema

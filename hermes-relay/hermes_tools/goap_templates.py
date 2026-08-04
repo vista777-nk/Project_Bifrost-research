@@ -49,32 +49,86 @@ Observation: <fill after each tool execution>
 Reflection: <evaluate: all steps complete? any DRC errors? files present and non-empty?>
 </scratch_pad>""",
 
-    "stm32-flash": """## STM32 Flash GOAP Template
+    "keil-build": """## Keil MDK Build GOAP Template
 
 <scratch_pad>
 Goal: {user_goal}
 Actions:
-  - adapter_status = functions.list_adapters(filter="stm32")
-  - device_info = functions.run_action(app="stm32", action_name="identify_device", parameters={{}})
-  - preview = functions.preview_action(app="stm32", action_name="flash_firmware", parameters={params})
-  - ⚠️ flash_result = functions.run_action(app="stm32", action_name="flash_firmware", parameters={params})
-  - verify = functions.run_action(app="stm32", action_name="verify_flash", parameters={{}})
+  - adapter_status = functions.list_adapters(filter="keil")
+  - build_result = functions.run_action(app="keil", action_name="build_project", parameters={{"project_path": "{project_path}", "target": "{target}"}})
+  - ⚠️ flash_result = functions.run_action(app="keil", action_name="flash_firmware", parameters={params})
+  - logs = functions.collect_logs(action_id=flash_result.action_id)
+Observation: <fill after each tool execution>
+Reflection: <evaluate: build successful? flash confirmed by user? verify passed?>
+</scratch_pad>""",
+
+    "cubeide-build": """## STM32CubeIDE Build GOAP Template
+
+<scratch_pad>
+Goal: {user_goal}
+Actions:
+  - adapter_status = functions.list_adapters(filter="stm32cubeide")
+  - config_result = functions.run_action(app="stm32cubeide", action_name="import_project", parameters={{"project_path": "{project_path}"}})
+  - build_result = functions.run_action(app="stm32cubeide", action_name="build_project", parameters={{"target": "{target}"}})
+  - ⚠️ flash_result = functions.run_action(app="stm32cubeide", action_name="flash_firmware", parameters={params})
+  - logs = functions.collect_logs(action_id=flash_result.action_id)
+Observation: <fill after each tool execution>
+Reflection: <evaluate: config loaded? build successful? flash confirmed? verify passed?>
+</scratch_pad>""",
+
+    "ccs-flash": """## CCS (Code Composer Studio) Flash GOAP Template
+
+<scratch_pad>
+Goal: {user_goal}
+Actions:
+  - adapter_status = functions.list_adapters(filter="ccs")
+  - device_info = functions.run_action(app="ccs", action_name="identify_device", parameters={{}})
+  - build_result = functions.run_action(app="ccs", action_name="build_project", parameters={{"project_path": "{project_path}"}})
+  - ⚠️ flash_result = functions.run_action(app="ccs", action_name="flash_firmware", parameters={params})
+  - verify = functions.run_action(app="ccs", action_name="verify_flash", parameters={{}})
+Observation: <fill after each tool execution>
+Reflection: <evaluate: device identified? build successful? flash confirmed? verify passed?>
+</scratch_pad>""",
+
+    "stm32-flash": """## STM32 Flash GOAP Template (Legacy — use keil-build or cubeide-build)
+
+<scratch_pad>
+Goal: {user_goal}
+Actions:
+  - adapter_status = functions.list_adapters(filter="stm32cubeide")
+  - device_info = functions.run_action(app="stm32cubeide", action_name="identify_device", parameters={{}})
+  - preview = functions.preview_action(app="stm32cubeide", action_name="flash_firmware", parameters={params})
+  - ⚠️ flash_result = functions.run_action(app="stm32cubeide", action_name="flash_firmware", parameters={params})
+  - verify = functions.run_action(app="stm32cubeide", action_name="verify_flash", parameters={{}})
   - logs = functions.collect_logs(action_id=flash_result.action_id)
 Observation: <fill after each tool execution>
 Reflection: <evaluate: device identified? flash confirmed by user? verify passed?>
 </scratch_pad>""",
 
-    "ti-flash": """## TI Flash GOAP Template
+    "autocad-dwg": """## AutoCAD DWG GOAP Template
 
 <scratch_pad>
 Goal: {user_goal}
 Actions:
-  - adapter_status = functions.list_adapters(filter="ti")
-  - device_info = functions.run_action(app="ti", action_name="identify_device", parameters={{}})
-  - ⚠️ flash_result = functions.run_action(app="ti", action_name="flash_firmware", parameters={params})
-  - verify = functions.run_action(app="ti", action_name="verify_flash", parameters={{}})
+  - adapter_status = functions.list_adapters(filter="autocad")
+  - script_result = functions.run_action(app="autocad", action_name="run_script", parameters={{"script_path": "{script_path}"}})
+  - export_result = functions.run_action(app="autocad", action_name="{action_name}", parameters={params})
+  - validation = functions.validate_result(action_id=export_result.action_id)
 Observation: <fill after each tool execution>
-Reflection: <evaluate: device identified? flash confirmed? verify passed?>
+Reflection: <evaluate: script executed? export complete? files valid?>
+</scratch_pad>""",
+
+    "multisim-reader": """## Multisim Reader GOAP Template
+
+<scratch_pad>
+Goal: {user_goal}
+Actions:
+  - adapter_status = functions.list_adapters(filter="multisim")
+  - circuit_data = functions.run_action(app="multisim", action_name="read_circuit", parameters={{"file_path": "{file_path}"}})
+  - export_result = functions.run_action(app="multisim", action_name="{action_name}", parameters={params})
+  - logs = functions.collect_logs(action_id=export_result.action_id)
+Observation: <fill after each tool execution>
+Reflection: <evaluate: circuit read successfully? netlist exported? data valid?>
 </scratch_pad>""",
 
     "solidworks-cad": """## SolidWorks CAD GOAP Template

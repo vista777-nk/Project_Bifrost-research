@@ -137,31 +137,41 @@ skills/
 │   └── SKILL.md        # name: kicad-pcb
 │                        # description: KiCad PCB 设计工作流 — 导出 Gerber、BOM、
 │                        #   DRC 检查、产物收集。触发条件：用户提到 KiCad/PCB/Gerber。
-├── stm32-flash/
-│   └── SKILL.md        # name: stm32-flash
-│                        # description: STM32 固件烧录 — 识别设备、烧录、校验、
-│                        #   读取日志。触发条件：用户提到 STM32/烧录/固件。
-├── ti-flash/
-│   └── SKILL.md        # name: ti-flash
-│                        # description: TI 芯片烧录 — ...
+├── multisim-reader/
+│   └── SKILL.md        # name: multisim-reader
+│                        # description: Multisim 电路读取与网表导出。触发条件：Multisim/仿真/网表。
+├── cubeide-build/
+│   └── SKILL.md        # name: cubeide-build
+│                        # description: STM32CubeIDE 工程编译与烧录。触发条件：STM32/CubeIDE/固件。
+├── ccs-flash/
+│   └── SKILL.md        # name: ccs-flash
+│                        # description: TI CCS 芯片识别、烧录与调试。触发条件：TI/CCS/C2000/烧录。
+├── keil-build/
+│   └── SKILL.md        # name: keil-build
+│                        # description: Keil MDK 工程编译与烧录。触发条件：Keil/UV4/ARM。
 ├── solidworks-cad/
 │   └── SKILL.md        # name: solidworks-cad
-│                        # description: SolidWorks CAD 操作 — ...
+│                        # description: SolidWorks CAD 操作 — 打开文档、导出工程图/STP。
+├── autocad-dwg/
+│   └── SKILL.md        # name: autocad-dwg
+│                        # description: AutoCAD 脚本执行与 DWG/DXF 批量导出。
+├── stm32-flash/
+│   └── SKILL.md        # name: stm32-flash（向后兼容，推荐 cubeide-build）
 └── relay-core/
     └── SKILL.md        # name: relay-core
-                         # description: codex-relay 通用中继操作 — 列出适配器、
+                         # description: Bifrost 通用中继操作 — 列出适配器、
                          #   确认高风险动作、收集日志。当需要了解系统状态时使用。
 ```
 
-### 6.2 为什么拆成 5 个而非 1 个
+### 6.2 为什么拆成 9 个而非 1 个
 
-| 对比维度 | 1 个大 skill | 5 个小 skill |
+| 对比维度 | 1 个大 skill | 9 个小 skill |
 |---------|-------------|-------------|
 | 上下文占用 | 每次全加载（~2000 tokens） | 只加载相关 skill（~500 tokens） |
 | 发现精确度 | description 太泛，误触发概率高 | 每个 description 精准匹配 |
 | 可维护性 | 一个文件越滚越大 | 每个独立维护 |
 | 跨平台复用 | 耦合在一起 | 可单独迁移到其他平台 |
-| $mention 可用性 | 只有一个名称 | 5 个清晰可调用的名称 |
+| $mention 可用性 | 只有一个名称 | 9 个清晰可调用的名称 |
 
 ---
 

@@ -8,9 +8,34 @@
 
 ---
 
+## 🎯 理念：联合一体化 — "机器人制造机器人"
+
+传统工业软件各自为政：KiCad 只管 PCB，Keil 只管固件，SolidWorks 只管结构。工程师在七套软件之间手动搬运数据，效率低、易出错、不可追溯。
+
+**Bifrost 的核心理念是联合一体化**——将七款工业软件统一到一层中继适配层之下，让 AI Agent 像"联合参谋部"一样，跨软件、跨领域、跨阶段地调度工程能力：
+
+```
+                    ┌─────────────────────────────┐
+                    │    🌈  Bifrost 联合参谋部      │
+                    │  统一数据模型 · 统一动作接口      │
+                    │  统一校验框架 · 统一日志追踪      │
+                    └──────┬────────────┬─────────┘
+           ┌───────────────┼────────────┼───────────────┐
+    ┌──────┴──────┐ ┌──────┴──────┐ ┌──┴────────┐ ┌────┴─────┐
+    │  PCB 设计    │ │  电路仿真    │ │  MCU 开发  │ │  CAD 结构 │
+    │  KiCad      │ │  Multisim  │ │ CubeIDE   │ │ SolidWorks│
+    │             │ │            │ │  CCS      │ │ AutoCAD  │
+    │             │ │            │ │  Keil     │ │          │
+    └─────────────┘ └─────────────┘ └───────────┘ └──────────┘
+```
+
+**机器人制造机器人**：AI 从电路设计 → 仿真验证 → 固件部署 → 结构外壳，**全栈、全链、全自动**。
+
+---
+
 ## 🎯 一句话说清楚
 
-**Bifrost** 是一层"工程中继适配层"，夹在 AI Agent（Codex、Hermes 等）与真实工业软件（KiCad、STM32、TI、SolidWorks）之间，负责把自然语言任务翻译成结构化动作 → 执行 → 校验 → 收集结果。
+**Bifrost** 是一层"工程中继适配层"，夹在 AI Agent（Codex、Hermes 等）与真实工业软件（KiCad、Keil MDK、STM32CubeIDE、CCS、AutoCAD、Multisim、SolidWorks）之间，负责把自然语言任务翻译成结构化动作 → 执行 → 校验 → 收集结果。
 
 ```
 你："把这 KiCad 工程导出 Gerber 并检查有没有错误"
@@ -23,7 +48,7 @@
         ↓
   🌈  Bifrost  Core（统一数据模型 + 动作引擎 + 校验框架）
         ↓
-  🌈  Bifrost  Adapters（KiCad pcbnew / STM32 pyocd / TI UniFlash / SolidWorks COM）
+  🌈  Bifrost  Adapters（KiCad pcbnew / Keil UV4 / STM32CubeIDE / CCS / AutoCAD accoreconsole / Multisim COM / SolidWorks COM）
         ↓
     真实工业软件
 ```
@@ -39,34 +64,49 @@ bifrost/                              ← 项目根（社区文档 + 许可证�
 ├── SECURITY.md                       #   安全策略
 ├── requirements.txt                  #   Python 依赖
 │
-├── codex-relay/                      # 📁 Codex 中继实现
+├── core/                             # 📁 核心引擎（框架无关，Codex + Hermes 共享）
+│   ├── domain.py                     #     数据模型
+│   ├── actions.py                    #     动作引擎
+│   ├── validators.py                 #     校验框架
+│   └── errors.py                     #     错误体系
+│
+├── adapters/                         # 📁 工业软件适配器（8 个，框架无关）
+│   ├── base.py                       #     BaseAdapter 抽象接口
+│   ├── kicad/                        #     KiCad 8.0.9（pcbnew Python API）
+│   ├── keil/                         #     Keil MDK 5.39（UV4 CLI）
+│   ├── stm32cubeide/                 #     STM32CubeIDE 1.17（Eclipse CLI）
+│   ├── ccs/                          #     CCS 12.8（Theia CLI + DSS）
+│   ├── autocad/                      #     AutoCAD 2022（accoreconsole + COM）
+│   ├── multisim/                     #     Multisim 14.3（COM Automation API）
+│   └── solidworks/                   #     SolidWorks 2024 SP5（COM / Macro）
+│
+├── tests/                            # 📁 统一测试
+├── examples/                         # 📁 使用示例
+│
+├── codex-relay/                      # 📁 Codex 插件（仅 Codex 专属文件）
 │   ├── plugin.json                   #   Agent Plugin 清单
 │   ├── .mcp.json                     #   MCP Server 配置
-│   ├── skills/                       #   Skill 集合（每软件一个 skill）
-│   │   ├── kicad-pcb/SKILL.md
-│   │   ├── stm32-flash/SKILL.md
-│   │   ├── ti-flash/SKILL.md
-│   │   └── solidworks-cad/SKILL.md
-│   ├── mcp/                          #   MCP Server（Python）
-│   │   ├── server.py
-│   │   ├── tools.py
-│   │   └── schemas.py
-│   ├── core/                         #   核心引擎（零外部框架依赖）
-│   │   ├── domain.py                 #     数据模型
-│   │   ├── actions.py                #     动作引擎
-│   │   ├── validators.py             #     校验框架
-│   │   └── errors.py                 #     错误体系
-│   ├── adapters/                     #   工业软件适配器
-│   │   ├── base.py                   #     BaseAdapter 抽象接口
-│   │   ├── kicad/                    #     KiCad（pcbnew Python API）
-│   │   ├── stm32/                    #     STM32（pyocd / CubeProgrammer）
-│   │   ├── ti/                       #     TI（UniFlash / DSLite）
-│   │   └── solidworks/               #     SolidWorks（COM / Macro）
-│   ├── examples/                     #   使用示例
-│   └── tests/                        #   测试
+│   ├── codex_plugin/                 #   Python 包（MCP Server）
+│   │   └── mcp/
+│   │       ├── server.py
+│   │       ├── tools.py
+│   │       └── schemas.py
+│   └── skills/                       #   Skill 集合（9 个 skill）
+│       ├── kicad-pcb/SKILL.md
+│       ├── keil-build/SKILL.md
+│       ├── cubeide-build/SKILL.md
+│       ├── ccs-flash/SKILL.md
+│       ├── autocad-dwg/SKILL.md
+│       ├── multisim-reader/SKILL.md
+│       ├── solidworks-cad/SKILL.md
+│       ├── stm32-flash/SKILL.md      #   向后兼容
+│       └── relay-core/SKILL.md
 │
-├── hermes-relay/                     # 📁 Hermes 中继实现（未来）
-│   └── (复用 codex-relay/core/ 和 adapters/，仅加薄包装层)
+├── hermes-relay/                     # 📁 Hermes 适配（仅 Hermes 专属文件）
+│   └── hermes_tools/
+│       ├── tools.py                  #   Hermes/OpenAI 工具定义
+│       ├── prompts.py                #   ChatML 系统提示生成
+│       └── goap_templates.py         #   GOAP 推理模板
 │
 └── docs/                             # 📁 技术文档体系（AI 可读版）
     ├── 00-overview.md … 09-hermes-integration.md
@@ -89,13 +129,20 @@ bifrost/                              ← 项目根（社区文档 + 许可证�
 
 - Python 3.11+
 - Codex CLI（如需在 Codex 中使用）
-- 目标工业软件（按需安装：KiCad 8.0+ / STM32CubeProgrammer / etc.）
+- 目标工业软件（按需安装）：
+  - KiCad 8.0.9
+  - Keil MDK 5.39
+  - STM32CubeIDE（推荐 1.17.0）
+  - Code Composer Studio（推荐 12.8.1）
+  - AutoCAD 2022
+  - Multisim 14.3
+  - SolidWorks 2024 SP5
 
 ### 安装
 
 ```bash
 # 克隆仓库
-git clone https://github.com/YOUR_USERNAME/bifrost.git
+git clone https://github.com/vista777-nk/Project_Bifrost-research.git
 cd bifrost
 
 # 安装依赖
@@ -141,12 +188,15 @@ python -m codex_plugin.mcp.server
 
 ## 🏭 支持的工业软件
 
-| 软件 | 状态 | 集成路径 | 首批动作 |
-|------|:---:|---------|---------|
-| **KiCad** | 🚧 规划中 | pcbnew Python API | 打开工程、导出 Gerber/BOM、DRC |
-| **STM32** | 🚧 规划中 | pyocd / CubeProgrammer CLI | 识别设备、烧录、校验 |
-| **TI** | ⏳ 后续 | UniFlash CLI / DSLite | 识别设备、烧录、校验 |
-| **SolidWorks** | ⏳ 后续 | COM / Macro API | 打开文档、导出工程图 |
+| Phase | 软件 | 版本 | 集成路径 | 首批动作 |
+|:---:|------|------|---------|---------|
+| **P1** | **KiCad** | 8.0.9 | pcbnew Python API | 打开工程、导出 Gerber/BOM、DRC |
+| **P1** | **Multisim** | 14.3 | COM Automation API | 读取电路、导出网表、仿真 |
+| **P2** | **STM32CubeIDE** | 1.17.0 | Eclipse CLI | 配置/编译/烧录 STM32 |
+| **P2** | **CCS** (TI) | 12.8.1 | Theia CLI + DSS | 识别设备、烧录、调试 TI 芯片 |
+| **P3** | **Keil MDK** | 5.39 | UV4 CLI | 编译工程、烧录、调试 |
+| **P4** | **SolidWorks** | 2024 SP5 | COM / Macro API | 打开文档、导出工程图/STP |
+| **P5** | **AutoCAD** | 2022 | accoreconsole + COM | 脚本执行、批量导出 DWG/DXF |
 
 ---
 
@@ -172,7 +222,6 @@ python -m codex_plugin.mcp.server
 我们欢迎所有形式的贡献！请先阅读：
 
 - [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) — 社区行为准则
-- [`CONVENTIONS.md`](CONVENTIONS.md) — 项目规范与约定
 - [`docs/05-implementation-plan.md`](docs/05-implementation-plan.md) — 了解当前阶段
 
 ---
@@ -185,12 +234,39 @@ python -m codex_plugin.mcp.server
 
 ## 🙏 致谢
 
-- [Agent Skills 开放标准](https://agentskills.io/) — 本项目的 Skill 格式遵循此标准
-- [Model Context Protocol](https://modelcontextprotocol.io/) — 本项目的工具接口基于 MCP
-- [KiCad](https://www.kicad.org/) / [STMicroelectronics](https://www.st.com/) / [Texas Instruments](https://www.ti.com/) / [Dassault Systèmes](https://www.solidworks.com/)
+### 上游项目（站在巨人肩膀上）
+
+本项目受益于以下开源项目的先驱工作：
+
+| 项目 | 领域 | 借鉴价值 |
+|------|------|---------|
+| **[NUEDC-STM32-MSPM0-SKILL](https://github.com/zww666-creater/NUEDC-STM32-MSPM0-SKILL)** | Codex Skill / 嵌入式 | Keil + CCS 双工作流 Codex Skill 范例 |
+| **[ccs1280-ti-embedded-workflow](https://github.com/logicalmove/ccs1280-ti-embedded-workflow)** | Codex Skill / TI | CCS 12.8.0 Codex Skill，TI C2000 系列 |
+| **[Solidworks-MCP](https://github.com/alisamsam/Solidworks-MCP)** | MCP Server / CAD | SolidWorks MCP Server，22 工具参考实现 |
+| **[pyswx](https://github.com/deloarts/pyswx)** | Python / CAD | SolidWorks API Python 包装器 |
+| **[SWAPI](https://github.com/skarpsill/SWAPI)** | AI 知识库 / CAD | AI-ready SolidWorks API 知识库 |
+| **[codestack](https://github.com/xarial/codestack)** | API 示例 / CAD | 最全面的 SolidWorks API 代码示例库 |
+| **[MCUQuickStart](https://github.com/Majie-xixi/MCUQuickStart)** | Python / 嵌入式 | Keil 工程 Python 生成器 |
+| **[keil-restart-tool](https://github.com/Masihtabaei/keil-restart-tool)** | Python / 嵌入式 | 外部 Python 操控 Keil µVision |
+| **[matlab-agentic-toolkit](https://github.com/matlab/matlab-agentic-toolkit)** | Agent 集成 / 工程 | MathWorks 官方，工业软件 Agent 集成黄金标准 |
+| **[Citadel](https://github.com/SethGammon/Citadel)** | Codex 操作层 | 持久记忆、意图路由、安全钩子 |
+| **[ruflo](https://github.com/ruvnet/ruflo)** | Agent Swarm / Hermes | 多 Agent 框架，原生 Codex + Hermes |
+| **[Hermes-Function-Calling](https://github.com/NousResearch/Hermes-Function-Calling)** | Hermes / LLM | Hermes 官方 function calling 示例 |
+| **[action-ccstudio-ide](https://github.com/uoohyo/action-ccstudio-ide)** | CI/CD / CCS | CCS headless GitHub Action |
+| **[Multisim-MCP](https://github.com/Last-emo-boy/Multisim-MCP)** | MCP Server / 电路仿真 | Multisim COM Automation 参考实现，61 工具 + snapshot/audit log 安全模式 |
+
+### 标准与协议
+
+- [Agent Skills 开放标准](https://agentskills.io/) — Skill 格式遵循此标准
+- [Model Context Protocol](https://modelcontextprotocol.io/) — 工具接口基于 MCP
+- [Conventional Commits](https://www.conventionalcommits.org/) — Commit 规范
+
+### 工业软件
+
+- [KiCad](https://www.kicad.org/) · [STMicroelectronics](https://www.st.com/) · [Texas Instruments](https://www.ti.com/) · [Dassault Systèmes](https://www.solidworks.com/) · [Autodesk](https://www.autodesk.com/) · [Arm Keil](https://www.keil.com/) · [NI Multisim](https://www.ni.com/)
 
 ---
 
 <p align="center">
-  <em>🌈 Bifrost — 桥接 AI 与工业，让每一行指令都落进现实。</em>
+  <em>🌈 Bifrost — 联合一体化，机器人制造机器人。桥接 AI 与工业，让每一行指令都落进现实。</em>
 </p>

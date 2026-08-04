@@ -160,7 +160,11 @@ test_mcp_run_action_invalid_params.py
 
 ---
 
-## 8. CI 建议（后续配置）
+## 8. CI 配置
+
+> ✅ 已落地为 `.github/workflows/test.yml`（2026-08-05）。COM 类 adapter（SolidWorks/AutoCAD/Multisim）的测试仅允许在 windows runner 上通过 marker 启用，ubuntu runner 永不执行依赖 pywin32 的测试。
+
+参考配置如下：
 
 ```yaml
 # .github/workflows/test.yml
