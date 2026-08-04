@@ -86,36 +86,73 @@
 
 ---
 
-## Phase 3：STM32 适配器
+## Phase 3：Keil MDK + STM32CubeMX 适配器
 
 ### 目标
-Codex 能操作 STM32：识别设备 → 烧录固件 → 校验写入 → 收集日志。
+让 Codex 能操作 STM32 工具链：CubeMX 生成代码 → Keil 编译 → Keil 烧录 → 校验。
 
 ### 前置条件
-- Phase 1 完成（Phase 2 不强制）
-- STM32CubeProgrammer CLI 或 pyocd 已安装
-- 至少一块 STM32 开发板可用于测试
+- Phase 1 完成
+- Keil MDK 5.39 已安装（`UV4.exe` 在 PATH）
+- STM32CubeMX 6.15.0 已安装
+- 至少一块 STM32 开发板 + ST-Link 用于测试
 
-### 任务清单
+### 3A：STM32CubeMX 子适配器
 
 | # | 任务 | 预估工时 |
 |---|------|---------|
-| 3.1 | 调研选定烧录工具路径（pyocd vs STM32CubeProgrammer CLI） | 2h |
-| 3.2 | 实现 STM32 adapter 基础框架 | 2h |
-| 3.3 | 实现 `identify_device` | 1.5h |
-| 3.4 | 实现 `flash_firmware`（含确认机制） | 3h |
-| 3.5 | 实现 `verify_flash` | 2h |
-| 3.6 | 实现 `read_device_log` | 1h |
-| 3.7 | 写集成测试 | 3h |
-| 3.8 | 创建示例 | 1h |
+| 3A.1 | 调研 CubeMX CLI 脚本语法（实测验证） | 2h |
+| 3A.2 | 实现 CubeMX adapter 基础框架 | 1h |
+| 3A.3 | 实现 `load_ioc` — 加载 .ioc 配置文件 | 1h |
+| 3A.4 | 实现 `generate_code` — 从 .ioc 生成 HAL 代码 | 2h |
+| 3A.5 | 实现 `export_config_report` — 导出引脚配置 | 1h |
 
-### Phase 3 总预估：~15.5h
+### 3B：Keil MDK 子适配器
+
+| # | 任务 | 预估工时 |
+|---|------|---------|
+| 3B.1 | 实现 Keil adapter 基础框架 | 1h |
+| 3B.2 | 实现 `build_project` — UV4.exe -b 编译 | 1.5h |
+| 3B.3 | 实现 `flash_firmware`（含确认机制）— UV4.exe -f | 2h |
+| 3B.4 | 实现 `clean_project` — UV4.exe -c | 0.5h |
+| 3B.5 | 实现 `read_build_log` — 解析编译日志 | 1h |
+| 3B.6 | 写集成测试 | 3h |
+| 3B.7 | 创建示例 Keil 工程 | 1h |
+
+### Phase 3 总预估：~16h
 
 ---
 
-## Phase 4：TI + SolidWorks
+## Phase 4：SolidWorks + AutoCAD 适配器
 
-（详细计划在 Phase 2/3 完成后细化）
+### 目标
+两大 CAD 工具适配：SolidWorks 3D 操作 + AutoCAD 2D 图纸。
+
+### 前置条件
+- Phase 1 完成
+- SolidWorks 2024 SP5 + AutoCAD 2022 已安装
+- Windows 环境（COM 依赖）
+
+| # | 任务 | 预估工时 |
+|---|------|---------|
+| 4.1 | 实现 SolidWorks COM 基础连接 | 1h |
+| 4.2 | 实现 `open_document` / `export_step` / `export_pdf` | 3h |
+| 4.3 | 实现 AutoCAD COM + accoreconsole 基础连接 | 1h |
+| 4.4 | 实现 `open_drawing` / `export_pdf` / `export_dxf` | 2h |
+| 4.5 | 实现 SolidWorks ↔ AutoCAD 格式转换桥 | 2h |
+| 4.6 | 写集成测试 | 3h |
+| 4.7 | 创建示例文件 | 1h |
+
+### Phase 4 总预估：~13h
+
+---
+
+## Phase 5+：Multisim 适配器
+
+### 目标
+退化为文件级操作：解析 .ms14 XML，提取电路信息和仿真结果。
+
+（详细计划在 Phase 3/4 完成后细化。Multisim 自动化受限，仅做文件读取。）
 
 ---
 

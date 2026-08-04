@@ -44,7 +44,7 @@
 │  每个 adapter 实现统一接口，对接具体软件                      │
 ├─────────────────────────────────────────────────────────┤
 │  真实工业软件                                              │
-│  KiCad / STM32CubeProgrammer / UniFlash / SolidWorks      │
+│  KiCad / Keil MDK / STM32CubeMX / SolidWorks / AutoCAD / Multisim      │
 └─────────────────────────────────────────────────────────┘
 ```
 
@@ -56,33 +56,37 @@
 
 ### Phase 0 — 设计阶段（当前）
 - [x] 技术决策记录（语言选择）
-- [ ] 统一数据模型定义
-- [ ] 工具接口设计
-- [ ] 插件层设计
-- [ ] KiCad / STM32 CLI 调研
+- [x] 统一数据模型定义
+- [x] 工具接口设计
+- [x] 插件层设计
+- [x] KiCad / STM32 CLI 调研
+- [x] 实际软件栈调研（6 款软件自动化路径）
 
 ### Phase 1 — 最小可用插件（第一期开发）
 - [ ] 实现 Core 数据模型（pydantic）
 - [ ] 实现最小 MCP Server（仅 `list_adapters` + `run_action`）
 - [ ] 实现 1 个 mock adapter（不连真实软件，用于测试）
-- [ ] 实现 1 个 KiCad adapter（仅 `export_gerber` + `run_drc`）
 - [ ] 写 Skill 文档
 - [ ] 端到端测试
 
-### Phase 2 — 扩展 KiCad
-- [ ] 完整 KiCad 动作集（开工程/导出BOM/DRC/收集产物）
+### Phase 2 — KiCad 8.0.9 适配器
+- [ ] KiCad adapter（pcbnew API：打开工程/导出Gerber/BOM/DRC/收集产物）
 - [ ] 结构化验证
 - [ ] 错误恢复
 
-### Phase 3 — STM32 烧录
-- [ ] STM32 adapter（识别设备/烧录/校验/读日志）
+### Phase 3 — Keil MDK 5.39 + STM32CubeMX 6.15.0
+- [ ] CubeMX adapter（CLI 脚本：加载 .ioc / 生成代码）
+- [ ] Keil adapter（UV4 CLI：编译 / 烧录 / 读日志）
+- [ ] CubeMX → Keil 工作流编排
 
-### Phase 4 — TI 烧录 + SolidWorks
-- [ ] TI adapter
-- [ ] SolidWorks adapter（COM 接口）
+### Phase 4 — SolidWorks 2024 SP5 + AutoCAD 2022
+- [ ] SolidWorks adapter（COM：打开文档 / 导出 STEP、PDF）
+- [ ] AutoCAD adapter（COM + accoreconsole：打开图纸 / 导出 PDF、DXF）
+- [ ] SolidWorks ↔ AutoCAD 格式转换桥
 
-### Phase 5 — 跨平台迁移
-- [ ] Hermes 插件适配
+### Phase 5+ — Multisim 14.3 + 跨平台
+- [ ] Multisim adapter（XML 解析：读取电路 / 导出网表）
+- [ ] Hermes 适配层对接
 - [ ] 统一适配层抽象
 
 ---

@@ -105,8 +105,8 @@ def _make_run_action_tool() -> dict:
                 "properties": {
                     "app": {
                         "type": "string",
-                        "description": "目标软件: kicad | stm32 | ti | solidworks",
-                        "enum": ["kicad", "stm32", "ti", "solidworks"],
+                        "description": "目标软件: kicad | keil | stm32cubemx | solidworks | autocad | multisim",
+                        "enum": ["kicad", "keil", "stm32cubemx", "solidworks", "autocad", "multisim"],
                     },
                     "action_name": {
                         "type": "string",
@@ -251,7 +251,7 @@ def _make_preview_action_tool() -> dict:
                 "properties": {
                     "app": {
                         "type": "string",
-                        "description": "目标软件: kicad | stm32 | ti | solidworks",
+                        "description": "目标软件: kicad | keil | stm32cubemx | solidworks | autocad | multisim",
                     },
                     "action_name": {
                         "type": "string",

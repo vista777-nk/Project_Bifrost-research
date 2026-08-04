@@ -10,7 +10,7 @@
 
 ## 🎯 一句话说清楚
 
-**Bifrost** 是一层"工程中继适配层"，夹在 AI Agent（Codex、Hermes 等）与真实工业软件（KiCad、STM32、TI、SolidWorks）之间，负责把自然语言任务翻译成结构化动作 → 执行 → 校验 → 收集结果。
+**Bifrost** 是一层"工程中继适配层"，夹在 AI Agent（Codex、Hermes 等）与真实工业软件（KiCad、Keil MDK、STM32CubeMX、SolidWorks、AutoCAD、Multisim）之间，负责把自然语言任务翻译成结构化动作 → 执行 → 校验 → 收集结果。
 
 ```
 你："把这 KiCad 工程导出 Gerber 并检查有没有错误"
@@ -44,9 +44,11 @@ bifrost/                              ← 项目根（社区文档 + 许可证�
 │   ├── .mcp.json                     #   MCP Server 配置
 │   ├── skills/                       #   Skill 集合（每软件一个 skill）
 │   │   ├── kicad-pcb/SKILL.md
-│   │   ├── stm32-flash/SKILL.md
-│   │   ├── ti-flash/SKILL.md
-│   │   └── solidworks-cad/SKILL.md
+│   │   ├── keil-build/SKILL.md
+│   │   ├── cubemx-config/SKILL.md
+│   │   ├── solidworks-cad/SKILL.md
+│   │   ├── autocad-dwg/SKILL.md
+│   │   └── multisim-reader/SKILL.md
 │   ├── mcp/                          #   MCP Server（Python）
 │   │   ├── server.py
 │   │   ├── tools.py
@@ -58,10 +60,12 @@ bifrost/                              ← 项目根（社区文档 + 许可证�
 │   │   └── errors.py                 #     错误体系
 │   ├── adapters/                     #   工业软件适配器
 │   │   ├── base.py                   #     BaseAdapter 抽象接口
-│   │   ├── kicad/                    #     KiCad（pcbnew Python API）
-│   │   ├── stm32/                    #     STM32（pyocd / CubeProgrammer）
-│   │   ├── ti/                       #     TI（UniFlash / DSLite）
-│   │   └── solidworks/               #     SolidWorks（COM / Macro）
+│   │   ├── kicad/                    #     KiCad 8.0.9（pcbnew Python API）
+│   │   ├── keil/                     #     Keil MDK 5.39（UV4 CLI）
+│   │   ├── stm32cubemx/              #     STM32CubeMX 6.15.0（CLI 脚本）
+│   │   ├── solidworks/               #     SolidWorks 2024 SP5（COM）
+│   │   ├── autocad/                  #     AutoCAD 2022（COM + accoreconsole）
+│   │   └── multisim/                 #     Multisim 14.3（XML 解析）
 │   ├── examples/                     #   使用示例
 │   └── tests/                        #   测试
 │
@@ -89,7 +93,7 @@ bifrost/                              ← 项目根（社区文档 + 许可证�
 
 - Python 3.11+
 - Codex CLI（如需在 Codex 中使用）
-- 目标工业软件（按需安装：KiCad 8.0+ / STM32CubeProgrammer / etc.）
+- 目标工业软件（按需安装，见下方支持列表）
 
 ### 安装
 
@@ -141,12 +145,14 @@ python -m codex_plugin.mcp.server
 
 ## 🏭 支持的工业软件
 
-| 软件 | 状态 | 集成路径 | 首批动作 |
-|------|:---:|---------|---------|
-| **KiCad** | 🚧 规划中 | pcbnew Python API | 打开工程、导出 Gerber/BOM、DRC |
-| **STM32** | 🚧 规划中 | pyocd / CubeProgrammer CLI | 识别设备、烧录、校验 |
-| **TI** | ⏳ 后续 | UniFlash CLI / DSLite | 识别设备、烧录、校验 |
-| **SolidWorks** | ⏳ 后续 | COM / Macro API | 打开文档、导出工程图 |
+| 软件 | 版本 | 状态 | 集成路径 | 首批动作 |
+|------|------|:---:|---------|---------|
+| **KiCad** | 8.0.9 | 🚧 Phase 2 | pcbnew Python API | 打开工程、导出 Gerber/BOM、DRC |
+| **Keil MDK** | 5.39 | 🚧 Phase 3 | UV4.exe CLI | 编译、烧录、读日志 |
+| **STM32CubeMX** | 6.15.0 | 🚧 Phase 3 | CLI 脚本模式 | 加载 .ioc、生成代码 |
+| **SolidWorks** | 2024 SP5 | ⏳ Phase 4 | COM (pywin32) | 打开文档、导出 STEP/PDF |
+| **AutoCAD** | 2022 | ⏳ Phase 4 | COM + accoreconsole | 打开图纸、导出 PDF/DXF |
+| **Multisim** | 14.3 | ⏳ Phase 5+ | XML 文件解析 | 读取电路信息、导出网表 |
 
 ---
 
