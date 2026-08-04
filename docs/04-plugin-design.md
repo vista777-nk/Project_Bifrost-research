@@ -111,42 +111,30 @@ codex-relay/                         ← Codex 插件根目录（仅 Codex 专�
 
 ### 3.1 server.py — 入口文件
 
+> **MCP SDK 版本**：v2.0.0+（2026-07-28 发布，API 已重写）。
+> 迁移要点：`Server` → `MCPServer`，`@server.tool()` → `@mcp.tool()`，`server.run()` → `mcp.run()`。
+
 ```python
 """
 codex-relay MCP Server
 工业软件中继适配层的 MCP 协议接口
 """
 
-import mcp.server.stdio
-from mcp.server import Server, NotificationOptions
-from mcp.server.models import InitializationCapabilities
+from mcp.server import MCPServer
 from .tools import register_all_tools
 
-def create_server() -> Server:
-    """创建并配置 MCP Server 实例"""
-    server = Server("codex-relay")
+# 创建 MCP Server 实例（v2 API）
+mcp = MCPServer("bifrost-codex")
 
-    # 注册所有工具
-    register_all_tools(server)
+# 注册所有工具
+register_all_tools(mcp)
 
-    return server
-
-async def main():
-    """MCP Server 主入口"""
-    server = create_server()
-    async with mcp.server.stdio.stdio_server() as (read_stream, write_stream):
-        await server.run(
-            read_stream,
-            write_stream,
-            InitializationCapabilities(
-                sampling={},
-                experimental={},
-            ),
-        )
+def main():
+    """MCP Server 主入口（v2 用 mcp.run() 替代手动管理 stream）"""
+    mcp.run()
 
 if __name__ == "__main__":
-    import asyncio
-    asyncio.run(main())
+    main()
 ```
 
 ### 3.2 tools.py — 工具实现
@@ -154,24 +142,23 @@ if __name__ == "__main__":
 ```python
 """
 MCP 工具实现
-每个工具 = 一个 async 函数，用 @server.tool() 装饰
+每个工具 = 一个 async 函数，用 @mcp.tool() 装饰（v2 API）
 """
 
-from mcp.server import Server
+from mcp.server import MCPServer
 from core.domain import ActionResult, ValidationReport
 from core.actions import ActionExecutor
 from core.validators import ResultValidator
 
-def register_all_tools(server: Server):
-    """注册所有工具到 MCP Server"""
+def register_all_tools(mcp: MCPServer):
+    """注册所有工具到 MCP Server（v2 风格）"""
 
-    @server.tool()
+    @mcp.tool()
     async def list_adapters(filter: str = "") -> dict:
         """列出可用的软件适配器及其状态"""
-        # 实现见下文伪代码
         ...
 
-    @server.tool()
+    @mcp.tool()
     async def run_action(
         app: str,
         action_name: str,
@@ -184,12 +171,12 @@ def register_all_tools(server: Server):
         """执行一个结构化动作"""
         ...
 
-    @server.tool()
+    @mcp.tool()
     async def validate_result(action_id: str, checks: list[str] = []) -> dict:
         """校验动作执行结果"""
         ...
 
-    @server.tool()
+    @mcp.tool()
     async def collect_logs(
         action_id: str = "",
         task_id: str = "",
@@ -199,12 +186,12 @@ def register_all_tools(server: Server):
         """收集日志和产物"""
         ...
 
-    @server.tool()
+    @mcp.tool()
     async def confirm_action(action_id: str, confirm: bool, reason: str = "") -> dict:
         """确认或取消一个高风险动作"""
         ...
 
-    @server.tool()
+    @mcp.tool()
     async def preview_action(app: str, action_name: str, parameters: dict = {}) -> dict:
         """预览动作效果（dry-run）"""
         ...

@@ -31,6 +31,11 @@
 | `TestErrors` | 错误体系 | 每种 Error 类可构造、context/suggested_action 字段不丢失 |
 | `TestValidators` | 校验框架 | 正常通过、单项失败、全部失败、空产物列表 |
 | `TestActionExecutor` | 动作执行引擎 | 成功执行、失败执行、需确认、超时、重试 |
+| `TestWorkflows` | 工作流编排 | 单步工作流、多步顺序执行、步骤失败时终止 |
+
+> **Phase 1 TDD 执行顺序**：上述测试类严格按 Core 层依赖顺序编写——
+> `domain → errors → validators → actions → workflows`。
+> 每个模块的实现代码必须与对应测试**同一次提交**中完成。
 
 ### 2.2 Adapter 层测试
 

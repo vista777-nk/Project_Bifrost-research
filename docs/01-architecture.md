@@ -178,7 +178,7 @@ class BaseAdapter(ABC):
 | STM32CubeIDE | Eclipse headless CLI | STM32CubeProgrammer CLI | ❌ 不做 GUI |
 | CCS | DSS (JavaScript) | Theia CLI / UniFlash CLI | ❌ 不做 GUI |
 | AutoCAD | accoreconsole CLI | COM (pywin32) | ❌ 不做 GUI |
-| Multisim | COM Automation API (pywin32) | netlist CLI 仿真 | ❌ 不做 GUI |
+| Multisim | COM Automation API (pywin32) | 命令行 netlist 仿真 | ❌ 不做 GUI（.ms14 为专有格式，不可直接解析） |
 | SolidWorks | COM (pywin32) | Macro API (.swp) | ❌ 不做 GUI |
 
 ---

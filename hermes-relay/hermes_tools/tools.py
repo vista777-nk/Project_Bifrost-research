@@ -124,10 +124,20 @@ def _make_run_action_tool() -> dict:
                         ),
                         "default": "normal",
                     },
+                    "task_id": {
+                        "type": "string",
+                        "description": "关联的 Task ID，不提供则自动生成",
+                        "default": "",
+                    },
                     "timeout_seconds": {
                         "type": "integer",
                         "description": "超时秒数",
                         "default": 300,
+                    },
+                    "retry_on_failure": {
+                        "type": "boolean",
+                        "description": "失败时是否自动重试（根据重试策略）",
+                        "default": True,
                     },
                 },
                 "required": ["app", "action_name"],
@@ -191,6 +201,12 @@ def _make_collect_logs_tool() -> dict:
                         "type": "boolean",
                         "description": "是否包含软件原始输出",
                         "default": False,
+                    },
+                    "format": {
+                        "type": "string",
+                        "enum": ["json", "text"],
+                        "description": "输出格式: json（结构化）或 text（人类可读）",
+                        "default": "json",
                     },
                 },
                 "required": [],

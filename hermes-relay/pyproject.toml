@@ -27,8 +27,11 @@ classifiers = [
 
 # 核心依赖仅根包 bifrost（core/ + adapters/）。
 # Hermes 模型推理依赖由用户按需安装，见下方 optional-dependencies。
+# 注：开发阶段根包 bifrost 尚未发布到 PyPI，需先在项目根 pip install -e . 再安装本包。
 dependencies = [
     "bifrost>=0.1.0",
+    "pydantic>=2.10.0,<3.0.0",
+    "structlog>=24.4.0,<26.0.0",
 ]
 
 [project.optional-dependencies]

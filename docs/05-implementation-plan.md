@@ -41,6 +41,7 @@
 | 1.2 | 实现 `core/errors.py` | `core/errors.py` | 0.5h | 所有错误类可构造，携带上下文字段 |
 | 1.3 | 实现 `core/validators.py` | `core/validators.py` | 1h | 校验框架可注册规则、执行校验 |
 | 1.4 | 实现 `core/actions.py` | `core/actions.py` | 2h | ActionExecutor 可注册 adapter、执行动作 |
+| 1.4b | 实现 `core/workflows.py` | `core/workflows.py` | 1h | Workflow/Step/run_workflow 工作流编排 |
 | 1.5 | 实现 `adapters/base.py` | `adapters/base.py` | 1h | BaseAdapter 抽象接口 |
 | 1.6 | 实现 Mock Adapter | `adapters/mock_adapter.py` | 1h | 模拟 3 种动作（成功/失败/需确认） |
 | 1.7 | 实现 MCP Server | `codex-relay/codex_plugin/mcp/{server,tools,schemas}.py` | 3h | 实现 6 个工具，stdio 可启动 |
@@ -52,7 +53,7 @@
 | 1.13 | 写集成测试 | `tests/test_mcp_server.py` | 2h | MCP Server 端到端测试通过 |
 | 1.14 | 创建 KiCad 示例工程 | `examples/kicad_export_example/` | 1h | 最小 KiCad 工程用于测试 |
 
-### Phase 1 总预估：~23.5h
+### Phase 1 总预估：~24.5h
 ### 产出物：Core + MCP Server + KiCad + Multisim 可用插件
 
 ---
