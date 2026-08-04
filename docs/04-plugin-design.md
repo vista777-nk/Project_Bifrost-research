@@ -56,8 +56,8 @@ codex-relay/                         ← Codex 插件根目录（仅 Codex 专�
   "author": {
     "name": "项目作者"
   },
-  "homepage": "https://github.com/xxx/bifrost",
-  "repository": "https://github.com/xxx/bifrost",
+  "homepage": "https://github.com/vista777-nk/Project_Bifrost-research",
+  "repository": "https://github.com/vista777-nk/Project_Bifrost-research",
   "license": "MIT",
   "keywords": [
     "kicad", "stm32", "pcb", "firmware",

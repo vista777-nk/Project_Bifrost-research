@@ -142,7 +142,7 @@ bifrost/                              ← 项目根（社区文档 + 许可证�
 
 ```bash
 # 克隆仓库
-git clone https://github.com/YOUR_USERNAME/bifrost.git
+git clone https://github.com/vista777-nk/Project_Bifrost-research.git
 cd bifrost
 
 # 安装依赖
