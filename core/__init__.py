@@ -1,1 +1,6 @@
 # Core — 核心引擎（框架无关）
+#
+# 公开 API:
+#   from core.domain import Task, Action, ActionResult, ...
+#   from core.errors import RelayError, ActionFailedError, ...
+
