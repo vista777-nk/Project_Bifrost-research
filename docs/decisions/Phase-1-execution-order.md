@@ -22,12 +22,12 @@ pytest tests/test_smoke.py -v    # 确认冒烟测试通过
 
 | 顺序 | 模块 | 测试先行 | 关键产出 |
 |:---:|------|---------|---------|
-| 2a | `tests/test_core.py` — TestDomainModels | ✅ | Task/Action/ActionResult/ValidationReport/AdapterInfo + 3 枚举 |
-| 2b | `core/domain.py` | ← 2a | 5 个 pydantic 模型可实例化、可序列化 |
+| 2a | `tests/test_core.py` — TestDomainModels | ✅ | Task/Action/ActionResult/Artifact/ValidationReport/AdapterInfo + 4 枚举 |
+| 2b | `core/domain.py` | ← 2a | 5 个 pydantic 模型可实例化、可序列化。**注意**：Action 含 `risk_level`(RiskLevel枚举) + `permission_note`；Artifact 为一级公民（name/artifact_type/created_by 字段） |
 | 2c | `core/errors.py` | ← 扩展 2a | RelayError/ConfirmationRequiredError 等 6+ 错误类 |
 | 2d | `core/validators.py` | ← 扩展 2a | Validator/ValidationRule/validate() |
 | 2e | `core/actions.py` | ← 扩展 2a | ActionExecutor（注册 adapter、执行、重试） |
-| 2f | `core/workflows.py` | ← 扩展 2a | Workflow/Step/run_workflow() |
+| 2f | `core/workflows.py` | ← 扩展 2a | Workflow/Step/run_workflow()。Step 含 input_artifacts/output_artifacts |
 
 依赖链：`domain → errors → validators → actions → workflows`
 
@@ -37,7 +37,7 @@ pytest tests/test_smoke.py -v    # 确认冒烟测试通过
 
 | 顺序 | 模块 | 说明 |
 |:---:|------|------|
-| 3a | `adapters/base.py` | BaseAdapter 抽象接口 |
+| 3a | `adapters/base.py` | BaseAdapter 抽象接口（含 prepare/execute/validate/rollback 生命周期） |
 | 3b | `adapters/mock_adapter.py` | 模拟 3 种动作（成功/失败/需确认） |
 | 3c | `tests/test_mock_adapter.py` | Mock adapter 测试 |
 | 3d | `adapters/kicad/adapter.py` | pcbnew + kicad-cli：open_project / export_gerber / export_bom / run_drc |

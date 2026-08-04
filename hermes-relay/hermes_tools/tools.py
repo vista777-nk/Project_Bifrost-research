@@ -124,6 +124,15 @@ def _make_run_action_tool() -> dict:
                         ),
                         "default": "normal",
                     },
+                    "risk_level": {
+                        "type": "string",
+                        "enum": ["low", "medium", "high", "critical"],
+                        "description": (
+                            "风险等级: low=只读/查询 / medium=写入/导出 / "
+                            "high=烧录/擦除(需确认) / critical=产线控制(需多人确认)"
+                        ),
+                        "default": "low",
+                    },
                     "task_id": {
                         "type": "string",
                         "description": "关联的 Task ID，不提供则自动生成",

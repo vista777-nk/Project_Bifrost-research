@@ -1,5 +1,7 @@
 # 🌈 Bifrost — 工业软件中继适配层
 
+> *Bifrost is an open-source Agentic Manufacturing Interface Layer — bridging AI agents with industrial software.*
+>
 > *Bifrost：北欧神话中连接神域与人类世界的彩虹桥。本项目是 AI 世界与工业软件世界之间的那道桥。*
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)

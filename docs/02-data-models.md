@@ -44,6 +44,13 @@ class ExecutionMode(str, Enum):
     DRY_RUN = "dry_run"     # 预览，不做实际操作
     NORMAL = "normal"       # 正常执行
     FORCE = "force"         # 强制执行（跳过确认）
+
+class RiskLevel(str, Enum):
+    """动作风险等级。决定是否需要人工确认、是否允许自动重试。"""
+    LOW = "low"              # 只读/查询类，可自动执行
+    MEDIUM = "medium"         # 写入文件/导出类，建议确认
+    HIGH = "high"             # 烧录/擦除/覆盖类，必须人工确认
+    CRITICAL = "critical"     # 产线控制/批量操作，必须多人确认
 ```
 
 ---
@@ -99,27 +106,39 @@ class Action(BaseModel):
     app: str = Field(description="目标软件")
     adapter: str = Field(default="", description="指定 adapter 名称，空字符串表示自动选择")
     parameters: dict = Field(default_factory=dict, description="动作参数，由 adapter 解释")
+    risk_level: RiskLevel = Field(default=RiskLevel.LOW, description="风险等级: low/medium/high/critical")
+    requires_confirmation: bool = Field(default=False, description="执行前是否需要用户确认（由 risk_level 推导的默认值，可覆盖）")
+    permission_note: str = Field(default="", description="需要确认时的说明文字，如'即将擦除STM32F407的Flash并写入新固件，此操作不可撤销'")
     precheck: Optional[str] = Field(default=None, description="执行前校验表达式或检查项")
     postcheck: Optional[str] = Field(default=None, description="执行后校验表达式或检查项")
     retry_policy: RetryPolicy = Field(default_factory=RetryPolicy)
-    requires_confirmation: bool = Field(default=False, description="执行前是否需要用户确认")
     timeout_seconds: int = Field(default=300, ge=1, le=3600)
     tags: list[str] = Field(default_factory=list, description="标签，方便筛选")
 ```
 
-### 3.3 ActionResult（动作结果）
+### 3.3 Artifact（工程产物）— 一级公民
 
-> 每次执行 Action 后的结构化返回。这是系统中最频繁创建的数据结构。
+> **工业流程的核心不是动作，而是产物。**
+> Artifact 是工作流步骤之间的纽带——上游 Action 产出 Artifact，下游 Action 消费 Artifact。
+> 这对实现"AI 制造链"至关重要：Gerber.zip → DRC 检查 → BOM.csv → 固件编译 → 烧录校验。
 
 ```python
 class Artifact(BaseModel):
     model_config = {"extra": "forbid"}
 
+    name: str = Field(default="", description="产物人类可读名称，如 'Gerber 制造文件'")
+    artifact_type: str = Field(default="", description="产物类型: gerber | bom | netlist | firmware | drc_report | step | dxf ...")
     path: str = Field(description="产物文件路径")
     size_bytes: int = Field(default=0, description="文件大小")
     checksum: Optional[str] = Field(default=None, description="SHA256 校验和")
     mime_type: Optional[str] = Field(default=None)
+    created_by: str = Field(default="", description="产出此 Artifact 的 action_id")
     description: str = Field(default="")
+    metadata: dict = Field(default_factory=dict, description="额外元数据（如 KiCad 层名、STM32 地址范围等）")
+
+### 3.4 ActionResult（动作结果）
+
+> 每次执行 Action 后的结构化返回。这是系统中最频繁创建的数据结构。
 
 class ErrorDetail(BaseModel):
     model_config = {"extra": "forbid"}

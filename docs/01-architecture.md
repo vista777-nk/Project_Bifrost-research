@@ -163,11 +163,21 @@ class BaseAdapter(ABC):
     def version(self) -> str: ...
     @property
     def available_actions(self) -> list[str]: ...
+    @property
+    def capabilities(self) -> list[str]: ...
 
+    # ── 生命周期方法 ──
     def check_availability(self) -> bool: ...
+    def prepare(self, action: Action) -> list[str]: ...    # 前置检查，返回警告列表（空=通过）
     def execute(self, action: Action) -> ActionResult: ...
     def validate(self, result: ActionResult) -> ValidationReport: ...
+    def rollback(self, action: Action) -> bool: ...        # 状态恢复，返回是否成功
 ```
+
+> **生命周期说明**：
+> - `prepare()` — 执行前校验许可证、软件版本、文档状态等。默认 no-op。
+> - `rollback()` — 执行失败后恢复状态。对 SolidWorks/STM32 等有状态软件至关重要。默认 no-op。
+> - Phase 1 的 Mock/KiCad/Multisim adapter 使用默认 no-op 即可，SolidWorks/STM32 adapter 后续实现。
 
 **每个 adapter 的内部实现策略**：
 
