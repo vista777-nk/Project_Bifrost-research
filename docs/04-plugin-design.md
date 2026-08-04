@@ -219,17 +219,13 @@ def register_all_tools(server: Server):
 
 ```
 codex-relay/skills/
-├── kicad-pcb/                     # KiCad 8.0.9 PCB 工作流
+├── kicad-pcb/                     # KiCad PCB 工作流
 │   └── SKILL.md
-├── keil-build/                    # Keil MDK 5.39 编译烧录工作流
+├── stm32-flash/                   # STM32 烧录工作流
 │   └── SKILL.md
-├── cubemx-config/                 # STM32CubeMX 6.15.0 配置生成
+├── ti-flash/                      # TI 烧录工作流
 │   └── SKILL.md
-├── solidworks-cad/                # SolidWorks 2024 SP5 CAD 工作流
-│   └── SKILL.md
-├── autocad-dwg/                   # AutoCAD 2022 图纸工作流
-│   └── SKILL.md
-├── multisim-reader/               # Multisim 14.3 电路读取
+├── solidworks-cad/                # SolidWorks CAD 工作流
 │   └── SKILL.md
 └── relay-core/                    # 通用中继工具
     └── SKILL.md

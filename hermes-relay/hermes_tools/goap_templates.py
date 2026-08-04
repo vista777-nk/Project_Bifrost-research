@@ -49,44 +49,86 @@ Observation: <fill after each tool execution>
 Reflection: <evaluate: all steps complete? any DRC errors? files present and non-empty?>
 </scratch_pad>""",
 
-    "stm32-flash": """## STM32 Flash GOAP Template
+    "keil-build": """## Keil MDK Build GOAP Template
 
 <scratch_pad>
 Goal: {user_goal}
 Actions:
   - adapter_status = functions.list_adapters(filter="keil")
-  - preview = functions.preview_action(app="keil", action_name="flash_firmware", parameters={params})
+  - build_result = functions.run_action(app="keil", action_name="build_project", parameters={{"project_path": "{project_path}", "target": "{target}"}})
   - ⚠️ flash_result = functions.run_action(app="keil", action_name="flash_firmware", parameters={params})
   - logs = functions.collect_logs(action_id=flash_result.action_id)
 Observation: <fill after each tool execution>
-Reflection: <evaluate: device connected? flash confirmed by user? build log clean?>
+Reflection: <evaluate: build successful? flash confirmed by user? verify passed?>
 </scratch_pad>""",
 
-    "cubemx-config": """## STM32CubeMX Configuration GOAP Template
+    "cubeide-build": """## STM32CubeIDE Build GOAP Template
 
 <scratch_pad>
 Goal: {user_goal}
 Actions:
-  - adapter_status = functions.list_adapters(filter="stm32cubemx")
-  - load_result = functions.run_action(app="stm32cubemx", action_name="load_ioc", parameters={{"ioc_path": "{ioc_path}"}})
-  - gen_result = functions.run_action(app="stm32cubemx", action_name="generate_code", parameters={{"output_dir": "{output_dir}"}})
-  - validation = functions.validate_result(action_id=gen_result.action_id)
+  - adapter_status = functions.list_adapters(filter="stm32cubeide")
+  - config_result = functions.run_action(app="stm32cubeide", action_name="import_project", parameters={{"project_path": "{project_path}"}})
+  - build_result = functions.run_action(app="stm32cubeide", action_name="build_project", parameters={{"target": "{target}"}})
+  - ⚠️ flash_result = functions.run_action(app="stm32cubeide", action_name="flash_firmware", parameters={params})
+  - logs = functions.collect_logs(action_id=flash_result.action_id)
 Observation: <fill after each tool execution>
-Reflection: <evaluate: .ioc loaded? code generated successfully? output directory populated?>
+Reflection: <evaluate: config loaded? build successful? flash confirmed? verify passed?>
 </scratch_pad>""",
 
-    "keil-build": """## Keil MDK Build & Flash GOAP Template
+    "ccs-flash": """## CCS (Code Composer Studio) Flash GOAP Template
 
 <scratch_pad>
 Goal: {user_goal}
 Actions:
-  - adapter_status = functions.list_adapters(filter="keil")
-  - build_result = functions.run_action(app="keil", action_name="build_project", parameters={{"project_path": "{project_path}"}})
-  - logs = functions.collect_logs(action_id=build_result.action_id)
-  - ⚠️ flash_result = functions.run_action(app="keil", action_name="flash_firmware", parameters={{"project_path": "{project_path}"}})
-  - validation = functions.validate_result(action_id=flash_result.action_id)
+  - adapter_status = functions.list_adapters(filter="ccs")
+  - device_info = functions.run_action(app="ccs", action_name="identify_device", parameters={{}})
+  - build_result = functions.run_action(app="ccs", action_name="build_project", parameters={{"project_path": "{project_path}"}})
+  - ⚠️ flash_result = functions.run_action(app="ccs", action_name="flash_firmware", parameters={params})
+  - verify = functions.run_action(app="ccs", action_name="verify_flash", parameters={{}})
 Observation: <fill after each tool execution>
-Reflection: <evaluate: build passed? flash confirmed? target running?>
+Reflection: <evaluate: device identified? build successful? flash confirmed? verify passed?>
+</scratch_pad>""",
+
+    "stm32-flash": """## STM32 Flash GOAP Template (Legacy — use keil-build or cubeide-build)
+
+<scratch_pad>
+Goal: {user_goal}
+Actions:
+  - adapter_status = functions.list_adapters(filter="stm32cubeide")
+  - device_info = functions.run_action(app="stm32cubeide", action_name="identify_device", parameters={{}})
+  - preview = functions.preview_action(app="stm32cubeide", action_name="flash_firmware", parameters={params})
+  - ⚠️ flash_result = functions.run_action(app="stm32cubeide", action_name="flash_firmware", parameters={params})
+  - verify = functions.run_action(app="stm32cubeide", action_name="verify_flash", parameters={{}})
+  - logs = functions.collect_logs(action_id=flash_result.action_id)
+Observation: <fill after each tool execution>
+Reflection: <evaluate: device identified? flash confirmed by user? verify passed?>
+</scratch_pad>""",
+
+    "autocad-dwg": """## AutoCAD DWG GOAP Template
+
+<scratch_pad>
+Goal: {user_goal}
+Actions:
+  - adapter_status = functions.list_adapters(filter="autocad")
+  - script_result = functions.run_action(app="autocad", action_name="run_script", parameters={{"script_path": "{script_path}"}})
+  - export_result = functions.run_action(app="autocad", action_name="{action_name}", parameters={params})
+  - validation = functions.validate_result(action_id=export_result.action_id)
+Observation: <fill after each tool execution>
+Reflection: <evaluate: script executed? export complete? files valid?>
+</scratch_pad>""",
+
+    "multisim-reader": """## Multisim Reader GOAP Template
+
+<scratch_pad>
+Goal: {user_goal}
+Actions:
+  - adapter_status = functions.list_adapters(filter="multisim")
+  - circuit_data = functions.run_action(app="multisim", action_name="read_circuit", parameters={{"file_path": "{file_path}"}})
+  - export_result = functions.run_action(app="multisim", action_name="{action_name}", parameters={params})
+  - logs = functions.collect_logs(action_id=export_result.action_id)
+Observation: <fill after each tool execution>
+Reflection: <evaluate: circuit read successfully? netlist exported? data valid?>
 </scratch_pad>""",
 
     "solidworks-cad": """## SolidWorks CAD GOAP Template
@@ -100,31 +142,6 @@ Actions:
   - validation = functions.validate_result(action_id=export_result.action_id)
 Observation: <fill after each tool execution>
 Reflection: <evaluate: document opened? export complete? files valid?>
-</scratch_pad>""",
-
-    "autocad-dwg": """## AutoCAD DWG GOAP Template
-
-<scratch_pad>
-Goal: {user_goal}
-Actions:
-  - adapter_status = functions.list_adapters(filter="autocad")
-  - doc_result = functions.run_action(app="autocad", action_name="open_drawing", parameters={{"file_path": "{file_path}"}})
-  - export_result = functions.run_action(app="autocad", action_name="{action_name}", parameters={params})
-  - validation = functions.validate_result(action_id=export_result.action_id)
-Observation: <fill after each tool execution>
-Reflection: <evaluate: drawing opened? export complete? files valid?>
-</scratch_pad>""",
-
-    "multisim-reader": """## Multisim Reader GOAP Template
-
-<scratch_pad>
-Goal: {user_goal}
-Actions:
-  - adapter_status = functions.list_adapters(filter="multisim")
-  - read_result = functions.run_action(app="multisim", action_name="read_circuit_info", parameters={{"file_path": "{file_path}"}})
-  - logs = functions.collect_logs(action_id=read_result.action_id)
-Observation: <fill after each tool execution>
-Reflection: <evaluate: circuit file readable? netlist extracted? simulation data found?>
 </scratch_pad>""",
 
     "relay-core": """## Relay Core GOAP Template

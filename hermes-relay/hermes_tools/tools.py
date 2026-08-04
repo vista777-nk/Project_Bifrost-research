@@ -71,7 +71,7 @@ def _make_list_adapters_tool() -> dict:
         "function": {
             "name": "list_adapters",
             "description": (
-                "列出当前可用的工业软件适配器（KiCad、STM32、TI、SolidWorks）"
+                "列出当前可用的工业软件适配器（KiCad、Keil MDK、STM32CubeIDE、CCS、AutoCAD、Multisim、SolidWorks）"
                 "及其各自版本、状态和可用动作列表。"
                 "在任何实际操作之前调用此工具以确认目标软件可用。"
             ),
@@ -80,7 +80,7 @@ def _make_list_adapters_tool() -> dict:
                 "properties": {
                     "filter": {
                         "type": "string",
-                        "description": "按名称过滤: 'kicad' | 'stm32' | 'ti' | 'solidworks'。空字符串表示全部。",
+                        "description": "按名称过滤: 'kicad' | 'keil' | 'stm32cubeide' | 'ccs' | 'autocad' | 'multisim' | 'solidworks'。空字符串表示全部。",
                         "default": "",
                     }
                 },
@@ -105,8 +105,8 @@ def _make_run_action_tool() -> dict:
                 "properties": {
                     "app": {
                         "type": "string",
-                        "description": "目标软件: kicad | keil | stm32cubemx | solidworks | autocad | multisim",
-                        "enum": ["kicad", "keil", "stm32cubemx", "solidworks", "autocad", "multisim"],
+                        "description": "目标软件: kicad | stm32 | ti | solidworks",
+                        "enum": ["kicad", "keil", "stm32cubeide", "ccs", "autocad", "multisim", "solidworks"],
                     },
                     "action_name": {
                         "type": "string",
@@ -251,7 +251,7 @@ def _make_preview_action_tool() -> dict:
                 "properties": {
                     "app": {
                         "type": "string",
-                        "description": "目标软件: kicad | keil | stm32cubemx | solidworks | autocad | multisim",
+                        "description": "目标软件: kicad | stm32 | ti | solidworks",
                     },
                     "action_name": {
                         "type": "string",
