@@ -1,0 +1,19 @@
+# Bifrost — Codex Relay 依赖
+# 与 codex-relay/pyproject.toml [project] dependencies 保持一致（见 docs/00 文档同步清单）
+
+# === Bifrost 核心（根包 bifrost：core/ + adapters/）===
+# 本地开发：以 editable 方式安装项目根目录
+-e ..
+
+# === Codex 插件（MCP Server）===
+mcp>=1.6.0,<2.0.0              # MCP Server
+pydantic>=2.10.0,<3.0.0        # 数据模型与校验
+typer>=0.15.0,<1.0.0           # CLI 入口
+structlog>=24.4.0,<26.0.0      # 结构化日志
+
+# === 适配器依赖（按需安装） ===
+# pyocd>=0.36.0,<1.0.0                      # STM32 烧录（Phase 2）
+# pywin32>=308; sys_platform == "win32"     # SolidWorks / AutoCAD / Multisim COM 接口
+
+# === 开发依赖 ===
+# pip install -e ".[dev]"（以 codex-relay/pyproject.toml [project.optional-dependencies] dev 为准）

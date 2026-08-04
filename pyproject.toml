@@ -36,6 +36,7 @@ hermes = []
 stm32 = ["pyocd>=0.36.0,<1.0.0"]
 solidworks = ["pywin32>=308; sys_platform == 'win32'"]
 autocad = ["pywin32>=308; sys_platform == 'win32'"]
+multisim = ["pywin32>=308; sys_platform == 'win32'"]
 # 开发依赖
 dev = [
     "pytest>=8.3.0,<9.0.0",
@@ -51,8 +52,11 @@ dev = [
 requires = ["setuptools>=75.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
+# 打包策略：根包 bifrost 只包含框架无关的共享核心。
+# codex-relay/ 与 hermes-relay/ 为独立包（bifrost-codex / bifrost-hermes），分别 release。
 [tool.setuptools.packages.find]
 where = ["."]
+include = ["core*", "adapters*"]
 
 [tool.ruff]
 target-version = "py311"

@@ -14,16 +14,6 @@ pywin32>=308; sys_platform == "win32"   # AutoCAD + SolidWorks COM 接口
 # pyocd>=0.36.0,<1.0.0                 # ARM Cortex 调试（备选，主路径为 Keil/CubeIDE CLI）
 
 # === 开发依赖 ===
-# pip install -r requirements-dev.txt（待创建）
-# pytest, mypy, black, ruff 等见 pyproject.toml [project.optional-dependencies] dev
-
-# === 开发依赖（pip install -r requirements-dev.txt） ===
-# 以下内容请放入 requirements-dev.txt：
-#
-# pytest>=8.3.0,<9.0.0
-# pytest-mock>=3.14.0,<4.0.0
-# pytest-asyncio>=0.24.0,<1.0.0
-# pytest-cov>=6.0.0,<7.0.0
-# mypy>=1.13.0,<2.0.0
-# black>=24.10.0,<26.0.0
-# ruff>=0.8.0,<1.0.0
+# pytest, pytest-mock, pytest-asyncio, pytest-cov, mypy, black, ruff
+# 统一以 pyproject.toml [project.optional-dependencies] dev 为唯一来源：
+#   pip install -e ".[dev]"
