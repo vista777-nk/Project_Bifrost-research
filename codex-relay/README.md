@@ -8,8 +8,8 @@
 
 ```
 codex-relay/                          ← Codex 专属
-├── plugin.json                       #   Agent Plugin 清单（待创建）
-├── .mcp.json                         #   MCP Server 配置（待创建）
+├── plugin.json                       #   Agent Plugin 清单
+├── .mcp.json                         #   MCP Server 配置
 ├── codex_plugin/                     #   Python 包（MCP Server 实现）
 │   ├── __init__.py
 │   └── mcp/
