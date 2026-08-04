@@ -6,7 +6,7 @@ pydantic>=2.10.0,<3.0.0       # 数据模型与校验
 structlog>=24.4.0,<26.0.0      # 结构化日志
 
 # === Codex 插件（codex-relay/） ===
-mcp>=1.6.0,<2.0.0              # MCP Server
+mcp>=2.0.0,<3.0.0              # MCP Server (v2 — 2026-07-28 发布，API 重写)
 typer>=0.15.0,<1.0.0           # CLI 入口
 
 # === 适配器依赖（按需安装） ===

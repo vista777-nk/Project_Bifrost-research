@@ -29,7 +29,7 @@ dependencies = [
 
 [project.optional-dependencies]
 # Codex 插件（MCP Server）
-codex = ["mcp>=1.6.0,<2.0.0", "typer>=0.15.0,<1.0.0"]
+codex = ["mcp>=2.0.0,<3.0.0", "typer>=0.15.0,<1.0.0"]
 # Hermes 适配
 hermes = []
 # 各软件适配器依赖
