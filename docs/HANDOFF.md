@@ -1,6 +1,43 @@
 # Project Handoff
 
-Last inspected: 2026-09-07.
+Last inspected: 2026-09-08.
+
+## Multisim Implementation Update
+
+The user redirected work to Multisim before real KiCad testing. The actual
+32-bit Windows PowerShell host now connects successfully to Multisim 14.3.
+The adapter uses an isolated JSON-in/JSON-out worker with the registered
+`MultisimInterface.MultisimApp` COM class; no second Python installation or
+execution-policy change is needed.
+
+Implemented: probe, circuit/component inspection, text/CSV connectivity reports,
+DC/AC/transient simulation, and sample retrieval by simulation action ID.
+File-based operations use temporary copies; report writes are explicit and
+protected by confirmation plus an exclusive-create check for overwrite races.
+The relay now marks `Action.confirmation_granted` only after `confirm_action`.
+This field is not an exposed run-action parameter.
+
+Live MCP tests use NI's installed Using Analyses example and verify the source
+hash is unchanged. COM signatures/constants came from the installed type
+library. DC/AC calls require typed string arrays; transient sampling is
+configured to fill its requested buffer before the simulation stop time.
+Verification: 8 live MCP tests passed; the non-hardware suite passed 164 tests
+with 1 skip and 91% Multisim Python adapter coverage. The wheel includes
+`adapters/multisim/worker.ps1`.
+
+After the network interruption, the refreshed plugin's own MCP tools were
+verified in the active Codex session: availability, probe (Multisim 14.3,
+32-bit worker), enumeration of 18 components, DC analysis, and numeric output
+retrieval for `V(BPout)` all succeeded. The installed plugin version is
+`0.1.0+codex.20260907155231` in the personal marketplace.
+
+See [Multisim Setup](MULTISIM_SETUP.md) for the exact scope, limits, and opt-in
+live test command. Reports are connectivity reports, not SPICE decks. Samples
+are cached for 16 simulation IDs and disappear on MCP restart. Relative external
+model files are not copied automatically. No KiCad integration tests were
+performed as part of this Multisim-focused work.
+
+The older activation and takeover sections below are historical context.
 
 ## Codex Activation Update
 

@@ -580,7 +580,9 @@ def _handle_confirm_action(args: dict[str, Any]) -> dict[str, Any]:
             "result": _result_payload(cancelled),
         }
 
-    confirmed_action = action.model_copy(update={"requires_confirmation": False})
+    confirmed_action = action.model_copy(
+        update={"requires_confirmation": False, "confirmation_granted": True}
+    )
     result = _execute(
         runtime,
         confirmed_action,

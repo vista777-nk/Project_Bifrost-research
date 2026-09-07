@@ -74,6 +74,7 @@ class ActionExecutor:
                 name=adapter.name,
                 display_name=self._display_name_for(adapter.name),
                 version=adapter.version,
+                software_version=getattr(adapter, "software_version", None),
                 available=available,
                 available_actions=adapter.available_actions,
                 priority_path=self._priority_path_for(adapter.name),

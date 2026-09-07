@@ -148,6 +148,9 @@ class Action(BaseModel):
     requires_confirmation: bool = Field(
         default=False, description="执行前是否需要用户确认"
     )
+    confirmation_granted: bool = Field(
+        default=False, description="Set by the relay only after explicit confirmation"
+    )
     permission_note: str = Field(
         default="", description="Human-readable reason confirmation is required"
     )

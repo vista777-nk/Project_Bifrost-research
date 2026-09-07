@@ -64,14 +64,13 @@ Use reviewed approval or an interactive session, not an unrestricted sandbox.
   call were verified with Codex CLI 0.153.4 on Windows.
 - KiCad 8.0.9 is detected through its bundled Python and configured CLI path.
   Real project export and DRC acceptance testing is the next task.
-- Multisim 14.3 is installed, but its current adapter is not operational.
-  The installed COM class is `MultisimInterface.MultisimApp`, with a 32-bit
-  in-process `MSInterface.dll`. A separate 32-bit host is needed for the
-  64-bit KiCad runtime; actual circuit operations remain to be implemented.
+- Multisim 14.3 uses an isolated 32-bit COM worker. Circuit inspection,
+  connectivity reports, DC, AC, and transient analysis are implemented and
+  have live MCP integration coverage. See [Multisim Setup](MULTISIM_SETUP.md).
 - Hermes is not part of this plugin and remains scaffolded.
 
 No original design should be overwritten without explicit user confirmation.
-Do not interpret placeholder Multisim responses as evidence of a simulation.
+Simulation success requires captured numeric results, not just a successful command.
 
 ## Development Updates
 

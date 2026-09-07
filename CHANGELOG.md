@@ -6,6 +6,9 @@ All notable changes to Bifrost are documented in this file.
 
 ### Added
 
+- Added a 32-bit Multisim COM worker, circuit inspection, connectivity reports,
+  bounded simulations, and output retrieval by simulation action ID.
+- Added source snapshots and explicit, race-safe report overwrite confirmation.
 - Added a current Codex plugin manifest and a local packaging command that pins
   the installed Python runtime and KiCad paths without editing global settings.
 - Added subprocess MCP smoke checks for automatic negotiation and the legacy

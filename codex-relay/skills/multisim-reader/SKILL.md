@@ -1,74 +1,80 @@
 ---
 name: multisim-reader
-description: Multisim 电路读取与仿真 — 打开设计文件、枚举元件、导出网表、运行仿真、采集输出数据。当用户提到 Multisim、电路仿真、SPICE、网表、.ms14 文件时使用。
+description: Inspect saved Multisim circuits, enumerate components and probes, export connectivity reports, and run DC, AC, or transient simulations through Bifrost. Use for Multisim, .ms14 files, circuit analysis, or simulation output requests.
 ---
 
-# Multisim 电路读取与仿真
+# Multisim Circuit Inspection and Simulation
 
-## 适用场景
-- 用户提到 Multisim、电路仿真、SPICE 分析、网表导出
-- 用户需要读取 `.ms14` 设计文件中的电路信息
-- 用户需要运行瞬态/AC/DC 仿真并获取输出数据
-- 用户想通过 AI 生成 SPICE netlist 并在 Multisim 中验证
-- 用户提到"仿真""波形""Bode 图""工作点"等关键词
+Use Bifrost's MCP tools. Do not replace unavailable tools with GUI automation,
+edit binary `.ms14` files, or claim that a simulation succeeded without returned
+numeric output data.
 
-## 前置条件
-- **仅 Windows** — Multisim COM Automation API 仅 Windows 平台可用
-- NI Multisim 14.x 已安装并激活
-- Python 环境需安装 `pywin32>=308`
-- 若 Multisim COM 组件为 32-bit，必须使用 32-bit Python
+## Start
 
-## 可用工具速查
-| 工具 | 用途 | 风险 |
-|------|------|:---:|
-| `list_adapters` | 确认 Multisim 适配器可用 | 🟢 低 |
-| `run_action(app="multisim", ...)` | 执行电路操作 | 🟡 中 |
-| `validate_result` | 校验仿真结果 | 🟢 低 |
-| `collect_logs` | 收集日志和产物 | 🟢 低 |
+1. Call `list_adapters(filter="multisim")`. Availability means that the required
+   files and 32-bit COM registration exist; it does not verify the license.
+2. Call `run_action(app="multisim", action_name="probe")` to verify connection,
+   software version, and the 32-bit worker. Stop and report any error.
+3. Use an absolute path to an existing, saved Multisim design. The adapter works
+   on temporary copies; relative external model files are not copied automatically.
 
-## 支持的动作 (action_name)
+The MCP server remains 64-bit. The adapter uses Windows' existing 32-bit
+PowerShell COM host. A separate 32-bit Python installation is not required.
+Never disable PowerShell or Codex security policy to force an operation through.
 
-| 动作 | 说明 | 关键参数 |
-|------|------|---------|
-| `read_circuit` | 打开设计并读取电路信息（元件、网络、探针） | `file_path` |
-| `export_netlist` | 导出 SPICE 网表 | `file_path`, `output_file` |
-| `run_simulation` | 运行仿真（瞬态/AC/DC） | `analysis_type`, `output_names`, `stop_time` |
-| `get_output_data` | 采集仿真输出数据 | `output_name` |
-| `list_components` | 枚举电路中所有元件 | `file_path` |
+## Actions
 
-## 标准工作流
+All actions use `run_action(app="multisim", action_name=..., parameters=...)`.
 
-### 读取电路 + 导出网表
-1. 调用 `list_adapters(filter="multisim")` — 确认 Multisim 可用
-2. 调用 `run_action(app="multisim", action_name="read_circuit", parameters={"file_path": "<路径>"})`
-3. 调用 `run_action(app="multisim", action_name="export_netlist", parameters={"file_path": "<路径>", "output_file": "<输出路径>"})`
-4. 调用 `validate_result(action_id=<步骤3的action_id>)`
+| Action | Parameters | Result |
+|---|---|---|
+| `probe` | None | Connection, version, worker bitness |
+| `read_circuit` | `file_path` | Circuit name, component references, output names |
+| `list_components` | `file_path` | Component and output enumeration |
+| `export_netlist` | `file_path`, `output_file`, optional `format`: `text` or `csv` | Connectivity report artifact |
+| `run_simulation` | `file_path`, optional analysis settings below | Simulation action ID and available output names |
+| `get_output_data` | `simulation_action_id`, `output_name` | Numeric samples and interpolation metadata |
 
-### 运行瞬态仿真
-1. 调用 `list_adapters(filter="multisim")`
-2. 调用 `run_action(app="multisim", action_name="read_circuit", parameters={"file_path": "<路径>"})`
-3. 调用 `run_action(app="multisim", action_name="run_simulation", parameters={"analysis_type": "transient", "output_names": ["V(out)"], "stop_time": 0.01})`
-4. 调用 `run_action(app="multisim", action_name="get_output_data", parameters={"output_name": "V(out)"})`
+`export_netlist` exports NI's connectivity report, **not an executable SPICE
+deck**. Use a separate `.txt` or `.csv` destination. `output_file` is required;
+never supply an original circuit as the output destination.
 
-## 集成路径优先级
-| 优先级 | 路径 | 说明 |
-|:---:|------|------|
-| 🥇 | COM Automation API (pywin32) | 完整电路操作、仿真控制、数据采集 |
-| 🥈 | 命令行 netlist 仿真 | 批处理仿真，能力有限 |
-| ❌ | .ms14 直接解析 | 专有二进制格式，不可行 |
+## Simulation
 
-## 重要限制与安全规则
-- **修改前停止仿真**：修改元件参数前确保仿真已停止
-- **快照保护**：建议所有修改走 `save_as`，不覆盖原设计文件
-- **单位规范**：R/L/C 值使用 SI 基本单位（`1kΩ = 1000`, `10nF = 1e-8`）
-- **枚举先行**：引用任何 RefDes/probe 名称前，先调用 `list_*` 枚举
-- **32-bit Python**：若 Multisim COM 组件为 32-bit，需使用 32-bit Python 环境
+Always pass `file_path`; a preceding read does not establish a persistent open
+circuit for later operations. Enumerate output names before selecting them.
+Use exact names such as `V(BPout)`, not guessed node or component identifiers.
 
-## 可借鉴项目
-- [Multisim-MCP](https://github.com/Last-emo-boy/Multisim-MCP) — 61 个 MCP 工具的 Multisim COM Automation 参考实现
+- `analysis_type`: `dc` (default), `ac`, or `transient`.
+- `output_names`: up to 16 names from `read_circuit`. Omitted or empty selects
+  the available voltage outputs, provided there are between 1 and 16.
+- `sample_count`: 2 to 10000, default 128. For AC logarithmic sweeps this is
+  density per decade or octave, with an additional total-point limit.
+- Transient: `stop_time` in seconds, from `1e-9` to `60`, default `0.01`.
+- AC: `start_frequency` and `stop_frequency` in Hz, from `0.001` to `1e9`,
+  with stop greater than start; defaults are 1 and 1000.
+- AC: `sweep_type` is `linear` (default), `decade`, or `octave`.
 
-## 何时停止问人
-- Multisim 未安装或 COM 组件不可用时
-- 设计文件不存在或格式不支持时
-- 仿真不收敛或报错时 — 报告错误详情
-- 连续 3 次重试失败时
+After a successful simulation, use its returned `action_id` as
+`simulation_action_id` when retrieving each output. Results are held for the
+last 16 successful simulations in that MCP process and are lost on restart.
+Do not assume the latest simulation belongs to the current task.
+
+Keep NI's returned sample/matrix structure and interpolation information.
+Transient outputs also include `sample_rate_hz`. Do not invent units, axes,
+waveform values, or convergence results that were not returned.
+
+## Safety and Verification
+
+- Original designs are never saved or modified by these actions. Workflows
+  requiring component edits, saved design changes, or live GUI interaction are
+  outside this implementation.
+- Existing report destinations trigger `confirmation_required`, including in
+  force mode. Explain the target to the user, wait for explicit approval, and
+  then call `confirm_action`; cancellation must leave the file unchanged.
+- Validate exported reports with `validate_result(action_id=...)`; validation
+  checks nonempty files and their recorded checksum.
+- Use `collect_logs` for failures. A timeout is not automatically retried;
+  inspect Multisim before retrying because the worker's state may be uncertain.
+- On `ERR_MULTISIM_COM`, include the reported stage and error message. Do not
+  treat missing probes, empty samples, or failed analyses as successful runs.
