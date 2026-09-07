@@ -4,6 +4,13 @@
 > **后续阅读**：`06-testing-strategy.md`
 > **用途**：定义每个 Phase 的精确任务、验收标准、依赖关系，让 AI 可以按步骤逐条执行
 
+> **Scope correction (2026-09-08):** The product must create and edit native
+> circuits in both KiCad and Multisim. The original tasks below cover the
+> integration foundation only. Circuit-authoring acceptance is defined in
+> [TDR-002](decisions/TDR-002-circuit-authoring-scope.md) and remains incomplete.
+> Complete that requirement before treating Phase 1 as the user's finished MVP
+> or advancing the active work to the MCU adapters.
+
 ---
 
 ## Phase 0：设计完成

@@ -4,6 +4,12 @@ All notable changes to Bifrost are documented in this file.
 
 ## Unreleased
 
+### Changed
+
+- Restored native circuit creation and editing in both KiCad and Multisim as
+  explicit product acceptance criteria, separate from the completed integration
+  foundation; recorded authoring API gaps and a native-file acceptance case.
+
 ### Added
 
 - Added a 32-bit Multisim COM worker, circuit inspection, connectivity reports,

@@ -4,6 +4,12 @@
 > 来源：全流程全要素检查报告 → 阻断性问题修复后的最终版执行计划
 > 总预估工时：~24.5h
 
+> **2026-09-08 scope clarification:** This order describes the initial
+> integration foundation. Native circuit creation and editing in both KiCad
+> and Multisim are required acceptance criteria; follow
+> [TDR-002](TDR-002-circuit-authoring-scope.md) before declaring the product
+> complete. The original estimate does not cover the missing authoring work.
+
 ---
 
 ## Step 1: 环境准备（5 min）

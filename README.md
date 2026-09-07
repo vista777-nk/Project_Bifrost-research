@@ -8,6 +8,11 @@
 [![Python](https://img.shields.io/badge/python-3.11%2B-3776AB.svg)](https://www.python.org/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
+**Product scope:** Codex must be able to create and edit native circuits in both
+KiCad and Multisim. The current inspection/export/simulation integration is a
+foundation, not completion of that requirement. See
+[Circuit Authoring Scope](docs/decisions/TDR-002-circuit-authoring-scope.md).
+
 ---
 
 ## 🎯 理念：联合一体化 — "机器人制造机器人"

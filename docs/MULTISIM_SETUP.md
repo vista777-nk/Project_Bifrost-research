@@ -1,5 +1,9 @@
 # Multisim Codex Integration
 
+This guide covers the currently implemented inspection and analysis tools.
+Native circuit creation and editing remain required, unfinished product work;
+see [Circuit Authoring Scope](decisions/TDR-002-circuit-authoring-scope.md).
+
 ## Runtime
 
 Bifrost's `codex-relay@personal` plugin uses the existing 64-bit Python MCP

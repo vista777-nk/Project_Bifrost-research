@@ -2,6 +2,20 @@
 
 Last inspected: 2026-09-08.
 
+## Product Scope Correction
+
+The user clarified that the original requirement is to **design and edit
+circuits in both KiCad and Multisim**, not only inspect/export/simulate existing
+files. The current plugin is integration infrastructure and does not yet meet
+that requirement. Authoring is now an explicit product acceptance gate in
+[TDR-002](decisions/TDR-002-circuit-authoring-scope.md).
+
+Prioritize native authoring feasibility and persisted editing, particularly the
+Multisim component-placement/wiring gap. Keep the original design-versus-API
+distinction explicit: exposed RLC setters, replacement, and SaveAs are not proof
+of arbitrary circuit creation; KiCad PCB editing is not schematic editing.
+No authoring runtime operations were added in this scope correction.
+
 ## Multisim Implementation Update
 
 The user redirected work to Multisim before real KiCad testing. The actual
