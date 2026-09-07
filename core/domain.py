@@ -62,6 +62,15 @@ class ExecutionMode(StrEnum):
     FORCE = "force"       # 强制执行（跳过确认）
 
 
+class RiskLevel(StrEnum):
+    """Action risk level used by relay permission gates."""
+
+    LOW = "low"
+    MEDIUM = "medium"
+    HIGH = "high"
+    CRITICAL = "critical"
+
+
 # ═══════════════════════════════════════════════════════════════
 # 数据模型
 # ═══════════════════════════════════════════════════════════════
@@ -119,6 +128,10 @@ class Action(BaseModel):
         description="动作类型: read | write | execute | validate | collect"
     )
     app: str = Field(description="目标软件")
+    risk_level: RiskLevel = Field(
+        default=RiskLevel.LOW,
+        description="Risk level: low | medium | high | critical",
+    )
     adapter: str = Field(
         default="", description="指定 adapter 名称，空字符串表示自动选择"
     )
@@ -134,6 +147,9 @@ class Action(BaseModel):
     retry_policy: RetryPolicy = Field(default_factory=RetryPolicy)
     requires_confirmation: bool = Field(
         default=False, description="执行前是否需要用户确认"
+    )
+    permission_note: str = Field(
+        default="", description="Human-readable reason confirmation is required"
     )
     timeout_seconds: int = Field(default=300, ge=1, le=3600)
     tags: list[str] = Field(default_factory=list, description="标签，方便筛选")

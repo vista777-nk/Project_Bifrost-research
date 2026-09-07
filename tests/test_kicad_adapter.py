@@ -11,16 +11,14 @@ Phase 1 Step 3d — KiCad Adapter 单元测试
 CI 默认跳过。
 """
 
-import os
 import tempfile
-from datetime import datetime
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
-from core.domain import Action, ActionStatus, ErrorSeverity
 from adapters.kicad.adapter import KiCadAdapter
-
+from core.domain import Action
 
 # ═══════════════════════════════════════════════════════════════
 # 接口合规性
@@ -131,6 +129,50 @@ class TestKiCadCollectArtifacts:
             ))
             assert len(result.artifacts) == 1
             assert "data.csv" in result.artifacts[0].path
+
+    def test_collect_works_through_executor_without_kicad(self):
+        from core.actions import ActionExecutor
+
+        adapter = KiCadAdapter()
+        executor = ActionExecutor()
+        executor.register_adapter(adapter)
+        with tempfile.TemporaryDirectory() as tmpdir:
+            (Path(tmpdir) / "board.gbr").write_text("gerber")
+            result = executor.execute(
+                _make_action("collect_artifacts", output_dir=tmpdir)
+            )
+        assert result.success is True
+        assert len(result.artifacts) == 1
+
+
+class TestKiCadGerberExport:
+    def test_success_records_generated_artifacts(self, tmp_path, monkeypatch):
+        adapter = KiCadAdapter()
+        adapter._cli_available = True
+        project = tmp_path / "board.kicad_pcb"
+        project.write_text("(kicad_pcb)")
+        output_dir = tmp_path / "gerber"
+
+        def fake_run(*_args, **_kwargs):
+            output_dir.mkdir(exist_ok=True)
+            (output_dir / "board-F_Cu.gbr").write_text("gerber")
+            (output_dir / "board.drl").write_text("drill")
+            return SimpleNamespace(returncode=0, stdout="ok", stderr="")
+
+        monkeypatch.setattr("adapters.kicad.adapter.subprocess.run", fake_run)
+        result = adapter.execute(
+            _make_action(
+                "export_gerber",
+                project_path=str(project),
+                output_dir=str(output_dir),
+            )
+        )
+
+        assert result.success is True
+        assert {Path(artifact.path).suffix for artifact in result.artifacts} == {
+            ".gbr",
+            ".drl",
+        }
 
 
 # ═══════════════════════════════════════════════════════════════

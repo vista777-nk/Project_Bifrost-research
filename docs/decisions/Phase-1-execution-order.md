@@ -47,6 +47,8 @@ pytest tests/test_smoke.py -v    # 确认冒烟测试通过
 
 ## Step 4: MCP Server 层
 
+> 状态：已完成。六个工具、结果存储、确认门禁、JSON Schema 与 MCP SDK 集成测试均已落地。
+
 | 顺序 | 模块 | 说明 |
 |:---:|------|------|
 | 4a | `codex_plugin/mcp/schemas.py` | pydantic → JSON Schema 导出 |

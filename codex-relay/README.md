@@ -14,9 +14,9 @@ codex-relay/                          ← Codex 专属
 │   ├── __init__.py
 │   └── mcp/
 │       ├── __init__.py
-│       ├── server.py                 #     MCP Server 入口（待实现）
-│       ├── tools.py                  #     工具实现（待实现）
-│       └── schemas.py                #     JSON Schema 生成（待实现）
+│       ├── server.py                 #     MCP Server 入口
+│       ├── tools.py                  #     工具实现与运行时状态
+│       └── schemas.py                #     JSON Schema 生成
 └── skills/                           #   Skill 集合（9 个 skill 文件夹）
     ├── kicad-pcb/SKILL.md
     ├── keil-build/SKILL.md
@@ -47,6 +47,6 @@ codex-relay/                          ← Codex 专属
 | 阶段 | 状态 |
 |------|:---:|
 | Phase 0 — 设计 | ✅ 完成 |
-| Phase 1 — 最小可用插件 | ⏳ 待开始 |
+| Phase 1 — 最小可用插件 | MCP Server 已完成，示例工程待补充 |
 
 详见 [docs/05-implementation-plan.md](../docs/05-implementation-plan.md)
