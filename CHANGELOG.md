@@ -6,6 +6,9 @@ All notable changes to Bifrost are documented in this file.
 
 ### Changed
 
+- Kept mouse/keyboard and GUI-control automation prohibited and documented a
+  verified non-GUI Multisim compressed-XML route, including native reopening,
+  a persisted value edit, and component/connectivity creation proofs.
 - Restored native circuit creation and editing in both KiCad and Multisim as
   explicit product acceptance criteria, separate from the completed integration
   foundation; recorded authoring API gaps and a native-file acceptance case.

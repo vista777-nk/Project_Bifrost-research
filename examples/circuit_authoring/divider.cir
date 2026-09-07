@@ -1,0 +1,5 @@
+Bifrost native voltage-divider authoring probe
+V1 1 0 DC 5
+R1 1 2 10000
+R2 2 0 10000
+.END

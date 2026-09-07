@@ -135,6 +135,13 @@ doc = acad.Documents.Open("drawing.dwg")
 
 ## 6. Multisim 14.3
 
+> **2026-09-08 correction:** The `.ms14` container is compressed XML. Directly
+> treating its bytes as text XML is incorrect, but decoding, structured XML
+> editing, and re-encoding have now been verified with native COM reopening.
+> This provides a non-GUI authoring route beyond the COM method set. See
+> [Non-GUI Authoring Research](research-multisim-authoring.md); the complete
+> authoring implementation and layout validation are still pending.
+
 > **2026-08-05 联网验证更新**：此前"主路径 = .ms14 XML 解析"的假设**已被推翻**。
 > `.ms14` 是 NI 专有格式，无证据表明可直接按 XML 解析。经验证的可行路径如下。
 

@@ -3,6 +3,10 @@
 Date: 2026-09-08.
 Status: User requirement clarified; authoring implementation is not complete.
 
+Constraint confirmed 2026-09-08: no mouse/keyboard or GUI-control automation.
+The user rejected a GUI fallback. Native-file interoperability is now verified
+at prototype level; see [the non-GUI research](../research-multisim-authoring.md).
+
 ## Requirement
 
 Bifrost must let Codex **design and edit circuits in both KiCad and Multisim**.
@@ -64,9 +68,10 @@ with regex replacements or discard unrecognized document fields.
    cross-application acceptance case below.
 5. Only then describe the plugin as meeting the circuit-design requirement.
 
-If Multisim authoring requires GUI automation, a new extension, or a software
-upgrade, present that requirement explicitly. The existing API-first/no-GUI
-constraint remains in effect until the user approves a documented change.
+Do not add GUI automation, synthetic mouse/keyboard input, or an equivalent
+desktop-control workaround. Use native-file APIs/parsers, COM, and documented
+non-interactive interfaces. Disclose any required extension or software upgrade;
+report a genuine unsupported capability rather than silently substituting GUI control.
 
 ## Acceptance Case
 

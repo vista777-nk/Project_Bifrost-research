@@ -2,6 +2,20 @@
 
 Last inspected: 2026-09-08.
 
+## Authoring Feasibility Blocker
+
+The user explicitly rejected all mouse/keyboard and GUI-control automation.
+The earlier GUI recommendation was premature: `.ms14` is compressed XML and
+a third-party decoder/encoder provides a working non-GUI file route.
+Round-trip bytes, native reopening, an XML-only R2 edit (3980 to 20000 ohms),
+and generation of native components/connectivity were verified locally.
+The reference generator still has source-model and drawing-alignment defects;
+full TDR-002 acceptance is not complete and no public authoring tools are installed.
+See [the non-GUI feasibility record](research-multisim-authoring.md) for sources,
+exact evidence, limitations, and the next native-file implementation steps.
+The failed `OpenFile(.cir)` probe remains historical evidence about that route
+only; it is not a reason to add a GUI backend. Vendor-derived assets stay local.
+
 ## Product Scope Correction
 
 The user clarified that the original requirement is to **design and edit
