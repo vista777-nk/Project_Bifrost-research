@@ -4,7 +4,7 @@
       "command": "python",
       "args": ["-m", "codex_plugin.mcp.server"],
       "env": {
-        "BIFROST_HOME": "${pluginRoot}"
+        "PYTHONUTF8": "1"
       }
     }
   }

@@ -54,6 +54,15 @@ class BaseAdapter(ABC):
         """
         ...
 
+    def can_execute(self, action: Action) -> bool:
+        """Return whether this action can run in the current environment.
+
+        Adapters with filesystem-only actions can override this without making
+        the target application appear available in ``list_adapters``.
+        """
+
+        return self.check_availability()
+
     @abstractmethod
     def execute(self, action: Action) -> ActionResult:
         """执行一个结构化动作。

@@ -8,6 +8,11 @@
 [![Python](https://img.shields.io/badge/python-3.11%2B-3776AB.svg)](https://www.python.org/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
+**Product scope:** Codex must be able to create and edit native circuits in both
+KiCad and Multisim. The current inspection/export/simulation integration is a
+foundation, not completion of that requirement. See
+[Circuit Authoring Scope](docs/decisions/TDR-002-circuit-authoring-scope.md).
+
 ---
 
 ## 🎯 理念：联合一体化 — "机器人制造机器人"
@@ -159,7 +164,8 @@ pip install -e .
 
 ```bash
 # 方式 1：本地插件开发（从项目根目录）
-codex plugin install --local ./codex-relay
+# See docs/CODEX_SETUP.md for runtime setup and personal marketplace creation.
+codex plugin add codex-relay@personal
 
 # 方式 2：通过 marketplace（发布后）
 # 在 Codex 中输入：$kicad-pcb

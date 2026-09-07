@@ -62,6 +62,12 @@
 - [x] KiCad / Keil / STM32CubeIDE / CCS / AutoCAD / Multisim / SolidWorks CLI/API 调研
 
 ### Phase 1 — KiCad + Multisim（第一期开发）
+
+Native circuit creation and editing in **both** applications are required,
+not optional follow-ups to inspection and simulation. See the authoring scope
+and acceptance gates in [TDR-002](decisions/TDR-002-circuit-authoring-scope.md).
+The integration tasks below do not by themselves satisfy this product goal.
+
 - [ ] 实现 Core 数据模型（pydantic）
 - [ ] 实现 MCP Server（list_adapters + run_action + confirm_action）
 - [ ] Mock adapter（不连真实软件）

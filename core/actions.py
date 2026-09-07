@@ -74,12 +74,18 @@ class ActionExecutor:
                 name=adapter.name,
                 display_name=self._display_name_for(adapter.name),
                 version=adapter.version,
+                software_version=getattr(adapter, "software_version", None),
                 available=available,
                 available_actions=adapter.available_actions,
                 priority_path=self._priority_path_for(adapter.name),
                 status_message=(
-                    "" if available
-                    else f"{self._display_name_for(adapter.name)} 不可用"
+                    ""
+                    if available
+                    else getattr(
+                        adapter,
+                        "status_message",
+                        f"{self._display_name_for(adapter.name)} 不可用",
+                    )
                 ),
             ))
         return result
@@ -112,7 +118,7 @@ class ActionExecutor:
                 )],
             )
 
-        if not adapter.check_availability():
+        if not adapter.can_execute(action):
             return ActionResult(
                 success=False,
                 action_id=action.action_id,
@@ -221,3 +227,8 @@ class ActionExecutor:
             "solidworks": "com",
         }
         return _paths.get(name, "unknown")
+
+    def get_adapter(self, app: str) -> BaseAdapter:
+        """Return a registered adapter for relay integrations."""
+
+        return self._get_adapter(app)

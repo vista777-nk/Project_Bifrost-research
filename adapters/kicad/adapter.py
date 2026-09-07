@@ -24,23 +24,21 @@ KiCad Adapter — 通过 pcbnew Python API 和 kicad-cli 操作 KiCad EDA。
 
 from __future__ import annotations
 
-import json
 import os
 import shutil
 import subprocess
 from datetime import datetime
 from pathlib import Path
-from typing import Optional
 
 from adapters.base import BaseAdapter
 from core.domain import (
     Action,
+    ActionResult,
     ActionStatus,
     Artifact,
-    ErrorDetail,
-    ActionResult,
-    ErrorSeverity,
     CheckResult,
+    ErrorDetail,
+    ErrorSeverity,
     ValidationReport,
     ValidationStatus,
 )
@@ -56,7 +54,7 @@ class KiCadAdapter(BaseAdapter):
     def __init__(self):
         self._pcbnew_available = False
         self._cli_available = False
-        self._version: Optional[str] = None
+        self._version: str | None = None
         self._status_message = ""
         self._detect()
 
@@ -83,6 +81,14 @@ class KiCadAdapter(BaseAdapter):
 
     def check_availability(self) -> bool:
         return self._pcbnew_available or self._cli_available
+
+    def can_execute(self, action: Action) -> bool:
+        """Allow filesystem-only actions even when KiCad is not installed."""
+
+        return action.action_name in {
+            "collect_artifacts",
+            "get_project_info",
+        } or self.check_availability()
 
     @property
     def status_message(self) -> str:
@@ -177,7 +183,7 @@ class KiCadAdapter(BaseAdapter):
         if issues:
             self._status_message = "; ".join(issues)
 
-    def _detect_cli_version(self) -> Optional[str]:
+    def _detect_cli_version(self) -> str | None:
         try:
             result = subprocess.run(
                 ["kicad-cli", "version", "--format", "plain"],
@@ -204,8 +210,13 @@ class KiCadAdapter(BaseAdapter):
                 errors=[ErrorDetail(
                     error_code="ERR_PCBNEW_UNAVAILABLE",
                     severity=ErrorSeverity.FATAL,
-                    message="pcbnew Python API 不可用。请确认 KiCad 已安装且 Python 可导入 pcbnew 模块。",
-                    suggested_action="使用 kicad-cli 命令行路径操作，或安装 KiCad 并配置 PYTHONPATH",
+                    message=(
+                        "pcbnew Python API 不可用。"
+                        "请确认 KiCad 已安装且 Python 可导入 pcbnew 模块。"
+                    ),
+                    suggested_action=(
+                        "使用 kicad-cli 命令行路径操作，或安装 KiCad 并配置 PYTHONPATH"
+                    ),
                 )],
             )
 
@@ -258,7 +269,13 @@ class KiCadAdapter(BaseAdapter):
             cmd.extend(["--layers", layers])
         cmd.append(project_path)
 
-        return self._run_cli(action, cmd, summary_prefix="Gerber 导出")
+        result = self._run_cli(action, cmd, summary_prefix="Gerber 导出")
+        if result.success:
+            result.artifacts = self._collect_files(
+                output_dir,
+                patterns=["*.gbr", "*.drl"],
+            )
+        return result
 
     def _export_bom(self, action: Action) -> ActionResult:
         """导出 BOM（kicad-cli sch export bom）"""
@@ -308,17 +325,7 @@ class KiCadAdapter(BaseAdapter):
         output_dir = action.parameters.get("output_dir", ".")
         patterns = action.parameters.get("patterns", ["*.gbr", "*.drl", "*.csv", "*.json"])
 
-        artifacts: list[Artifact] = []
-        base = Path(output_dir)
-        if base.exists():
-            for pattern in patterns:
-                for f in base.rglob(pattern):
-                    stat = f.stat()
-                    artifacts.append(Artifact(
-                        path=str(f),
-                        size_bytes=stat.st_size,
-                        description=f.stem,
-                    ))
+        artifacts = self._collect_files(output_dir, patterns)
 
         return ActionResult(
             success=True, action_id=action.action_id, task_id=action.task_id,
@@ -327,6 +334,23 @@ class KiCadAdapter(BaseAdapter):
             summary=f"在 {output_dir} 找到 {len(artifacts)} 个产物文件",
             artifacts=artifacts,
         )
+
+    @staticmethod
+    def _collect_files(output_dir: str, patterns: list[str]) -> list[Artifact]:
+        artifacts: list[Artifact] = []
+        base = Path(output_dir)
+        if not base.exists():
+            return artifacts
+        for pattern in patterns:
+            for path in base.rglob(pattern):
+                artifacts.append(
+                    Artifact(
+                        path=str(path),
+                        size_bytes=path.stat().st_size,
+                        description=path.stem,
+                    )
+                )
+        return artifacts
 
     def _get_project_info(self, action: Action) -> ActionResult:
         """读取工程元信息"""
@@ -362,7 +386,7 @@ class KiCadAdapter(BaseAdapter):
         action: Action,
         cmd: list[str],
         summary_prefix: str = "",
-        artifacts: Optional[list[Artifact]] = None,
+        artifacts: list[Artifact] | None = None,
     ) -> ActionResult:
         """执行 kicad-cli 命令并返回结构化结果"""
         start = datetime.now()
@@ -466,7 +490,10 @@ class KiCadAdapter(BaseAdapter):
             errors=[ErrorDetail(
                 error_code="ERR_ACTION_NOT_SUPPORTED",
                 severity=ErrorSeverity.FATAL,
-                message=f"KiCad 适配器不支持动作 '{action.action_name}'。可用动作: {self.available_actions}",
+                message=(
+                    f"KiCad 适配器不支持动作 '{action.action_name}'。"
+                    f"可用动作: {self.available_actions}"
+                ),
             )],
         )
 
