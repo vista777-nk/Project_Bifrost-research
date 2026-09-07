@@ -159,7 +159,8 @@ pip install -e .
 
 ```bash
 # 方式 1：本地插件开发（从项目根目录）
-codex plugin install --local ./codex-relay
+# See docs/CODEX_SETUP.md for runtime setup and personal marketplace creation.
+codex plugin add codex-relay@personal
 
 # 方式 2：通过 marketplace（发布后）
 # 在 Codex 中输入：$kicad-pcb

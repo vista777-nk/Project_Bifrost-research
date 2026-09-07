@@ -1,0 +1,21 @@
+{
+  "name": "codex-relay",
+  "version": "0.1.0",
+  "description": "Bifrost industrial software tools for KiCad and Multisim.",
+  "author": { "name": "Bifrost Maintainers" },
+  "homepage": "https://github.com/vista777-nk/Project_Bifrost-research",
+  "repository": "https://github.com/vista777-nk/Project_Bifrost-research",
+  "license": "MIT",
+  "keywords": ["kicad", "multisim", "eda", "mcp"],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Bifrost Codex Relay",
+    "shortDescription": "KiCad and Multisim engineering tools",
+    "longDescription": "Bifrost connects Codex to installed engineering software through structured actions, result validation, logs, and explicit overwrite confirmation. Check adapter availability before use.",
+    "developerName": "Bifrost Maintainers",
+    "category": "Developer Tools",
+    "capabilities": ["Read", "Write"],
+    "defaultPrompt": ["Check available engineering tools before working on my project."]
+  }
+}

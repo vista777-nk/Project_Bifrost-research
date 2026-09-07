@@ -6,6 +6,10 @@ All notable changes to Bifrost are documented in this file.
 
 ### Added
 
+- Added a current Codex plugin manifest and a local packaging command that pins
+  the installed Python runtime and KiCad paths without editing global settings.
+- Added subprocess MCP smoke checks for automatic negotiation and the legacy
+  handshake, including tool discovery and structured execution errors.
 - Implemented the Codex MCP server with six tools, runtime result storage,
   validation, log collection, previews, retries, and explicit confirmation.
 - Added MCP tool schemas plus unit and in-process MCP SDK integration tests.

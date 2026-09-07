@@ -7,26 +7,9 @@ server produces a focused installation error when the dependency is absent.
 
 from __future__ import annotations
 
-import os
-import sys
-from pathlib import Path
 from typing import Any
 
-
-def _add_monorepo_root() -> None:
-    """Make sibling core/adapters importable for local plugin installs."""
-
-    plugin_root = Path(
-        os.environ.get("BIFROST_HOME", Path(__file__).resolve().parents[2])
-    ).resolve()
-    repository_root = plugin_root.parent
-    if (repository_root / "core").is_dir() and str(repository_root) not in sys.path:
-        sys.path.insert(0, str(repository_root))
-
-
-_add_monorepo_root()
-
-from .tools import register_all_tools  # noqa: E402
+from .tools import register_all_tools
 
 mcp: Any | None
 _mcp_import_error: ImportError | None = None

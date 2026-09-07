@@ -1,5 +1,8 @@
 # Codex Relay — Bifrost Codex 插件
 
+Setup and verified readiness: [Local Codex Plugin Setup](../docs/CODEX_SETUP.md).
+The installed plugin is `codex-relay@personal`; the MCP server is `bifrost-codex`.
+
 > 本目录仅包含 Codex 专属文件。共享的 `core/`、`adapters/`、`tests/`、`examples/` 位于项目根目录。
 
 ---
@@ -8,7 +11,7 @@
 
 ```
 codex-relay/                          ← Codex 专属
-├── plugin.json                       #   Agent Plugin 清单
+├── .codex-plugin/plugin.json         #   Codex Plugin 清单
 ├── .mcp.json                         #   MCP Server 配置
 ├── codex_plugin/                     #   Python 包（MCP Server 实现）
 │   ├── __init__.py

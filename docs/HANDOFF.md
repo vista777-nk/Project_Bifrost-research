@@ -2,6 +2,48 @@
 
 Last inspected: 2026-09-07.
 
+## Codex Activation Update
+
+The user prioritized a working Codex CLI plugin for the installed KiCad and
+Multisim programs. Plugin packaging and the real MCP connection are now verified:
+
+- Codex CLI: 0.153.4; plugin: `codex-relay@personal`.
+- Personal marketplace: `C:\Users\linux\.agents\plugins\marketplace.json`.
+- Local plugin source: `C:\Users\linux\plugins\codex-relay`.
+- Runtime: repository-local `.venv-codex`, Python 3.11.5 based on KiCad's bundled
+  interpreter, with both `bifrost` and `bifrost-codex` installed editable.
+- KiCad CLI: `E:\KiCad\8.0\bin\kicad-cli.exe`, verified version 8.0.9.
+- Both automatic MCP negotiation and legacy stdio handshake tests passed.
+- The exact generated plugin configuration passed stdio smoke testing from a
+  temporary working directory, without relying on the repository cwd.
+- A fresh `codex exec` session discovered and called `bifrost-codex.list_adapters`
+  successfully with reviewed approval. The first read-only invocation was
+  blocked by its non-interactive `never` approval policy; no persistent approval
+  settings were changed.
+- Full tests at this milestone: 134 passed, 1 skipped because KiCad is now
+  installed in the test runtime. This supersedes the old 129-test baseline below.
+
+The repository now uses `.codex-plugin/plugin.json`; the portable source
+manifest is rendered into a machine-local plugin by `codex_plugin.local_setup`.
+Only the three implemented skills are copied. The generated plugin passed the
+plugin-creator validator. The old root-level manifest and obsolete install
+command were removed. The MCP server requires properly installed packages.
+
+Multisim's actual registered ProgID is `MultisimInterface.MultisimApp` and its
+32-bit in-process server is
+`C:\Program Files (x86)\National Instruments\Circuit Design Suite 14.3\MSInterface.dll`.
+The installed type library exposes `Connect`, `OpenFile`, `EnumComponents`,
+`ReportNetlist`, `RunSimulation`, `DoACSweep`, `DoDCOperatingPoint`, and
+`GetOutputData`. Metadata inspection does not establish successful execution.
+The attempted COM connection actually ran in 64-bit PowerShell despite the
+requested shell path. Its class-registration failure is therefore inconclusive;
+the corrected 32-bit-host probe was blocked by the approval service's concurrency
+error and requires user authorization to retry. No design was opened or changed.
+
+Next: verify real KiCad exports and DRC, then implement the Multisim 32-bit host
+and actual operations. The prior baseline and remaining-task details below are
+historical context, not a claim that these integrations are complete.
+
 ## Purpose and Structure
 
 Bifrost bridges AI agents and industrial software through structured actions,
