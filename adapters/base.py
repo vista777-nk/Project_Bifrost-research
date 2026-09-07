@@ -63,6 +63,10 @@ class BaseAdapter(ABC):
 
         return self.check_availability()
 
+    def preview(self, action: Action) -> ActionResult | None:
+        """Validate parameters and describe native changes without publishing them."""
+        return None
+
     @abstractmethod
     def execute(self, action: Action) -> ActionResult:
         """执行一个结构化动作。

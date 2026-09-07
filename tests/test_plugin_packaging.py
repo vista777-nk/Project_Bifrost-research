@@ -30,8 +30,11 @@ def test_prepare_plugin_uses_explicit_runtime_and_copies_skills(tmp_path):
     cli = kicad_bin / ("kicad-cli.exe" if os.name == "nt" else "kicad-cli")
     cli.touch()
     destination = tmp_path / "plugins" / "codex-relay"
+    authoring = tmp_path / "authoring"
+    authoring.mkdir()
+    (authoring / "manifest.json").write_text('{"local_only": true}')
 
-    prepare_plugin(SOURCE, destination, python, kicad_bin)
+    prepare_plugin(SOURCE, destination, python, kicad_bin, authoring)
 
     config = json.loads((destination / ".mcp.json").read_text("utf-8"))
     server = config["mcpServers"]["bifrost-codex"]
@@ -39,6 +42,7 @@ def test_prepare_plugin_uses_explicit_runtime_and_copies_skills(tmp_path):
     assert server["args"] == ["-m", "codex_plugin.mcp.server"]
     assert server["env"]["PYTHONUTF8"] == "1"
     assert server["env"]["BIFROST_KICAD_CLI"] == str(cli)
+    assert server["env"]["BIFROST_AUTHORING_HOME"] == str(authoring)
     assert "BIFROST_HOME" not in server["env"]
     assert (destination / "skills" / "kicad-pcb" / "SKILL.md").is_file()
     assert (destination / "skills" / "multisim-reader" / "SKILL.md").is_file()

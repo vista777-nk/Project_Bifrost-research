@@ -2,6 +2,8 @@
 
 Setup and verified readiness: [Local Codex Plugin Setup](../docs/CODEX_SETUP.md).
 The installed plugin is `codex-relay@personal`; the MCP server is `bifrost-codex`.
+Native circuit creation/editing, supported scope, and testing prompts:
+[Native Circuit Authoring](../docs/10-circuit-authoring.md).
 
 > 本目录仅包含 Codex 专属文件。共享的 `core/`、`adapters/`、`tests/`、`examples/` 位于项目根目录。
 

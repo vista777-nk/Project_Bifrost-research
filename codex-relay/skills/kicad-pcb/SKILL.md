@@ -1,9 +1,45 @@
 ---
 name: kicad-pcb
-description: KiCad PCB 设计工作流 — 打开工程、导出 Gerber/BOM、运行 DRC、收集产物。当用户提到 KiCad、PCB、Gerber、DRC、BOM 或需要操作 .kicad_pcb 文件时使用。
+description: Create and edit supported KiCad 8 native schematics, inspect PCB projects, export Gerber/BOM, and run checks through Bifrost. Use for KiCad, .kicad_sch, .kicad_pcb, Gerber, ERC, DRC, or BOM requests.
 ---
 
 # KiCad PCB 工作流
+
+## Native Schematic Authoring
+
+Use `run_action(app="kicad", ...)`; never control desktop input.
+The writer targets KiCad 8/schema 20231120 and real Device:R/C/L and
+Simulation_SPICE:VDC symbols. This is schematic authoring; PCB placement and
+routing are separate capabilities and are not implemented by these actions.
+
+- `find_components`: optional `query`; returns supported library IDs and units.
+- `create_schematic`: `output_file` ending in `.kicad_sch`, and `circuit`.
+- `inspect_schematic`: `input_file`; returns `circuit` and `input_sha256`.
+- `edit_schematic`: `input_file`, distinct `output_file`, latest
+  `expected_input_sha256`, and `changes`.
+
+`circuit.components` contains up to 128 objects: `reference`, `kind`
+(`R`, `C`, `L`, `VDC`), numeric SI `value`, optional `x_mm`/`y_mm`, `rotation`
+(0/90/180/270), and `pins` mapping `"1"`/`"2"` to ASCII net identifiers or null.
+Net `"0"` means ground. New placements snap to the native 1.27 mm grid.
+
+Each change has `op`: `set_value` (`reference,value`), `remove` (`reference`),
+`replace` (`reference,kind,value`), `move` (`reference,x_mm,y_mm`), `rotate`
+(`reference,rotation`), `connect` (`reference,pin,net`), `disconnect`
+(`reference,pin`), or `add` (`component`, the complete component object).
+
+Review batches with `preview_action`: before/after circuits are validated,
+while native validation remains pending until execution. Successful writes
+include native pin/net comparison and ERC results. Inspect `verification`;
+an editable artifact with ERC violations is not an electrically clean design.
+Use `validate_result` to check the artifact checksum after publication.
+
+Topology edits currently require a single-sheet Bifrost-authored schematic.
+Supported imported schematics accept value edits; unsupported symbols, buses,
+hierarchy, mirrors, or topology labels fail explicitly. Preserve that boundary
+and report limitations instead of silently replacing or dropping native objects.
+The source is never overwritten. Existing revision destinations require the
+relay's confirmation; use prior explicit authorization where applicable.
 
 ## 适用场景
 - 用户提到 KiCad、PCB 设计、Gerber 文件、DRC 检查、BOM 导出

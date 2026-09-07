@@ -25,6 +25,9 @@ classifiers = [
 dependencies = [
     "pydantic>=2.10.0,<3.0.0",
     "structlog>=24.4.0,<26.0.0",
+    "sexpdata==1.0.2",
+    "lxml>=5.0.0,<7.0.0",
+    "networkx>=3.2,<4.0",
 ]
 
 [project.optional-dependencies]
@@ -58,8 +61,11 @@ build-backend = "setuptools.build_meta"
 where = ["."]
 include = ["core*", "adapters*"]
 
+[tool.setuptools]
+license-files = ["LICENSE", "THIRD_PARTY_NOTICES.md"]
+
 [tool.setuptools.package-data]
-"adapters.multisim" = ["worker.ps1"]
+"adapters.multisim" = ["worker.ps1", "codec.mjs"]
 
 [tool.ruff]
 target-version = "py311"

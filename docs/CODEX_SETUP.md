@@ -6,6 +6,8 @@ and MCP server remain `bifrost-codex`.
 
 ## Windows Runtime
 
+User workflow and tested authoring limits: [Native Circuit Authoring](10-circuit-authoring.md).
+
 Run these commands from the repository root. Substitute your installed KiCad
 directory if it differs. A separate environment leaves KiCad and the existing
 project `.venv` unchanged. `--system-site-packages` makes KiCad's `pcbnew`
@@ -22,13 +24,26 @@ then generates an MCP configuration with absolute runtime paths. Empty skill
 folders for later phases are not distributed. No machine paths are committed
 to the portable manifest.
 
+For native Multisim authoring, install Node.js and initialize a fresh local
+directory from the licensed Multisim 14.3 sample installation:
+
+```powershell
+npm install --prefix .bifrost-authoring/runtime/node --ignore-scripts --strict-ssl=true --no-audit --no-fund --save-exact electronics-workbench-decoder@0.2.0
+.\.venv-codex\Scripts\python.exe -m adapters.multisim.setup_authoring --home .bifrost-authoring/runtime
+```
+
+The generated component/probe templates stay local and ignored by Git. Setup
+refuses to replace an existing pack; use a fresh directory for a rebuild.
+This machine's pack is already initialized. Do not rerun initialization for
+ordinary testing. No downloaded package install scripts are needed.
+
 ## Install
 
 Create the initial personal marketplace entry with Codex's bundled
 `plugin-creator` skill. Then prepare its home-relative source directory:
 
 ```powershell
-.\.venv-codex\Scripts\python.exe -m codex_plugin.local_setup --source ./codex-relay --destination "$HOME\plugins\codex-relay" --kicad-bin 'E:\KiCad\8.0\bin'
+.\.venv-codex\Scripts\python.exe -m codex_plugin.local_setup --source ./codex-relay --destination "$HOME\plugins\codex-relay" --kicad-bin 'E:\KiCad\8.0\bin' --authoring-home .bifrost-authoring/runtime
 codex plugin add codex-relay@personal
 ```
 
@@ -63,13 +78,14 @@ Use reviewed approval or an interactive session, not an unrestricted sandbox.
 - Plugin installation, stdio discovery, and a real Codex CLI `list_adapters`
   call were verified with Codex CLI 0.153.4 on Windows.
 - KiCad 8.0.9 is detected through its bundled Python and configured CLI path.
-  Real project export and DRC acceptance testing is the next task.
+  Native divider creation/editing, reopening, and ERC acceptance pass.
 - Multisim 14.3 uses an isolated 32-bit COM worker. Circuit inspection,
   connectivity reports, DC, AC, and transient analysis are implemented and
-  have live MCP integration coverage. See [Multisim Setup](MULTISIM_SETUP.md).
+  have live MCP integration coverage. Native R/C/L/VDC authoring also passes
+  persisted revision and divider DC acceptance. See [Multisim Setup](MULTISIM_SETUP.md).
 - Hermes is not part of this plugin and remains scaffolded.
 
-No original design should be overwritten without explicit user confirmation.
+Native authoring always publishes a distinct revision and preserves the input.
 Simulation success requires captured numeric results, not just a successful command.
 
 ## Development Updates

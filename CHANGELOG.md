@@ -15,6 +15,17 @@ All notable changes to Bifrost are documented in this file.
 
 ### Added
 
+- Added native KiCad 8 and Multisim 14.3 R/C/L/VDC schematic authoring, including
+  placement, wires, value edits, replacement, movement, rotation, and removal.
+- Added semantic previews, source-hash concurrency checks, native reopening,
+  KiCad ERC evidence, and live Multisim divider verification at 2.5/3.333333 V.
+- Added a local-only licensed Multisim component/probe pack, a pinned native
+  container codec, and preservation of literal SPICE attribute line breaks.
+- Added the native circuit manual, a portable divider specification, and an
+  end-to-end MCP authoring verification command.
+
+- Added validated native circuit specifications, edit batches, and atomic
+  publication of native revisions without unapproved overwrites.
 - Added a 32-bit Multisim COM worker, circuit inspection, connectivity reports,
   bounded simulations, and output retrieval by simulation action ID.
 - Added source snapshots and explicit, race-safe report overwrite confirmation.
