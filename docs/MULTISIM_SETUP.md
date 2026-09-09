@@ -1,8 +1,8 @@
 # Multisim Codex Integration
 
-This guide covers the currently implemented inspection and analysis tools.
-Native circuit creation and editing remain required, unfinished product work;
-see [Circuit Authoring Scope](decisions/TDR-002-circuit-authoring-scope.md).
+This guide covers inspection and analysis. Native R/C/L/VDC circuit creation
+and editing are also implemented and pass the divider acceptance case; see
+[Native Circuit Authoring](10-circuit-authoring.md) for the manual and limits.
 
 ## Runtime
 
@@ -40,8 +40,11 @@ Example request:
 > Use Bifrost to inspect my saved Multisim circuit, enumerate its outputs, and
 > run a DC operating-point analysis. Do not modify the original design.
 
-Each file-based action takes an explicit absolute `file_path`. The adapter
-opens a temporary copy and never calls `Save`, `SaveAs`, or component-edit APIs.
+Each inspection/analysis action takes an explicit absolute `file_path`.
+The adapter opens a temporary copy and never saves the original. Native
+authoring uses separate `input_file`/`output_file` parameters and validates the
+new revision through COM before publication. Setup uses COM `NewFile`/`SaveAs`
+to derive a version-matched blank document.
 Self-contained designs were used for verification. Relative external model
 dependencies are not copied automatically and can cause an explicit failure.
 
@@ -80,8 +83,9 @@ repository. Each test verifies its original SHA-256 hash remains unchanged.
 
 Verified on the installed Multisim 14.3 environment: 8 live tests passed,
 including text/CSV reports, approved overwrites, single-output DC, linear/
-decade/octave AC sweeps, and transient samples. The non-hardware suite passed
-164 tests with 1 skip; focused Python adapter coverage was 91%.
+decade/octave AC sweeps, and transient samples. The prior non-hardware baseline
+passed 164 tests with 1 skip and 91% focused Python adapter coverage. Native
+authoring now adds separate regression tests.
 The refreshed installed plugin was also verified directly in Codex on
 2026-09-08 with `probe`, `read_circuit`, `run_simulation`, and `get_output_data`.
 

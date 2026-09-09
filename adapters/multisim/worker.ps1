@@ -35,7 +35,7 @@ try {
     if ([Environment]::Is64BitProcess) { throw 'Multisim requires a 32-bit COM host.' }
     $request = [Console]::In.ReadToEnd() | ConvertFrom-Json
     $name = [string]$request.action_name
-    if ($name -notin @('probe', 'read_circuit', 'list_components', 'export_netlist', 'run_simulation')) {
+    if ($name -notin @('probe', 'read_circuit', 'list_components', 'export_netlist', 'run_simulation', 'new_blank', 'verify_schematic', 'canonicalize_schematic')) {
         throw "Unsupported worker action: $name"
     }
     $parameters = $request.parameters
@@ -46,19 +46,48 @@ try {
     if (-not $app.IsConnected) { throw "Multisim connection failed: $($app.LastErrorMessage)" }
     $data = @{ connected = $true; software_version = [string]$app.VersionInfo }
 
-    if ($name -ne 'probe') {
+    if ($name -eq 'new_blank') {
+        $target = [IO.Path]::GetFullPath([string]$parameters.output_file)
+        if (Test-Path -LiteralPath $target) { throw 'Refusing to overwrite a blank-document target.' }
+        $circuit = $app.NewFile()
+        [void]$circuit.SaveAs($target)
+        Assert-ComSuccess $circuit
+        $data.file = $target
+    } elseif ($name -ne 'probe') {
         $stage = 'open_file'
         $circuit = $app.OpenFile([string]$parameters.file_path)
         if ($null -eq $circuit) { throw "Cannot open circuit: $($app.LastErrorMessage)" }
         Assert-ComSuccess $app
         $data.circuit_name = [string]$circuit.CircuitName
-        if ($name -in @('read_circuit', 'list_components')) {
+        if ($name -eq 'canonicalize_schematic') {
+            $stage = 'set_native_values'
+            if ($circuit.SimulationState -ne 0) { $circuit.StopSimulation() }
+            foreach ($property in $parameters.values.PSObject.Properties) {
+                [void]$circuit.GetType().InvokeMember('RLCValue', [Reflection.BindingFlags]::SetProperty,
+                    $null, $circuit, @([string]$property.Name, [double]$property.Value))
+                Assert-ComSuccess $circuit
+            }
+            $target = [IO.Path]::GetFullPath([string]$parameters.output_file)
+            if (Test-Path -LiteralPath $target) { throw 'Refusing to overwrite a canonicalization target.' }
+            [void]$circuit.SaveAs($target)
+            Assert-ComSuccess $circuit
+            $data.file = $target
+        } elseif ($name -in @('read_circuit', 'list_components', 'verify_schematic')) {
             $stage = 'enum_components'
             $data.components = Get-Names ($circuit.EnumComponents(0))
             Assert-ComSuccess $circuit
             $data.outputs = Get-Names ($circuit.EnumOutputs(0))
             Assert-ComSuccess $circuit
             $data.component_count = $data.components.Count
+            if ($name -eq 'verify_schematic') {
+                $data.report = [string]$circuit.ReportNetlist($true, 1, [Type]::Missing)
+                Assert-ComSuccess $circuit
+                $data.values = @{}
+                foreach ($reference in @($parameters.value_references)) {
+                    $data.values[[string]$reference] = [double]$circuit.RLCValue([string]$reference)
+                    Assert-ComSuccess $circuit
+                }
+            }
         } elseif ($name -eq 'export_netlist') {
             $stage = 'report_netlist'
             $format = if ($parameters.format -eq 'csv') { 1 } else { 0 }
@@ -96,9 +125,18 @@ try {
             $clock = [Diagnostics.Stopwatch]::StartNew()
             $limit = [Math]::Max(1, [int]$request.timeout_seconds - 10)
             $outputs = @{}
+            $stage = 'wait_for_analysis_output'
+            $timedOut = $true
+            while ($timedOut) {
+                [void]$circuit.WaitForNextOutput([ref]$timedOut, 100)
+                if ($clock.Elapsed.TotalSeconds -ge $limit) { throw 'Timed out waiting for analysis output.' }
+            }
             foreach ($output in $names) {
                 $stage = 'output_ready:' + [string]$output
-                while (-not $circuit.OutputReady([string]$output)) {
+                $ready = $false
+                while (-not $ready) {
+                    try { $ready = [bool]$circuit.OutputReady([string]$output) } catch { }
+                    if ($ready) { break }
                     if ($clock.Elapsed.TotalSeconds -ge $limit) { throw "Timed out waiting for output: $output" }
                     Start-Sleep -Milliseconds 50
                 }
@@ -117,9 +155,18 @@ try {
     }
     $response = @{ success = $true; worker_bits = 32; data = $data }
 } catch {
+    $detail = $_.Exception.Message
+    foreach ($object in @($circuit, $app)) {
+        if ($null -ne $object) {
+            try {
+                $nativeMessage = [string]$object.LastErrorMessage
+                if (-not [string]::IsNullOrWhiteSpace($nativeMessage)) { $detail += ' | ' + $nativeMessage }
+            } catch { }
+        }
+    }
     $response = @{ success = $false; worker_bits = $(if ([Environment]::Is64BitProcess) { 64 } else { 32 });
         error = @{ code = 'ERR_MULTISIM_COM';
-            message = "$stage (line $($_.InvocationInfo.ScriptLineNumber)): $($_.Exception.Message)" } }
+            message = "$stage`: $detail" } }
 } finally {
     if ($null -ne $circuit) {
         try { $circuit.StopSimulation() } catch { }

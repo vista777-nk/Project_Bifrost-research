@@ -24,12 +24,14 @@ KiCad Adapter — 通过 pcbnew Python API 和 kicad-cli 操作 KiCad EDA。
 
 from __future__ import annotations
 
+import hashlib
 import os
 import shutil
 import subprocess
 from datetime import datetime
 from pathlib import Path
 
+from adapters.authoring import AUTHORING_ACTIONS, execute_authoring
 from adapters.base import BaseAdapter
 from core.domain import (
     Action,
@@ -52,6 +54,7 @@ class KiCadAdapter(BaseAdapter):
     """
 
     def __init__(self):
+        self._cli_path = os.environ.get("BIFROST_KICAD_CLI") or shutil.which("kicad-cli")
         self._pcbnew_available = False
         self._cli_available = False
         self._version: str | None = None
@@ -70,7 +73,7 @@ class KiCadAdapter(BaseAdapter):
 
     @property
     def available_actions(self) -> list[str]:
-        return [
+        return AUTHORING_ACTIONS + [
             "open_project",
             "export_gerber",
             "export_bom",
@@ -95,6 +98,8 @@ class KiCadAdapter(BaseAdapter):
         return self._status_message
 
     def execute(self, action: Action) -> ActionResult:
+        if action.action_name in AUTHORING_ACTIONS:
+            return execute_authoring(action, self._schematic_editor)
         handlers = {
             "open_project": self._open_project,
             "export_gerber": self._export_gerber,
@@ -134,12 +139,28 @@ class KiCadAdapter(BaseAdapter):
                 )],
             )
 
+    def _schematic_editor(self):
+        from adapters.kicad.schematic import KiCadSchematicEditor
+
+        return KiCadSchematicEditor(self._cli_path)
+
+    def preview(self, action: Action) -> ActionResult | None:
+        if action.action_name in {"create_schematic", "edit_schematic"}:
+            return execute_authoring(action, self._schematic_editor, preview=True)
+        return None
+
     def validate(self, result: ActionResult) -> ValidationReport:
-        checks: list[CheckResult] = []
+        checks: list[CheckResult] = [CheckResult(
+            check_name="execution_success",
+            status=ValidationStatus.PASSED if result.success else ValidationStatus.FAILED,
+        )]
 
         # 检查产物文件存在
         for art in result.artifacts:
-            exists = Path(art.path).exists()
+            path = Path(art.path)
+            exists = path.is_file()
+            if exists and art.checksum:
+                exists = hashlib.sha256(path.read_bytes()).hexdigest() == art.checksum
             checks.append(CheckResult(
                 check_name=f"file_exists:{art.path}",
                 status=ValidationStatus.PASSED if exists else ValidationStatus.FAILED,
@@ -173,7 +194,7 @@ class KiCadAdapter(BaseAdapter):
             issues.append("pcbnew 模块不可用（KiCad Python API 未安装或未在 PATH 中）")
 
         # 检测 kicad-cli
-        if shutil.which("kicad-cli"):
+        if self._cli_path:
             self._cli_available = True
             if not self._version:
                 self._version = self._detect_cli_version()
@@ -186,7 +207,7 @@ class KiCadAdapter(BaseAdapter):
     def _detect_cli_version(self) -> str | None:
         try:
             result = subprocess.run(
-                ["kicad-cli", "version", "--format", "plain"],
+                [self._cli_path or "kicad-cli", "version", "--format", "plain"],
                 capture_output=True, text=True, timeout=10,
             )
             return result.stdout.strip() if result.returncode == 0 else None
@@ -389,6 +410,7 @@ class KiCadAdapter(BaseAdapter):
         artifacts: list[Artifact] | None = None,
     ) -> ActionResult:
         """执行 kicad-cli 命令并返回结构化结果"""
+        cmd = [self._cli_path or cmd[0], *cmd[1:]]
         start = datetime.now()
         try:
             result = subprocess.run(

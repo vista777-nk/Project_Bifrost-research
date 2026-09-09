@@ -9,8 +9,10 @@
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 **Product scope:** Codex must be able to create and edit native circuits in both
-KiCad and Multisim. The current inspection/export/simulation integration is a
-foundation, not completion of that requirement. See
+KiCad and Multisim. Native R/C/L/VDC schematic creation and editing now pass the
+divider acceptance case on KiCad 8.0.9 and Multisim 14.3, without desktop input
+automation. Broader libraries and imported topology editing remain unfinished.
+Start with the [native circuit user manual](docs/10-circuit-authoring.md). See
 [Circuit Authoring Scope](docs/decisions/TDR-002-circuit-authoring-scope.md).
 
 ---

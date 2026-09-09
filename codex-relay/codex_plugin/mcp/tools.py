@@ -397,6 +397,14 @@ def _handle_run_action(args: dict[str, Any]) -> dict[str, Any]:
         result = _execute(runtime, action, retry_on_failure=request.retry_on_failure)
         return _result_payload(result)
 
+    try:
+        native_preview = runtime.adapter(action.app).preview(action)
+    except Exception as exc:
+        native_preview = _adapter_exception_result(action, exc)
+    if native_preview is not None and not native_preview.success:
+        runtime.record(action, native_preview)
+        return _result_payload(native_preview)
+
     if request.mode == ExecutionMode.DRY_RUN.value:
         now = datetime.now()
         result = ActionResult(
@@ -412,10 +420,14 @@ def _handle_run_action(args: dict[str, Any]) -> dict[str, Any]:
             metadata={"dry_run": True, "risk_level": action.risk_level.value},
         )
         runtime.record(action, result)
+        if native_preview is not None:
+            result.metadata.update(native_preview.metadata)
         return _result_payload(result)
 
     if action.requires_confirmation:
         result = _confirmation_result(action)
+        if native_preview is not None:
+            result.metadata.update(native_preview.metadata)
         runtime.record(action, result, retry_on_failure=request.retry_on_failure)
         return _result_payload(result)
 
@@ -620,6 +632,19 @@ def _handle_preview_action(args: dict[str, Any]) -> dict[str, Any]:
         )
 
     parameters = request.parameters
+    action = _make_action(
+        RunActionInput(
+            app=request.app,
+            action_name=request.action_name,
+            parameters=parameters,
+        )
+    )
+    try:
+        native_preview = adapter.preview(action)
+    except Exception as exc:
+        return _result_payload(_adapter_exception_result(action, exc))
+    if native_preview is not None and not native_preview.success:
+        return _result_payload(native_preview)
     risk = _effective_risk(request.action_name, RiskLevel.LOW)
     overwrite_targets = _existing_output_targets(parameters)
     if overwrite_targets and risk == RiskLevel.LOW:
@@ -661,6 +686,8 @@ def _handle_preview_action(args: dict[str, Any]) -> dict[str, Any]:
         ),
         "warnings": warnings,
     }
+    if native_preview is not None:
+        preview["native_changes"] = native_preview.metadata["preview"]
     return {
         "success": True,
         "preview": preview,

@@ -16,6 +16,7 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, FiniteFloat, ValidationError
 
+from adapters.authoring import AUTHORING_ACTIONS, execute_authoring
 from adapters.base import BaseAdapter
 from core.domain import (
     Action,
@@ -99,7 +100,7 @@ class MultisimAdapter(BaseAdapter):
 
     @property
     def available_actions(self) -> list[str]:
-        return list(_INPUTS)
+        return AUTHORING_ACTIONS + list(_INPUTS)
 
     @property
     def status_message(self) -> str:
@@ -176,6 +177,8 @@ class MultisimAdapter(BaseAdapter):
         return body
 
     def execute(self, action: Action) -> ActionResult:
+        if action.action_name in AUTHORING_ACTIONS:
+            return execute_authoring(action, self._schematic_editor)
         start = datetime.now()
         if action.action_name not in _INPUTS:
             return self._error(
@@ -314,6 +317,16 @@ class MultisimAdapter(BaseAdapter):
             )
         except Exception as exc:
             return self._error(action, "ERR_MULTISIM_EXECUTION", str(exc))
+
+    def _schematic_editor(self):
+        from adapters.multisim.schematic import MultisimSchematicEditor
+
+        return MultisimSchematicEditor(self)
+
+    def preview(self, action: Action) -> ActionResult | None:
+        if action.action_name in {"create_schematic", "edit_schematic"}:
+            return execute_authoring(action, self._schematic_editor, preview=True)
+        return None
 
     @staticmethod
     def _finite_samples(value: Any) -> bool:

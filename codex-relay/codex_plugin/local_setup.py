@@ -19,6 +19,7 @@ def prepare_plugin(
     destination: Path,
     python_executable: Path,
     kicad_bin: Path | None,
+    authoring_home: Path | None = None,
 ) -> Path:
     source = source.expanduser().resolve()
     destination = destination.expanduser().resolve()
@@ -45,6 +46,11 @@ def prepare_plugin(
             raise FileNotFoundError(f"KiCad CLI not found: {cli}")
         server["env"]["BIFROST_KICAD_CLI"] = str(cli)
         server["env"]["PATH"] = str(kicad_bin) + os.pathsep + os.environ.get("PATH", "")
+    if authoring_home is not None:
+        authoring_home = authoring_home.expanduser().resolve()
+        if not (authoring_home / "manifest.json").is_file():
+            raise FileNotFoundError("Initialize the local Multisim authoring pack first.")
+        server["env"]["BIFROST_AUTHORING_HOME"] = str(authoring_home)
 
     existing_manifest.parent.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(manifest_path, existing_manifest)
@@ -63,8 +69,13 @@ def main() -> None:
     parser.add_argument("--destination", type=Path, required=True)
     parser.add_argument("--python", type=Path, default=Path(sys.executable))
     parser.add_argument("--kicad-bin", type=Path)
+    parser.add_argument("--authoring-home", type=Path)
     args = parser.parse_args()
-    print(prepare_plugin(args.source, args.destination, args.python, args.kicad_bin))
+    print(
+        prepare_plugin(
+            args.source, args.destination, args.python, args.kicad_bin, args.authoring_home
+        )
+    )
 
 
 if __name__ == "__main__":

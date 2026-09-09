@@ -1,11 +1,26 @@
 # TDR-002: Native Circuit Creation and Editing
 
 Date: 2026-09-08.
-Status: User requirement clarified; authoring implementation is not complete.
+Status: bounded native divider acceptance implemented and passed; broader
+component libraries and imported topology editing remain incomplete.
 
 Constraint confirmed 2026-09-08: no mouse/keyboard or GUI-control automation.
-The user rejected a GUI fallback. Native-file interoperability is now verified
-at prototype level; see [the non-GUI research](../research-multisim-authoring.md).
+The user rejected a GUI fallback. Native-file interoperability is implemented
+with version-scoped parsers and native verification; see
+[the authoring manual](../10-circuit-authoring.md).
+
+## Verified Implementation
+
+Both adapters expose catalog lookup, inspection, creation, and revision editing
+through the Codex MCP interface. The shared contract implements all operation
+types listed below for two-pin R/C/L/VDC components. Native CLI/COM checks
+verify saved values and connectivity; KiCad ERC and actual Multisim DC results
+pass the divider case. Originals remain immutable and output overwrites require
+confirmation. Full topology edits currently require Bifrost-authored files;
+supported imported files accept value edits. Unsupported content fails explicitly.
+
+The following API table records the original investigation, not the current
+implementation status. No GUI fallback or SPICE-only surrogate was introduced.
 
 ## Requirement
 
@@ -32,7 +47,7 @@ Images, connectivity reports, or standalone SPICE decks do not fulfill this
 requirement unless the target application contains a genuine, editable native
 schematic with the requested components and connections.
 
-## Current State and API Evidence
+## Initial API Evidence
 
 | Area | Evidence | Remaining Work |
 |---|---|---|
@@ -88,7 +103,9 @@ For both applications, Codex must:
 5. Return native file paths, revision hashes, semantic changes, and validation
    evidence. Preserve pre-existing user files unless overwrite is explicitly approved.
 
-The current test totals do not establish that any of these authoring cases pass.
+The native authoring integration tests now exercise this case and additionally
+check move, rotate, replace, disconnect, and reconnect operations. Broader
+component-library coverage still requires separate implementation and acceptance.
 
 ## Safety
 

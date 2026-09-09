@@ -187,10 +187,10 @@ class ActionExecutor:
     @staticmethod
     def _infer_action_type(action_name: str) -> str:
         """根据动作名称推断类型"""
-        _read_kw = ("export", "collect", "get", "list", "read", "identify")
+        _read_kw = ("export", "collect", "get", "list", "read", "identify", "inspect", "find")
         if any(kw in action_name for kw in _read_kw):
             return "read"
-        _write_kw = ("flash", "erase", "write", "burn", "save", "modify", "replace")
+        _write_kw = ("flash", "erase", "write", "burn", "save", "modify", "replace", "create", "edit")
         if any(kw in action_name for kw in _write_kw):
             return "write"
         _exec_kw = ("build", "compile", "simulate", "run", "execute", "open")

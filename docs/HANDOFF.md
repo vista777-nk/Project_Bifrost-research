@@ -2,6 +2,50 @@
 
 Last inspected: 2026-09-08.
 
+## Native Authoring Implementation
+
+KiCad 8.0.9 and Multisim 14.3 now pass native R/C/L/VDC divider creation,
+persisted value editing, capacitor add/remove, and native reopening. Move,
+rotate, replace, disconnect, and reconnect operations have integration coverage.
+KiCad ERC passes; actual Multisim DC is approximately 2.5 V before the resistor
+edit and 3.333333 V afterward. Ten live regression tests pass, including the
+existing Multisim DC/AC/transient/report workflows. No desktop input automation
+is permitted or implemented.
+
+The Multisim simulation defect was literal LF/CR/TAB inside native XML SPICE
+attributes: standard XML parsing normalized it to spaces and joined `.model`
+onto resistor lines. `xmlio.py` protects/restores attribute whitespace around
+lxml, with regression tests. The corrected local pack is
+`.bifrost-authoring/runtime`, using `electronics-workbench-decoder@0.2.0`.
+Older `.bifrost-authoring/components` profiles are diagnostic and must not be used.
+
+Shared authoring validates inputs and source hashes, previews semantic edits,
+stages native validation, and atomically publishes distinct revision paths.
+Value-only edits preserve wiring; topology edits preserve same-kind component
+identities and reroute wires. Full topology editing currently requires a
+Bifrost-authored file; supported imported files accept value edits. Broader
+libraries, hierarchy, imported topology, and PCB layout editing remain work.
+See [the manual](10-circuit-authoring.md) for the current contract and
+`scripts/verify_native_authoring.py` for reproducible MCP acceptance artifacts.
+
+Installed plugin: `0.1.0+codex.20260907215622`, refreshed from the existing
+personal marketplace. The exact installed MCP config passed native create,
+inspect, semantic preview, edit, add/remove, hash validation, and DC acceptance
+for both applications. Artifacts: `output/native-acceptance-20260908/`.
+Native catalog lookup also exposes per-action JSON Schemas to avoid confusion
+between inspection/analysis `file_path` and authoring `input_file` parameters.
+
+Final verification: 186 non-hardware tests passed, 1 skipped; 10 live tests
+passed. The deliberate KiCad disconnect reports `label_dangling`, and the
+reconnected revision passes ERC. A fresh Codex CLI session completed all four
+catalog/inspection calls successfully. The final MCP acceptance report and
+eight native revisions are in `output/native-acceptance-verified/`.
+Scoped Ruff checks pass. The built wheel contains native workers and third-party
+notices, with no NI XML/templates or native design files included.
+
+The sections below are historical takeover and feasibility notes. Their older
+"not implemented" statements and test totals are superseded by this section.
+
 ## Authoring Feasibility Blocker
 
 The user explicitly rejected all mouse/keyboard and GUI-control automation.
