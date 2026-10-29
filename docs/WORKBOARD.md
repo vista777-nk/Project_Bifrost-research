@@ -17,7 +17,7 @@
 
 | ID | 优先级 | 任务 | 域 | Owner | 状态 | 验收命令 | 证据 |
 |---|---|---|---|---|---|---|---|
-| T-000 | P0 | 接手基线、状态事实源与协作纪律 | governance | DeepSeek | Done（2026-10-30） | 非硬件全量回归；文档链接可达 | 本文件、`STATUS.md`、提交记录 |
+| T-000 | P0 | 接手基线、状态事实源与协作纪律 | governance | DeepSeek | Done（2026-10-30） | 非硬件全量回归；文档链接可达 | 本文件、`STATUS.md`、提交 `48c0ee9` |
 | T-001 | P1 | 在 DeepSeek/Kimi 实际客户端接入同一 MCP 并留证 | integration | 待认领 | Proposed | 六个工具可调用；记录客户端版本/配置/日期 | — |
 | T-002 | P1 | 定义“导入工程拓扑编辑”的范围、样例与失败模式 | authoring | 待认领 | Proposed | 范围文档 + 真实样例 + 显式拒绝用例 | — |
 | T-003 | P2 | Ruff 第一批：core/adapters 清零 | quality | 待认领 | Proposed | `ruff check .` 在 core/adapters 无新增；行为不变 | — |
@@ -36,6 +36,8 @@
   Ruff **75 findings**；mypy `core/` **29 errors / 7 files**。
 - 本次未重跑实机；2026-09-08 的历史验收保留在
   `output/native-acceptance-verified/`，不作为今日结论。
+- 提交：`48c0ee9`（`docs(governance)`）。Kimi 首次会话需复核本文件与
+  `COLLABORATION.md`，有异议先提给用户，不直接改写纪律。
 
 ## 4. 待用户决策
 
