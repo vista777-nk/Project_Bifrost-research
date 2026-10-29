@@ -123,7 +123,8 @@ bifrost/                              ← 项目根（社区文档 + 许可证�
 │       └── goap_templates.py         #   GOAP 推理模板
 │
 └── docs/                             # 📁 技术文档体系（AI 可读版）
-    ├── 00-overview.md … 09-hermes-integration.md
+    ├── STATUS.md / WORKBOARD.md / COLLABORATION.md
+    ├── 00-overview.md … 10-circuit-authoring.md
     ├── decisions/                    #   技术决策记录
     └── research-*.md                 #   调研报告
 ```
@@ -219,12 +220,14 @@ python -m codex_plugin.mcp.server
 
 | 文档 | 说明 |
 |------|------|
+| [`docs/STATUS.md`](docs/STATUS.md) | 当前状态（唯一事实源） |
+| [`docs/WORKBOARD.md`](docs/WORKBOARD.md) | 任务板 |
+| [`docs/COLLABORATION.md`](docs/COLLABORATION.md) | 协作纪律 |
 | [`docs/00-overview.md`](docs/00-overview.md) | 项目总览（AI 可读版） |
 | [`docs/01-architecture.md`](docs/01-architecture.md) | 架构设计详解 |
 | [`docs/02-data-models.md`](docs/02-data-models.md) | 统一数据模型定义 |
 | [`docs/03-tools-design.md`](docs/03-tools-design.md) | 工具接口设计 |
 | [`docs/04-plugin-design.md`](docs/04-plugin-design.md) | Codex 插件层设计 |
-| [`docs/05-implementation-plan.md`](docs/05-implementation-plan.md) | 分阶段实现计划 |
 | [`docs/06-testing-strategy.md`](docs/06-testing-strategy.md) | 测试策略 |
 | [`docs/07-gap-analysis.md`](docs/07-gap-analysis.md) | 调研与差距分析 |
 | [`docs/08-agent-skills-standard.md`](docs/08-agent-skills-standard.md) | Agent Skills 开放标准 |
@@ -237,7 +240,8 @@ python -m codex_plugin.mcp.server
 我们欢迎所有形式的贡献！请先阅读：
 
 - [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) — 社区行为准则
-- [`docs/05-implementation-plan.md`](docs/05-implementation-plan.md) — 了解当前阶段
+- [`docs/STATUS.md`](docs/STATUS.md) — 当前能力与验证事实
+- [`docs/WORKBOARD.md`](docs/WORKBOARD.md) — 当前任务与优先级
 
 ---
 

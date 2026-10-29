@@ -195,7 +195,8 @@ DeepSeek 与 Kimi 自行协调实现、审查和集成，避免同时改同一�
 
 接手阅读顺序：本文 → [原生电路手册](10-circuit-authoring.md) → [TDR-002](decisions/TDR-002-circuit-authoring-scope.md) → [Multisim 说明](MULTISIM_SETUP.md) → [环境安装](CODEX_SETUP.md) → 对应代码和测试。
 
-旧 [HANDOFF.md](HANDOFF.md) 保留多轮调研和恢复过程，较早的“未实现”“审批阻断”等段落不能当成当前状态。[总体计划](05-implementation-plan.md) 与 [Phase 1 顺序](decisions/Phase-1-execution-order.md) 包含实现前任务、旧路径及估算；冲突时核对代码、最新测试和用户明确要求。
+更早的交接与计划文档已清理，历史见 Git 记录；本文是唯一保留的交接快照。
+冲突时核对代码、最新测试、`STATUS.md` 与用户明确要求。
 
 关键提交：`ec9b539`（MCP/确认边界）、`0de5ba5`（本机插件/stdio）、`3ad7f23`（Multisim 32 位 COM）、`54d3b86`（恢复原生设计验收要求）、`ebe5ad1`（非 GUI XML 路线）、`1fc85fe`（两款软件原生编辑）。
 

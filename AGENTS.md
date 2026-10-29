@@ -13,8 +13,8 @@
    - [TDR-002 原生电路范围](docs/decisions/TDR-002-circuit-authoring-scope.md)
    - [原生电路作者手册](docs/10-circuit-authoring.md)
 
-`docs/HANDOFF.md` 与 `docs/HANDOFF_DEEPSEEK_KIMI.md` 只是历史快照，
-不得当作当前状态。当前事实只认 `docs/STATUS.md`。
+`docs/HANDOFF_DEEPSEEK_KIMI.md` 只是历史快照，不得当作当前状态。
+当前事实只认 `docs/STATUS.md`。
 
 ## 2. 红线（不可协商）
 

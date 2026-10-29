@@ -4,8 +4,8 @@
 > 最近核实：2026-10-30（DeepSeek）。接手基线：`b7a7042`（`dev`，与本地 `origin/dev` 一致）；
 > 本治理提交之后的 HEAD 以 `git log -1` 为准。
 > 更新规则：任何能力声明必须附命令、日期与证据路径；没有当天实机运行就写“未验证”。
-> 历史记录：[HANDOFF_DEEPSEEK_KIMI.md](HANDOFF_DEEPSEEK_KIMI.md)（2026-10-30 快照）、
-> [HANDOFF.md](HANDOFF.md)（更早记录）。两者不再代表当前状态。
+> 历史记录：[HANDOFF_DEEPSEEK_KIMI.md](HANDOFF_DEEPSEEK_KIMI.md)（2026-10-30 快照）。
+> 更早的交接与计划已清理，历史见 Git 记录；该快照不代表当前状态。
 
 ## 1. 项目与产品门槛
 
@@ -50,10 +50,9 @@ Bifrost 是 AI Agent 与工业软件之间的中继适配层：
 3. **实机回归未在今日重跑**：10 个 `hardware` 标记测试被 deselect；历史验收不能替代今日结论。
 4. **`.gitattributes` 把 `*.kicad_sch`、`*.kicad_pro` 标为 binary**：
    会隐藏原生原理图的文本 diff，影响审查；需要单独评估并验证重新规范化。
-5. **`examples/` 仍保留 `.gitkeep`**：实际已有 `voltage-divider.json` 与 `divider.cir`，可清理。
-6. **命名遗留**：`codex-relay/` 与文档中的 Codex 表述是历史客户端命名，
+5. **命名遗留**：`codex-relay/` 与文档中的 Codex 表述是历史客户端命名，
    当前 DeepSeek/Kimi 通过同一 stdio MCP 入口复用，不代表范围缩小。
-7. **文档密度高**：`docs/` 中另有 23 份历史文档（交接、计划与调研）。
+6. **文档密度高**：`docs/` 仍有历史设计、调研与决策文档。
    本文件与 `WORKBOARD.md` 是唯一当前入口，其余按历史资料对待。
 
 ## 5. 环境事实（本机）

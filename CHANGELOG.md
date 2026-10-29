@@ -6,8 +6,8 @@ All notable changes to Bifrost are documented in this file.
 
 ### Changed
 
-- Marked the handoff documents as historical snapshots and pointed README and
-  the early plan to the current status and workboard.
+- Marked the remaining handoff snapshot as historical and pointed README to the
+  current status and workboard.
 - Kept mouse/keyboard and GUI-control automation prohibited and documented a
   verified non-GUI Multisim compressed-XML route, including native reopening,
   a persisted value edit, and component/connectivity creation proofs.
@@ -43,6 +43,11 @@ All notable changes to Bifrost are documented in this file.
 - Implemented the Codex MCP server with six tools, runtime result storage,
   validation, log collection, previews, retries, and explicit confirmation.
 - Added MCP tool schemas plus unit and in-process MCP SDK integration tests.
+
+### Removed
+
+- Removed superseded handoff and phase-plan documents, the obsolete `.cir`
+  example, and redundant placeholder `.gitkeep` files in populated directories.
 
 ### Fixed
 
