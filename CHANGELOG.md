@@ -15,6 +15,9 @@ All notable changes to Bifrost are documented in this file.
 
 ### Added
 
+- Added a Chinese project handoff for DeepSeek and Kimi, with current test
+  results, implementation boundaries, local runtime paths, and continuation steps.
+
 - Added native KiCad 8 and Multisim 14.3 R/C/L/VDC schematic authoring, including
   placement, wires, value edits, replacement, movement, rotation, and removal.
 - Added semantic previews, source-hash concurrency checks, native reopening,

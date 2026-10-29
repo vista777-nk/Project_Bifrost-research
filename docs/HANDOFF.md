@@ -1,5 +1,9 @@
 # Project Handoff
 
+> **2026-10-30 交接更新：** 后续项目由 DeepSeek 与 Kimi 负责。请先阅读
+> [中文主交接文档](HANDOFF_DEEPSEEK_KIMI.md)，其中包含本次复查、测试结果、
+> 接入方法与后续优先级。本文保留为 2026-09-08 及更早工作的历史记录。
+
 Last inspected: 2026-09-08.
 
 ## Native Authoring Implementation
