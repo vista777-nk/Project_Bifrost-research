@@ -6,6 +6,8 @@ All notable changes to Bifrost are documented in this file.
 
 ### Changed
 
+- Marked the handoff documents as historical snapshots and pointed README and
+  the early plan to the current status and workboard.
 - Kept mouse/keyboard and GUI-control automation prohibited and documented a
   verified non-GUI Multisim compressed-XML route, including native reopening,
   a persisted value edit, and component/connectivity creation proofs.
@@ -15,6 +17,8 @@ All notable changes to Bifrost are documented in this file.
 
 ### Added
 
+- Added a single-source project status ledger, a DeepSeek/Kimi collaboration
+  protocol, a live workboard, and a root `AGENTS.md` entry point for all agents.
 - Added a Chinese project handoff for DeepSeek and Kimi, with current test
   results, implementation boundaries, local runtime paths, and continuation steps.
 

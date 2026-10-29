@@ -1,8 +1,8 @@
 # Project Handoff
 
-> **2026-10-30 交接更新：** 后续项目由 DeepSeek 与 Kimi 负责。请先阅读
-> [中文主交接文档](HANDOFF_DEEPSEEK_KIMI.md)，其中包含本次复查、测试结果、
-> 接入方法与后续优先级。本文保留为 2026-09-08 及更早工作的历史记录。
+> **2026-10-30 交接更新：** 后续项目由 DeepSeek 与 Kimi 负责。当前状态与优先级
+> 以 [STATUS.md](STATUS.md) 和 [WORKBOARD.md](WORKBOARD.md) 为准；本文保留为
+> 2026-09-08 及更早工作的历史记录，不再更新事实。
 
 Last inspected: 2026-09-08.
 

@@ -11,6 +11,9 @@
 > Complete that requirement before treating Phase 1 as the user's finished MVP
 > or advancing the active work to the MCU adapters.
 
+> **状态入口（2026-10-30）：** 本文是早期分阶段计划，不是当前状态。
+> 当前能力、验证结果与优先级见 [STATUS.md](STATUS.md) 与 [WORKBOARD.md](WORKBOARD.md)。
+
 ---
 
 ## Phase 0：设计完成

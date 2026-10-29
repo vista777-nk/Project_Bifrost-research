@@ -16,7 +16,9 @@ Start with the [native circuit user manual](docs/10-circuit-authoring.md). See
 [Circuit Authoring Scope](docs/decisions/TDR-002-circuit-authoring-scope.md).
 
 **项目交接（2026-10-30）：** 后续由 DeepSeek 与 Kimi 负责开发和维护。
-接手请先阅读 [中文交接文档](docs/HANDOFF_DEEPSEEK_KIMI.md)。
+接手请依次阅读 [当前状态](docs/STATUS.md)、[协作纪律](docs/COLLABORATION.md)、
+[任务板](docs/WORKBOARD.md)；根目录 [AGENTS.md](AGENTS.md) 是 agent 强制入口。
+历史交接记录见 [中文交接文档](docs/HANDOFF_DEEPSEEK_KIMI.md)。
 
 ---
 
