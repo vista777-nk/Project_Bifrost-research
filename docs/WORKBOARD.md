@@ -25,7 +25,7 @@
 | T-005 | P2 | KiCad PCB 制造导出独立实机验收 | kicad | 待认领 | Proposed | 全新输出目录 + Gerber/BOM/DRC 产物与报告 | — |
 | T-006 | P3 | 器件家族扩展（等待用户指定真实需求） | authoring | 待认领 | Proposed | 真实符号 + 持久化 + 连通性 + 电气验收 | — |
 | T-007 | P3 | Hermes 执行层：完成或明确冻结 | hermes | 待认领 | Proposed | 用户决策 + 对应记录 | — |
-| T-008 | P2 | 清理冗余历史文档、失效示例与占位文件 | governance | DeepSeek | Done（2026-10-30） | 链接可达；非硬件全量回归通过 | 待填提交 |
+| T-008 | P2 | 清理冗余历史文档、失效示例与占位文件 | governance | DeepSeek | Done（2026-10-30） | 链接可达；非硬件全量回归通过 | 提交 `86ff63a` |
 
 ## 3. T-000 完成记录
 
