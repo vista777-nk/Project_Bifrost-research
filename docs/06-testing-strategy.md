@@ -1,6 +1,6 @@
 # 06 — 测试策略（AI 可读版）
 
-> **前置阅读**：`05-implementation-plan.md`
+> **前置阅读**：`STATUS.md`、`WORKBOARD.md`
 > **用途**：定义测试分层、测试方法、必须覆盖的场景、CI 配置
 
 ---

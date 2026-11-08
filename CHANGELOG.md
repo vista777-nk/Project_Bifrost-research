@@ -6,6 +6,8 @@ All notable changes to Bifrost are documented in this file.
 
 ### Changed
 
+- Marked the remaining handoff snapshot as historical and pointed README to the
+  current status and workboard.
 - Kept mouse/keyboard and GUI-control automation prohibited and documented a
   verified non-GUI Multisim compressed-XML route, including native reopening,
   a persisted value edit, and component/connectivity creation proofs.
@@ -14,6 +16,11 @@ All notable changes to Bifrost are documented in this file.
   foundation; recorded authoring API gaps and a native-file acceptance case.
 
 ### Added
+
+- Added a single-source project status ledger, a DeepSeek/Kimi collaboration
+  protocol, a live workboard, and a root `AGENTS.md` entry point for all agents.
+- Added a Chinese project handoff for DeepSeek and Kimi, with current test
+  results, implementation boundaries, local runtime paths, and continuation steps.
 
 - Added native KiCad 8 and Multisim 14.3 R/C/L/VDC schematic authoring, including
   placement, wires, value edits, replacement, movement, rotation, and removal.
@@ -36,6 +43,11 @@ All notable changes to Bifrost are documented in this file.
 - Implemented the Codex MCP server with six tools, runtime result storage,
   validation, log collection, previews, retries, and explicit confirmation.
 - Added MCP tool schemas plus unit and in-process MCP SDK integration tests.
+
+### Removed
+
+- Removed superseded handoff and phase-plan documents, the obsolete `.cir`
+  example, and redundant placeholder `.gitkeep` files in populated directories.
 
 ### Fixed
 

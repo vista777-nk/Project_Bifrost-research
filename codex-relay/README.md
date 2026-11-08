@@ -54,4 +54,4 @@ codex-relay/                          ← Codex 专属
 | Phase 0 — 设计 | ✅ 完成 |
 | Phase 1 — 最小可用插件 | MCP Server 已完成，示例工程待补充 |
 
-详见 [docs/05-implementation-plan.md](../docs/05-implementation-plan.md)
+当前状态见 [docs/STATUS.md](../docs/STATUS.md)，任务见 [docs/WORKBOARD.md](../docs/WORKBOARD.md)。

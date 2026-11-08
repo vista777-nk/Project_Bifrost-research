@@ -309,7 +309,7 @@ def execute_hermes_tool_call(tool_name: str, arguments: dict[str, Any]) -> dict[
     """
     if not _core_available:
         raise ImportError(
-            "Core 尚未实现。请先完成 Phase 1 开发（参见 docs/05-implementation-plan.md）。"
+            "Core 尚未实现。请先完成共享核心开发（参见 docs/STATUS.md 与 docs/WORKBOARD.md）。"
         )
 
     # 工具名 → 处理函数映射

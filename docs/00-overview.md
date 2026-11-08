@@ -117,7 +117,7 @@ The integration tasks below do not by themselves satisfy this product goal.
 | 数据模型字段变更 | `02-data-models.md` + `core/domain.py` |
 | 工具参数/返回值变更 | `03-tools-design.md` + `hermes-relay/hermes_tools/tools.py` 工具定义 |
 | Skill 增删/改名 | `01-architecture.md` §2.3、`04-plugin-design.md` §4、`08-agent-skills-standard.md` §6 |
-| Phase 进度变化 | `05-implementation-plan.md` + `00-overview.md` §7 |
+| Phase 进度变化 | `STATUS.md` + `WORKBOARD.md` |
 | 依赖/打包变更 | 根 `pyproject.toml`、`codex-relay/pyproject.toml`、`hermes-relay/pyproject.toml`、`requirements.txt` 四处保持一致 |
 
 ---

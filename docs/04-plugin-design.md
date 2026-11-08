@@ -1,7 +1,7 @@
 # 04 — Codex 插件层设计（AI 可读版）
 
 > **前置阅读**：`03-tools-design.md`
-> **后续阅读**：`05-implementation-plan.md`
+> **后续阅读**：`STATUS.md`、`WORKBOARD.md`
 > **用途**：定义 Codex 插件的 Skill 文档和 MCP Server 的具体实现规范
 > **遵循标准**：[Agent Skills](https://agentskills.io/) + [Agent Plugin](https://agentskills.io/specification/agent-plugin)
 
@@ -354,4 +354,4 @@ pytest tests/test_mcp_server.py -v
 
 ## 7. 下一步
 
-继续阅读 `05-implementation-plan.md` — 分阶段实现计划。
+当前状态见 `STATUS.md`，任务见 `WORKBOARD.md`。
